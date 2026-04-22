@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cleanmate.presentation.calendar.CleaningCalendarController"
+            styleClass="dashboard-root"
+            prefWidth="1180" prefHeight="720">
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="220" spacing="4">
+            <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
+            <Label text="CleanMate" styleClass="sidebar-brand"/>
+            <Label text="Firma" styleClass="sidebar-subtitle"/>
+            <Region prefHeight="20"/>
+            <Button text="Dashboard" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Cleaning Calendar" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="Zákazníci" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Cleaning Plány" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Zamestnanci" styleClass="nav-button" maxWidth="Infinity"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Button text="Odhlásiť" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox styleClass="content" spacing="18">
+            <padding><Insets top="28" right="32" bottom="24" left="32"/></padding>
+
+            <Label text="Cleaning Calendar" styleClass="page-title"/>
+            <Label text="Kalendár všetkých upratovaní" styleClass="page-subtitle"/>
+
+            <HBox spacing="12" styleClass="filter-bar">
+                <VBox spacing="4">
+                    <Label text="Dátum" styleClass="field-label"/>
+                    <DatePicker fx:id="datePicker" prefWidth="180"/>
+                </VBox>
+                <VBox spacing="4">
+                    <Label text="Zamestnanec" styleClass="field-label"/>
+                    <ComboBox fx:id="employeeCombo" prefWidth="200"/>
+                </VBox>
+                <VBox spacing="4">
+                    <Label text="Stav" styleClass="field-label"/>
+                    <ComboBox fx:id="statusCombo" prefWidth="160"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <VBox spacing="4" alignment="BOTTOM_RIGHT">
+                    <Label fx:id="resultsCountLabel" text="Zobrazených: 0" styleClass="page-subtitle"/>
+                    <Button text="Vymazať filtre" onAction="#onClearFilters" styleClass="secondary-button"/>
+                </VBox>
+            </HBox>
+
+            <ListView fx:id="list" VBox.vgrow="ALWAYS" styleClass="cal-list"/>
+        </VBox>
+    </center>
+</BorderPane>
