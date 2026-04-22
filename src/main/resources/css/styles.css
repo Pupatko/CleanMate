@@ -456,3 +456,18 @@
 .icon-button:hover {
     -fx-text-fill: #EF4444;
 }
+
+/* ===== Employee availability badges ===== */
+.avail-available { -fx-background-color: #10B981; }
+.avail-on_duty   { -fx-background-color: #F59E0B; }
+.avail-off_duty  { -fx-background-color: #94A3B8; }
+.avail-inactive  { -fx-background-color: #EF4444; }
+
+.active-yes {
+    -fx-text-fill: #10B981;
+    -fx-font-weight: bold;
+}
+.active-no {
+    -fx-text-fill: #94A3B8;
+    -fx-font-weight: bold;
+}
