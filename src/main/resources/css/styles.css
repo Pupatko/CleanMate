@@ -1,0 +1,205 @@
+.login-root {
+    -fx-background-color: #F8FAFC;
+}
+
+.app-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2563EB;
+}
+
+.app-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #64748B;
+    -fx-padding: 0 0 10 0;
+}
+
+.form-group {
+    -fx-padding: 0;
+}
+
+.field-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #334155;
+    -fx-font-weight: bold;
+}
+
+.input {
+    -fx-font-size: 13px;
+    -fx-background-color: white;
+    -fx-border-color: #CBD5E1;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 8 12 8 12;
+}
+
+.input:focused {
+    -fx-border-color: #2563EB;
+}
+
+.primary-button {
+    -fx-background-color: #2563EB;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 10 16 10 16;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.primary-button:hover {
+    -fx-background-color: #1D4ED8;
+}
+
+.error-label {
+    -fx-text-fill: #EF4444;
+    -fx-font-size: 12px;
+}
+
+/* ===== Dashboard ===== */
+.dashboard-root {
+    -fx-background-color: #F1F5F9;
+}
+
+.sidebar {
+    -fx-background-color: #0F172A;
+}
+
+.sidebar-brand {
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.sidebar-subtitle {
+    -fx-text-fill: #94A3B8;
+    -fx-font-size: 12px;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #CBD5E1;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER-LEFT;
+    -fx-padding: 10 14 10 14;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.nav-button:hover {
+    -fx-background-color: #1E293B;
+    -fx-text-fill: white;
+}
+
+.nav-active {
+    -fx-background-color: #2563EB;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.nav-logout {
+    -fx-text-fill: #FCA5A5;
+}
+
+.nav-logout:hover {
+    -fx-background-color: #7F1D1D;
+    -fx-text-fill: white;
+}
+
+.content {
+    -fx-background-color: #F1F5F9;
+}
+
+.page-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0F172A;
+}
+
+.page-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748B;
+}
+
+.section-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #334155;
+    -fx-padding: 10 0 0 0;
+}
+
+.summary-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-padding: 18 20 18 20;
+    -fx-spacing: 6;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+.card-value {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2563EB;
+}
+
+.card-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748B;
+}
+
+.card-warning .card-value { -fx-text-fill: #F59E0B; }
+.card-info .card-value    { -fx-text-fill: #0EA5E9; }
+.card-success .card-value { -fx-text-fill: #10B981; }
+
+/* ===== Data table ===== */
+.data-table {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+.data-table .column-header-background {
+    -fx-background-color: #F8FAFC;
+    -fx-background-radius: 10 10 0 0;
+}
+
+.data-table .column-header,
+.data-table .filler {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #E2E8F0 transparent;
+}
+
+.data-table .column-header .label {
+    -fx-text-fill: #475569;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.data-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #F1F5F9 transparent;
+}
+
+.data-table .table-row-cell:selected {
+    -fx-background-color: #EFF6FF;
+    -fx-text-fill: #0F172A;
+}
+
+/* ===== Status badges ===== */
+.status-badge {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 10 3 10;
+    -fx-background-radius: 12;
+    -fx-text-fill: white;
+}
+
+.status-new         { -fx-background-color: #94A3B8; }
+.status-assigned    { -fx-background-color: #2563EB; }
+.status-in_progress { -fx-background-color: #F59E0B; }
+.status-done        { -fx-background-color: #10B981; }
+.status-cancelled   { -fx-background-color: #EF4444; }

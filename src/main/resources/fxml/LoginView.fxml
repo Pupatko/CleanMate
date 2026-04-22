@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.cleanmate.presentation.LoginController"
+      styleClass="login-root"
+      alignment="CENTER"
+      spacing="14">
+    <padding>
+        <Insets top="40" right="48" bottom="40" left="48"/>
+    </padding>
+
+    <Label text="CleanMate" styleClass="app-title"/>
+    <Label text="Prihlásenie" styleClass="app-subtitle"/>
+
+    <VBox spacing="6" styleClass="form-group">
+        <Label text="Používateľské meno" styleClass="field-label"/>
+        <TextField fx:id="usernameField" promptText="napr. admin" styleClass="input"/>
+    </VBox>
+
+    <VBox spacing="6" styleClass="form-group">
+        <Label text="Heslo" styleClass="field-label"/>
+        <PasswordField fx:id="passwordField" promptText="••••••••" styleClass="input"/>
+    </VBox>
+
+    <VBox spacing="6" styleClass="form-group">
+        <Label text="Rola" styleClass="field-label"/>
+        <ComboBox fx:id="roleCombo" styleClass="input" maxWidth="Infinity"/>
+    </VBox>
+
+    <Label fx:id="errorLabel" styleClass="error-label" managed="true" visible="false"/>
+
+    <Button text="Prihlásiť sa" onAction="#onLogin" styleClass="primary-button" maxWidth="Infinity"/>
+</VBox>
