@@ -386,3 +386,73 @@
     -fx-font-style: italic;
     -fx-padding: 8 0 0 0;
 }
+
+/* ===== Plan builder ===== */
+.step-list {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.step-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 4 0 4 0;
+}
+
+.step-list .list-cell:drop-target .step-row {
+    -fx-border-color: #2563EB;
+    -fx-background-color: #EFF6FF;
+}
+
+.step-row {
+    -fx-background-color: #F8FAFC;
+    -fx-background-radius: 8;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 10 14 10 14;
+}
+
+.drag-handle {
+    -fx-text-fill: #94A3B8;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.step-order {
+    -fx-text-fill: #64748B;
+    -fx-font-weight: bold;
+    -fx-min-width: 28;
+}
+
+.step-name {
+    -fx-text-fill: #0F172A;
+    -fx-font-size: 13px;
+}
+
+.type-chip {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 8 3 8;
+    -fx-background-radius: 10;
+    -fx-text-fill: white;
+}
+
+.type-cleaning { -fx-background-color: #2563EB; }
+.type-laundry  { -fx-background-color: #8B5CF6; }
+.type-check    { -fx-background-color: #0EA5E9; }
+.type-restock  { -fx-background-color: #F59E0B; }
+.type-photo    { -fx-background-color: #10B981; }
+
+.icon-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #94A3B8;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 8 0 8;
+    -fx-cursor: hand;
+}
+
+.icon-button:hover {
+    -fx-text-fill: #EF4444;
+}

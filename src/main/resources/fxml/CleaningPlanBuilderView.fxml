@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cleanmate.presentation.plan.CleaningPlanBuilderController"
+            styleClass="dashboard-root"
+            prefWidth="1180" prefHeight="720">
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="220" spacing="4">
+            <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
+            <Label text="CleanMate" styleClass="sidebar-brand"/>
+            <Label text="Firma" styleClass="sidebar-subtitle"/>
+            <Region prefHeight="20"/>
+            <Button text="Dashboard" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Cleaning Calendar" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Zákazníci" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Cleaning Plány" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="Zamestnanci" styleClass="nav-button" maxWidth="Infinity"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Button text="Odhlásiť" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox styleClass="content" spacing="18">
+            <padding><Insets top="28" right="32" bottom="24" left="32"/></padding>
+
+            <Label text="Cleaning Plan Builder" styleClass="page-title"/>
+            <Label text="Šablóna checklistu priradená k apartmánu" styleClass="page-subtitle"/>
+
+            <GridPane hgap="16" vgap="10" styleClass="form-card">
+                <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>
+                <columnConstraints>
+                    <javafx.scene.layout.ColumnConstraints percentWidth="50"/>
+                    <javafx.scene.layout.ColumnConstraints percentWidth="50"/>
+                </columnConstraints>
+
+                <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <Label text="Názov šablóny" styleClass="field-label"/>
+                    <TextField fx:id="planNameField" promptText="napr. Štandardná 1-izbová" styleClass="input"/>
+                </VBox>
+                <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    <Label text="Priradený apartmán" styleClass="field-label"/>
+                    <ComboBox fx:id="propertyCombo" styleClass="input" maxWidth="Infinity"/>
+                </VBox>
+            </GridPane>
+
+            <VBox spacing="10" styleClass="form-card" VBox.vgrow="ALWAYS">
+                <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>
+
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label text="Kroky checklistu" styleClass="section-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="countLabel" text="Krokov: 0" styleClass="page-subtitle"/>
+                </HBox>
+
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <TextField fx:id="stepNameField" promptText="Názov kroku (napr. Vysávanie kuchyne)"
+                               styleClass="input" HBox.hgrow="ALWAYS"/>
+                    <ComboBox fx:id="stepTypeCombo" styleClass="input" prefWidth="150"/>
+                    <Button fx:id="addStepButton" text="+ Pridať" onAction="#onAddStep" styleClass="primary-button"/>
+                </HBox>
+
+                <Label fx:id="errorLabel" styleClass="error-label"/>
+
+                <Label text="Tip: kroky môžete preusporiadať potiahnutím (drag &amp; drop)." styleClass="page-subtitle"/>
+
+                <ListView fx:id="stepList" VBox.vgrow="ALWAYS" styleClass="step-list"/>
+            </VBox>
+
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button text="Vymazať všetko" onAction="#onClear" styleClass="danger-button"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Uložiť šablónu" onAction="#onSave" styleClass="primary-button"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>
