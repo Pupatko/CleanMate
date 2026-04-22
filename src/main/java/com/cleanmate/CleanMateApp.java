@@ -13,7 +13,7 @@ public class CleanMateApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(
-                Objects.requireNonNull(getClass().getResource("/fxml/DashboardView.fxml")));
+                Objects.requireNonNull(getClass().getResource("/fxml/CustomerManagementView.fxml")));
         Scene scene = new Scene(root, 480, 560);
         scene.getStylesheets().add(
                 Objects.requireNonNull(getClass().getResource("/css/styles.css")).toExternalForm());
