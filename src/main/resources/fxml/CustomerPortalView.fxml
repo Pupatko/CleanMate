@@ -52,7 +52,7 @@
                     <ComboBox fx:id="propertyFilter" prefWidth="280" styleClass="input"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
-                <VBox alignment="BOTTOM_RIGHT">
+                <VBox spacing="4" alignment="CENTER_RIGHT">
                     <Label fx:id="countLabel" text="Záznamov: 0 / 0" styleClass="page-subtitle"/>
                 </VBox>
             </HBox>

@@ -46,15 +46,20 @@
                 <Button text="+ Pridať zákazníka" onAction="#onAdd" styleClass="primary-button"/>
             </HBox>
 
+            <HBox spacing="12" styleClass="filter-bar" alignment="CENTER_LEFT">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Vyhľadávanie (regex)" styleClass="field-label"/>
+                    <TextField fx:id="searchField" promptText="napr. ^Bra.*s\.r\.o\.$  alebo  @gmail" styleClass="input"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <VBox spacing="4" alignment="CENTER_RIGHT">
+                    <Label fx:id="searchHintLabel" text="Regex vyhľadávanie v mene, emaili a telefóne." styleClass="page-subtitle"/>
+                </VBox>
+            </HBox>
+
             <HBox spacing="16" VBox.vgrow="ALWAYS">
 
                 <VBox spacing="10" HBox.hgrow="ALWAYS">
-                    <VBox spacing="4">
-                        <Label text="Vyhľadávanie (regex)" styleClass="field-label"/>
-                        <TextField fx:id="searchField" promptText="napr. ^Bra.*s\.r\.o\.$  alebo  @gmail" styleClass="input"/>
-                        <Label fx:id="searchHintLabel" text="Regex vyhladavanie v mene, emaili a telefone." styleClass="page-subtitle"/>
-                    </VBox>
-
                     <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
                         <columns>
                             <TableColumn fx:id="colName" text="Meno / Firma" prefWidth="220"/>

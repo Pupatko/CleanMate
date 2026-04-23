@@ -42,21 +42,21 @@
                 <Label text="Kalendár všetkých upratovaní" styleClass="page-subtitle"/>
             </VBox>
 
-            <HBox spacing="12" styleClass="filter-bar">
+            <HBox spacing="12" styleClass="filter-bar" alignment="CENTER_LEFT">
                 <VBox spacing="4">
                     <Label text="Dátum" styleClass="field-label"/>
-                    <DatePicker fx:id="datePicker" prefWidth="180"/>
+                    <DatePicker fx:id="datePicker" prefWidth="180" styleClass="input"/>
                 </VBox>
                 <VBox spacing="4">
                     <Label text="Zamestnanec" styleClass="field-label"/>
-                    <ComboBox fx:id="employeeCombo" prefWidth="200"/>
+                    <ComboBox fx:id="employeeCombo" prefWidth="200" styleClass="input"/>
                 </VBox>
                 <VBox spacing="4">
                     <Label text="Stav" styleClass="field-label"/>
-                    <ComboBox fx:id="statusCombo" prefWidth="160"/>
+                    <ComboBox fx:id="statusCombo" prefWidth="160" styleClass="input"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
-                <VBox spacing="4" alignment="BOTTOM_RIGHT">
+                <VBox spacing="4" alignment="CENTER_RIGHT">
                     <Label fx:id="resultsCountLabel" text="Zobrazených: 0" styleClass="page-subtitle"/>
                     <Button text="Vymazať filtre" onAction="#onClearFilters" styleClass="secondary-button"/>
                 </VBox>

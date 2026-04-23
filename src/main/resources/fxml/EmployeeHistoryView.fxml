@@ -58,8 +58,9 @@
             <HBox spacing="12" styleClass="filter-bar" alignment="CENTER_LEFT">
                 <VBox spacing="4">
                     <Label text="Obdobie" styleClass="field-label"/>
-                    <ComboBox fx:id="rangeCombo" prefWidth="220"/>
+                    <ComboBox fx:id="rangeCombo" prefWidth="220" styleClass="input"/>
                 </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
             </HBox>
 
             <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">

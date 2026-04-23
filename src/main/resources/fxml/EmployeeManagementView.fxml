@@ -44,6 +44,8 @@
                     <Label text="Správa upratovacieho tímu" styleClass="page-subtitle"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="editButton" text="Editovať" onAction="#onEdit" styleClass="secondary-button"/>
+                <Button fx:id="deactivateButton" text="Deaktivovať" onAction="#onDeactivate" styleClass="danger-button"/>
                 <Button text="+ Pridať zamestnanca" onAction="#onAdd" styleClass="primary-button"/>
             </HBox>
 
@@ -56,12 +58,9 @@
                     <Label text="Dostupnosť" styleClass="field-label"/>
                     <ComboBox fx:id="availabilityFilter" prefWidth="180" styleClass="input"/>
                 </VBox>
-                <VBox spacing="4" alignment="BOTTOM_RIGHT">
+                <Region HBox.hgrow="ALWAYS"/>
+                <VBox spacing="4" alignment="CENTER_RIGHT">
                     <Label fx:id="countLabel" text="Zobrazených: 0 / 0" styleClass="page-subtitle"/>
-                    <HBox spacing="8">
-                        <Button fx:id="editButton" text="Editovať" onAction="#onEdit" styleClass="secondary-button"/>
-                        <Button fx:id="deactivateButton" text="Deaktivovať" onAction="#onDeactivate" styleClass="danger-button"/>
-                    </HBox>
                 </VBox>
             </HBox>
 
