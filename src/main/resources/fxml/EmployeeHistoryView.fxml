@@ -32,11 +32,13 @@
     </left>
 
     <center>
-        <VBox styleClass="content" spacing="16">
+        <VBox styleClass="content" spacing="20">
             <padding><Insets top="28" right="32" bottom="24" left="32"/></padding>
 
-            <Label text="História úloh" styleClass="page-title"/>
-            <Label text="Prehľad všetkých dokončených upratovaní" styleClass="page-subtitle"/>
+            <VBox spacing="4">
+                <Label text="História úloh" styleClass="page-title"/>
+                <Label text="Prehľad všetkých dokončených upratovaní" styleClass="page-subtitle"/>
+            </VBox>
 
             <HBox spacing="16">
                 <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">

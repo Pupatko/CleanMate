@@ -33,12 +33,12 @@
     </left>
 
     <center>
-        <VBox styleClass="content" spacing="16">
-            <padding><Insets top="24" right="32" bottom="24" left="32"/></padding>
+        <VBox styleClass="content" spacing="20">
+            <padding><Insets top="28" right="32" bottom="24" left="32"/></padding>
 
             <HBox alignment="CENTER_LEFT" spacing="12">
                 <Button text="‹ Späť" onAction="#onBack" styleClass="secondary-button"/>
-                <VBox spacing="2" HBox.hgrow="ALWAYS">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
                     <Label fx:id="propertyLabel" text="—" styleClass="page-title"/>
                     <Label fx:id="metaLabel" text="—" styleClass="page-subtitle"/>
                 </VBox>

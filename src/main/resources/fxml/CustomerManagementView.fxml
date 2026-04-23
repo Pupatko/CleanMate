@@ -34,11 +34,11 @@
     </left>
 
     <center>
-        <VBox styleClass="content" spacing="16">
+        <VBox styleClass="content" spacing="20">
             <padding><Insets top="28" right="32" bottom="24" left="32"/></padding>
 
             <HBox alignment="CENTER_LEFT" spacing="12">
-                <VBox spacing="2">
+                <VBox spacing="4">
                     <Label text="Zákazníci" styleClass="page-title"/>
                     <Label text="Správa klientov upratovacej firmy" styleClass="page-subtitle"/>
                 </VBox>

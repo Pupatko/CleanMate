@@ -35,11 +35,13 @@
     </left>
 
     <center>
-        <VBox styleClass="content" spacing="18">
+        <VBox styleClass="content" spacing="20">
             <padding><Insets top="28" right="32" bottom="24" left="32"/></padding>
 
-            <Label text="Cleaning Plan Builder" styleClass="page-title"/>
-            <Label text="Šablóna checklistu priradená k apartmánu" styleClass="page-subtitle"/>
+            <VBox spacing="4">
+                <Label text="Cleaning Plan Builder" styleClass="page-title"/>
+                <Label text="Šablóna checklistu priradená k apartmánu" styleClass="page-subtitle"/>
+            </VBox>
 
             <GridPane hgap="16" vgap="10" styleClass="form-card">
                 <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>

@@ -32,11 +32,13 @@
     </left>
 
     <center>
-        <VBox styleClass="content" spacing="18">
+        <VBox styleClass="content" spacing="20">
             <padding><Insets top="28" right="32" bottom="24" left="32"/></padding>
 
-            <Label text="Môj profil" styleClass="page-title"/>
-            <Label text="Osobné údaje a štatistiky" styleClass="page-subtitle"/>
+            <VBox spacing="4">
+                <Label text="Môj profil" styleClass="page-title"/>
+                <Label text="Osobné údaje a štatistiky" styleClass="page-subtitle"/>
+            </VBox>
 
             <HBox spacing="16" styleClass="form-card" alignment="CENTER_LEFT">
                 <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>

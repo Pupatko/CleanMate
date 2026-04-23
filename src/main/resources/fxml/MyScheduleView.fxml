@@ -30,7 +30,7 @@
     </left>
 
     <center>
-        <VBox styleClass="content" spacing="18">
+        <VBox styleClass="content" spacing="20">
             <padding><Insets top="28" right="32" bottom="24" left="32"/></padding>
 
             <HBox alignment="CENTER_LEFT" spacing="16">
