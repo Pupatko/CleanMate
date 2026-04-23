@@ -165,6 +165,7 @@
     -fx-border-color: #E2E8F0;
     -fx-border-radius: 10;
     -fx-border-width: 1;
+    -fx-fixed-cell-size: 46;
 }
 
 .data-table .column-header-background {
@@ -175,21 +176,27 @@
 .data-table .column-header,
 .data-table .filler {
     -fx-background-color: transparent;
-    -fx-border-color: transparent transparent #E2E8F0 transparent;
+    -fx-border-color: transparent transparent #CBD5E1 transparent;
+    -fx-border-width: 0 0 2 0;
 }
 
 .data-table .column-header .label {
-    -fx-text-fill: #475569;
+    -fx-text-fill: #334155;
     -fx-font-weight: bold;
     -fx-font-size: 12px;
-    -fx-padding: 4 0 4 0;
+    -fx-padding: 12 12 12 12;
 }
 
 .data-table .table-row-cell {
     -fx-background-color: white;
     -fx-border-color: transparent transparent #F1F5F9 transparent;
+    -fx-border-width: 0 0 1 0;
     -fx-text-background-color: #0F172A;
     -fx-table-cell-border-color: transparent;
+}
+
+.data-table .table-row-cell:odd {
+    -fx-background-color: #FAFBFD;
 }
 
 .data-table .table-row-cell:empty {
@@ -197,12 +204,8 @@
     -fx-border-color: transparent;
 }
 
-.data-table .table-row-cell:odd {
-    -fx-background-color: white;
-}
-
 .data-table .table-row-cell:hover {
-    -fx-background-color: #F1F5F9;
+    -fx-background-color: #EFF6FF;
     -fx-text-background-color: #0F172A;
 }
 
@@ -225,10 +228,59 @@
 .data-table .table-cell {
     -fx-text-fill: #0F172A;
     -fx-font-size: 13px;
+    -fx-padding: 0 12 0 12;
+    -fx-alignment: CENTER_LEFT;
 }
 
 .data-table:focused .table-row-cell:selected .table-cell {
     -fx-text-fill: #0F172A;
+}
+
+/* Slim modern scrollbar */
+.data-table .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8;
+}
+.data-table .scroll-bar:vertical .thumb {
+    -fx-background-color: #CBD5E1;
+    -fx-background-radius: 4;
+}
+.data-table .scroll-bar:vertical .track,
+.data-table .scroll-bar:vertical .track-background {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+.data-table .scroll-bar:vertical .increment-button,
+.data-table .scroll-bar:vertical .decrement-button {
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+    -fx-max-height: 0;
+    -fx-padding: 0;
+    -fx-opacity: 0;
+}
+.data-table .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-pref-height: 8;
+}
+.data-table .scroll-bar:horizontal .thumb {
+    -fx-background-color: #CBD5E1;
+    -fx-background-radius: 4;
+}
+.data-table .scroll-bar:horizontal .track,
+.data-table .scroll-bar:horizontal .track-background {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+.data-table .scroll-bar:horizontal .increment-button,
+.data-table .scroll-bar:horizontal .decrement-button {
+    -fx-pref-width: 0;
+    -fx-min-width: 0;
+    -fx-max-width: 0;
+    -fx-padding: 0;
+    -fx-opacity: 0;
+}
+.data-table .corner {
+    -fx-background-color: transparent;
 }
 
 /* ===== Status badges ===== */
