@@ -3,7 +3,8 @@ package com.cleanmate.presentation.nav;
 public enum Route {
     LOGIN           ("/fxml/LoginView.fxml",              "CleanMate – Prihlásenie"),
     DASHBOARD       ("/fxml/DashboardView.fxml",          "CleanMate – Dashboard"),
-    CALENDAR        ("/fxml/CleaningCalendarView.fxml",   "CleanMate – Cleaning Calendar"),
+    CALENDAR        ("/fxml/CleaningCalendarView.fxml",   "CleanMate – Upratovania"),
+    ADD_CLEANING    ("/fxml/AddCleaningView.fxml",        "CleanMate – Nové upratovanie"),
     CLEANING_DETAIL ("/fxml/CleaningDetailView.fxml",     "CleanMate – Detail upratovania"),
     CUSTOMERS       ("/fxml/CustomerManagementView.fxml", "CleanMate – Zákazníci"),
     PLANS           ("/fxml/CleaningPlanBuilderView.fxml","CleanMate – Cleaning Plans"),

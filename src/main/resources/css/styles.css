@@ -369,6 +369,12 @@
     -fx-font-weight: bold;
 }
 
+.cal-checkin {
+    -fx-font-size: 12px;
+    -fx-text-fill: #2563EB;
+    -fx-font-weight: bold;
+}
+
 .cal-property {
     -fx-font-size: 15px;
     -fx-text-fill: #0F172A;

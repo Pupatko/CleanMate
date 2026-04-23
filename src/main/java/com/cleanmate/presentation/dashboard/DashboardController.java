@@ -59,11 +59,8 @@ public class DashboardController extends BaseNavController {
 
         recentTable.setItems(sampleRows());
 
-        recentTable.setOnMouseClicked(e -> {
-            if (e.getClickCount() == 2 && recentTable.getSelectionModel().getSelectedItem() != null) {
-                navCleaningDetail();
-            }
-        });
+        recentTable.getSelectionModel().selectedItemProperty().addListener(
+                (obs, o, n) -> { if (n != null) navCleaningDetail(); });
     }
 
     private ObservableList<CleaningRow> sampleRows() {

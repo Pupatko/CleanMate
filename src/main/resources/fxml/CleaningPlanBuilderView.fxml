@@ -25,7 +25,7 @@
             <Label text="Firma" styleClass="sidebar-subtitle"/>
             <Region prefHeight="20"/>
             <Button text="Dashboard" onAction="#navDashboard" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Cleaning Calendar" onAction="#navCalendar" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Upratovania" onAction="#navCalendar" styleClass="nav-button" maxWidth="Infinity"/>
             <Button text="Zákazníci" onAction="#navCustomers" styleClass="nav-button" maxWidth="Infinity"/>
             <Button text="Cleaning Plány" onAction="#navPlans" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
             <Button text="Zamestnanci" onAction="#navEmployees" styleClass="nav-button" maxWidth="Infinity"/>

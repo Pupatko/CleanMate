@@ -3,7 +3,8 @@ package com.cleanmate.presentation.nav;
 public abstract class BaseNavController {
 
     public void navDashboard()   { ViewRouter.get().navigate(Route.DASHBOARD); }
-    public void navCalendar()    { ViewRouter.get().navigate(Route.CALENDAR); }
+    public void navCalendar()       { ViewRouter.get().navigate(Route.CALENDAR); }
+    public void navAddCleaning()    { ViewRouter.get().navigate(Route.ADD_CLEANING); }
     public void navCustomers()   { ViewRouter.get().navigate(Route.CUSTOMERS); }
     public void navPlans()       { ViewRouter.get().navigate(Route.PLANS); }
     public void navEmployees()   { ViewRouter.get().navigate(Route.EMPLOYEES); }

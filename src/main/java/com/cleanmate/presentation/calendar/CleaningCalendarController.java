@@ -59,13 +59,15 @@ public class CleaningCalendarController extends com.cleanmate.presentation.nav.B
         employeeCombo.valueProperty().addListener((obs, o, n) -> applyFilter());
         statusCombo.valueProperty().addListener((obs, o, n) -> applyFilter());
 
-        list.setOnMouseClicked(e -> {
-            if (e.getClickCount() == 2 && list.getSelectionModel().getSelectedItem() != null) {
-                navCleaningDetail();
-            }
-        });
+        list.getSelectionModel().selectedItemProperty().addListener(
+                (obs, o, n) -> { if (n != null) navCleaningDetail(); });
 
         applyFilter();
+    }
+
+    @FXML
+    private void onAdd() {
+        navAddCleaning();
     }
 
     @FXML
@@ -92,15 +94,15 @@ public class CleaningCalendarController extends com.cleanmate.presentation.nav.B
     private ObservableList<CalendarCleaningItem> sampleData() {
         LocalDate today = LocalDate.now();
         return FXCollections.observableArrayList(
-                new CalendarCleaningItem(today, LocalTime.of(9, 0), "Panská 12, BA", "Anna Nová", "DONE"),
-                new CalendarCleaningItem(today, LocalTime.of(10, 30), "Hviezdoslavovo nám. 4", "Peter Malý", "IN_PROGRESS"),
-                new CalendarCleaningItem(today, LocalTime.of(11, 15), "Obchodná 27", "—", "NEW"),
-                new CalendarCleaningItem(today, LocalTime.of(13, 0), "Panenská 8", "Eva Horváthová", "ASSIGNED"),
-                new CalendarCleaningItem(today, LocalTime.of(15, 45), "Laurinská 3", "Ján Kováč", "CANCELLED"),
-                new CalendarCleaningItem(today.plusDays(1), LocalTime.of(9, 30), "Grösslingova 45", "Anna Nová", "ASSIGNED"),
-                new CalendarCleaningItem(today.plusDays(1), LocalTime.of(12, 0), "Ventúrska 7", "Peter Malý", "NEW"),
-                new CalendarCleaningItem(today.plusDays(2), LocalTime.of(10, 0), "Michalská 22", "Eva Horváthová", "ASSIGNED"),
-                new CalendarCleaningItem(today.minusDays(1), LocalTime.of(14, 30), "Sedlárska 5", "Ján Kováč", "DONE")
+                new CalendarCleaningItem(today,              LocalTime.of(9,  0),  LocalTime.of(11, 30), "Panská 12, BA",           "Anna Nová",      "DONE"),
+                new CalendarCleaningItem(today,              LocalTime.of(10, 30), LocalTime.of(13, 0),  "Hviezdoslavovo nám. 4",   "Peter Malý",     "IN_PROGRESS"),
+                new CalendarCleaningItem(today,              LocalTime.of(11, 0),  LocalTime.of(14, 0),  "Obchodná 27",             "—",              "NEW"),
+                new CalendarCleaningItem(today,              LocalTime.of(13, 0),  LocalTime.of(15, 30), "Panenská 8",              "Eva Horváthová", "ASSIGNED"),
+                new CalendarCleaningItem(today,              LocalTime.of(15, 0),  LocalTime.of(17, 30), "Laurinská 3",             "Ján Kováč",      "CANCELLED"),
+                new CalendarCleaningItem(today.plusDays(1),  LocalTime.of(9,  30), LocalTime.of(12, 0),  "Grösslingova 45",         "Anna Nová",      "ASSIGNED"),
+                new CalendarCleaningItem(today.plusDays(1),  LocalTime.of(12, 0),  LocalTime.of(14, 30), "Ventúrska 7",             "Peter Malý",     "NEW"),
+                new CalendarCleaningItem(today.plusDays(2),  LocalTime.of(10, 0),  LocalTime.of(12, 30), "Michalská 22",            "Eva Horváthová", "ASSIGNED"),
+                new CalendarCleaningItem(today.minusDays(1), LocalTime.of(14, 0),  LocalTime.of(16, 30), "Sedlárska 5",             "Ján Kováč",      "DONE")
         );
     }
 
@@ -117,8 +119,13 @@ public class CleaningCalendarController extends com.cleanmate.presentation.nav.B
                 return;
             }
 
-            Label timeLbl = new Label(item.date().format(DATE_FMT) + "  " + item.time().format(TIME_FMT));
-            timeLbl.getStyleClass().add("cal-time");
+            Label dateLbl = new Label(item.date().format(DATE_FMT));
+            dateLbl.getStyleClass().add("cal-time");
+
+            Label timeLbl = new Label(
+                    "CHECK-OUT " + item.checkOut().format(TIME_FMT)
+                    + "  →  CHECK-IN " + item.checkIn().format(TIME_FMT));
+            timeLbl.getStyleClass().add("cal-checkin");
 
             Label propLbl = new Label(item.property());
             propLbl.getStyleClass().add("cal-property");
@@ -126,16 +133,16 @@ public class CleaningCalendarController extends com.cleanmate.presentation.nav.B
             Label empLbl = new Label("👤 " + item.employee());
             empLbl.getStyleClass().add("cal-employee");
 
-            VBox textBox = new VBox(4, timeLbl, propLbl, empLbl);
+            VBox textBox = new VBox(4, dateLbl, timeLbl, propLbl, empLbl);
             textBox.setAlignment(Pos.CENTER_LEFT);
 
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS);
 
-            Label badge = new Label(item.status());
+            Label badge = new Label(item.status().replace('_', ' '));
             badge.getStyleClass().setAll("status-badge", "status-" + item.status().toLowerCase());
 
-            HBox row = new HBox(12, textBox, spacer, badge);
+            HBox row = new HBox(16, textBox, spacer, badge);
             row.setAlignment(Pos.CENTER_LEFT);
             row.getStyleClass().add("cal-row");
 
@@ -143,4 +150,12 @@ public class CleaningCalendarController extends com.cleanmate.presentation.nav.B
             setText(null);
         }
     }
+
+    public record CalendarCleaningItem(
+            LocalDate date,
+            LocalTime checkOut,
+            LocalTime checkIn,
+            String property,
+            String employee,
+            String status) {}
 }
