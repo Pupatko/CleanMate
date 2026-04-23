@@ -97,7 +97,7 @@ public class CustomerPortalController extends com.cleanmate.presentation.nav.Bas
                 if (empty || v == null) { setText(null); return; }
                 int r = v.intValue();
                 setText("★".repeat(r) + "☆".repeat(5 - r));
-                setStyle("-fx-text-fill: #F59E0B; -fx-font-size: 14px;");
+                setStyle("-fx-text-fill: #F59E0B;");
             }
         });
 

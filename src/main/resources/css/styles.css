@@ -9,7 +9,7 @@
 }
 
 .app-subtitle {
-    -fx-font-size: 14px;
+    -fx-font-size: 13px;
     -fx-text-fill: #64748B;
     -fx-padding: 0 0 10 0;
 }
@@ -41,7 +41,7 @@
     -fx-background-color: #2563EB;
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-font-size: 14px;
+    -fx-font-size: 13px;
     -fx-padding: 10 16 10 16;
     -fx-background-radius: 6;
     -fx-cursor: hand;
@@ -116,7 +116,7 @@
 }
 
 .page-title {
-    -fx-font-size: 26px;
+    -fx-font-size: 22px;
     -fx-font-weight: bold;
     -fx-text-fill: #0F172A;
 }
@@ -144,7 +144,7 @@
 }
 
 .card-value {
-    -fx-font-size: 32px;
+    -fx-font-size: 28px;
     -fx-font-weight: bold;
     -fx-text-fill: #2563EB;
 }
@@ -182,6 +182,7 @@
     -fx-text-fill: #475569;
     -fx-font-weight: bold;
     -fx-font-size: 12px;
+    -fx-padding: 4 0 4 0;
 }
 
 .data-table .table-row-cell {
@@ -223,6 +224,7 @@
 
 .data-table .table-cell {
     -fx-text-fill: #0F172A;
+    -fx-font-size: 13px;
 }
 
 .data-table:focused .table-row-cell:selected .table-cell {
@@ -248,11 +250,12 @@
 .secondary-button {
     -fx-background-color: white;
     -fx-text-fill: #334155;
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
     -fx-border-color: #CBD5E1;
     -fx-border-radius: 6;
     -fx-background-radius: 6;
-    -fx-padding: 6 12 6 12;
+    -fx-padding: 8 14 8 14;
     -fx-cursor: hand;
 }
 .secondary-button:hover {
@@ -390,6 +393,7 @@
 
 .empty-hint {
     -fx-text-fill: #94A3B8;
+    -fx-font-size: 13px;
     -fx-font-style: italic;
     -fx-padding: 20;
 }
@@ -397,6 +401,7 @@
 .danger-button {
     -fx-background-color: white;
     -fx-text-fill: #EF4444;
+    -fx-font-size: 13px;
     -fx-border-color: #FCA5A5;
     -fx-border-radius: 6;
     -fx-background-radius: 6;
@@ -470,12 +475,13 @@
 
 .drag-handle {
     -fx-text-fill: #94A3B8;
-    -fx-font-size: 14px;
+    -fx-font-size: 15px;
     -fx-cursor: hand;
 }
 
 .step-order {
     -fx-text-fill: #64748B;
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
     -fx-min-width: 28;
 }
@@ -486,7 +492,7 @@
 }
 
 .type-chip {
-    -fx-font-size: 10px;
+    -fx-font-size: 11px;
     -fx-font-weight: bold;
     -fx-padding: 3 8 3 8;
     -fx-background-radius: 10;
@@ -502,7 +508,7 @@
 .icon-button {
     -fx-background-color: transparent;
     -fx-text-fill: #94A3B8;
-    -fx-font-size: 16px;
+    -fx-font-size: 15px;
     -fx-font-weight: bold;
     -fx-padding: 0 8 0 8;
     -fx-cursor: hand;
@@ -520,10 +526,12 @@
 
 .active-yes {
     -fx-text-fill: #10B981;
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
 }
 .active-no {
     -fx-text-fill: #94A3B8;
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
 }
 
@@ -580,13 +588,13 @@
 }
 
 .task-time {
-    -fx-font-size: 20px;
+    -fx-font-size: 22px;
     -fx-font-weight: bold;
     -fx-text-fill: #2563EB;
 }
 
 .task-property {
-    -fx-font-size: 16px;
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-text-fill: #0F172A;
 }
@@ -614,7 +622,7 @@
 /* ===== Customer portal ===== */
 .qc-rating {
     -fx-text-fill: #F59E0B;
-    -fx-font-size: 16px;
+    -fx-font-size: 15px;
     -fx-font-weight: bold;
 }
 
@@ -639,5 +647,5 @@
 }
 
 .prop-icon {
-    -fx-font-size: 32px;
+    -fx-font-size: 28px;
 }
