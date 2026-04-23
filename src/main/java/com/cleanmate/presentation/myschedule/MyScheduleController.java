@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.logging.Logger;
 
-public class MyScheduleController {
+public class MyScheduleController extends com.cleanmate.presentation.nav.BaseNavController {
 
     private static final Logger LOG = Logger.getLogger(MyScheduleController.class.getName());
 
@@ -51,8 +51,9 @@ public class MyScheduleController {
 
         list.setOnMouseClicked(e -> {
             MyTaskItem sel = list.getSelectionModel().getSelectedItem();
-            if (sel != null && e.getClickCount() >= 1) {
+            if (sel != null) {
                 LOG.info("Open checklist for: " + sel.property() + " @ " + sel.time());
+                navChecklist();
             }
         });
     }

@@ -23,13 +23,13 @@
             <Label text="CleanMate" styleClass="sidebar-brand"/>
             <Label text="Firma" styleClass="sidebar-subtitle"/>
             <Region prefHeight="20"/>
-            <Button text="Dashboard" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Cleaning Calendar" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
-            <Button text="Zákazníci" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Cleaning Plány" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Zamestnanci" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Dashboard" onAction="#navDashboard" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Cleaning Calendar" onAction="#navCalendar" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="Zákazníci" onAction="#navCustomers" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Cleaning Plány" onAction="#navPlans" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Zamestnanci" onAction="#navEmployees" styleClass="nav-button" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
-            <Button text="Odhlásiť" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+            <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
         </VBox>
     </left>
 

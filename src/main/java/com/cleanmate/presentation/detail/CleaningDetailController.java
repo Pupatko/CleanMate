@@ -19,7 +19,7 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.util.logging.Logger;
 
-public class CleaningDetailController {
+public class CleaningDetailController extends com.cleanmate.presentation.nav.BaseNavController {
 
     private static final Logger LOG = Logger.getLogger(CleaningDetailController.class.getName());
     private static final int THUMB_SIZE = 140;

@@ -20,7 +20,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Logger;
 
-public class CleaningCalendarController {
+public class CleaningCalendarController extends com.cleanmate.presentation.nav.BaseNavController {
 
     private static final Logger LOG = Logger.getLogger(CleaningCalendarController.class.getName());
     private static final String ALL = "— všetci —";
@@ -58,6 +58,12 @@ public class CleaningCalendarController {
         datePicker.valueProperty().addListener((obs, o, n) -> applyFilter());
         employeeCombo.valueProperty().addListener((obs, o, n) -> applyFilter());
         statusCombo.valueProperty().addListener((obs, o, n) -> applyFilter());
+
+        list.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2 && list.getSelectionModel().getSelectedItem() != null) {
+                navCleaningDetail();
+            }
+        });
 
         applyFilter();
     }

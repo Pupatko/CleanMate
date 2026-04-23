@@ -16,7 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.logging.Logger;
 
-public class EmployeeManagementController {
+public class EmployeeManagementController extends com.cleanmate.presentation.nav.BaseNavController {
 
     private static final Logger LOG = Logger.getLogger(EmployeeManagementController.class.getName());
     private static final String ALL = "— všetci —";

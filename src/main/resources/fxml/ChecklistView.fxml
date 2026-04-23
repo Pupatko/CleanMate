@@ -24,11 +24,11 @@
             <Label text="CleanMate" styleClass="sidebar-brand"/>
             <Label text="Zamestnanec" styleClass="sidebar-subtitle"/>
             <Region prefHeight="20"/>
-            <Button text="Môj plán" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="Môj plán" onAction="#navMySchedule" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
             <Button text="História" styleClass="nav-button" maxWidth="Infinity"/>
             <Button text="Profil" styleClass="nav-button" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
-            <Button text="Odhlásiť" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+            <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
         </VBox>
     </left>
 

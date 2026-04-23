@@ -1,5 +1,7 @@
 package com.cleanmate.presentation;
 
+import com.cleanmate.presentation.nav.Route;
+import com.cleanmate.presentation.nav.ViewRouter;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -38,8 +40,15 @@ public class LoginController {
             return;
         }
 
-        LOG.info("Login attempt: user='" + username + "', role=" + role);
+        LOG.info("Login OK: user='" + username + "', role=" + role);
         errorLabel.setVisible(false);
+
+        Route target = switch (role) {
+            case "ZAMESTNANEC" -> Route.MY_SCHEDULE;
+            case "ZAKAZNIK"    -> Route.PORTAL;
+            default            -> Route.DASHBOARD;
+        };
+        ViewRouter.get().navigate(target);
     }
 
     private void showError(String message) {

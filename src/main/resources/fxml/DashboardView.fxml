@@ -25,14 +25,14 @@
 
             <Region prefHeight="20"/>
 
-            <Button text="Dashboard" onAction="#onNavDashboard" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
-            <Button text="Cleaning Calendar" onAction="#onNavCalendar" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Zákazníci" onAction="#onNavCustomers" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Cleaning Plány" onAction="#onNavPlans" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Zamestnanci" onAction="#onNavEmployees" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Dashboard" onAction="#navDashboard" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="Cleaning Calendar" onAction="#navCalendar" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Zákazníci" onAction="#navCustomers" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Cleaning Plány" onAction="#navPlans" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Zamestnanci" onAction="#navEmployees" styleClass="nav-button" maxWidth="Infinity"/>
 
             <Region VBox.vgrow="ALWAYS"/>
-            <Button text="Odhlásiť" onAction="#onLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+            <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
         </VBox>
     </left>
 

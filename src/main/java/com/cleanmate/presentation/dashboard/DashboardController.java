@@ -1,5 +1,6 @@
 package com.cleanmate.presentation.dashboard;
 
+import com.cleanmate.presentation.nav.BaseNavController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,7 +12,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.logging.Logger;
 
-public class DashboardController {
+public class DashboardController extends BaseNavController {
 
     private static final Logger LOG = Logger.getLogger(DashboardController.class.getName());
 
@@ -57,6 +58,12 @@ public class DashboardController {
         });
 
         recentTable.setItems(sampleRows());
+
+        recentTable.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2 && recentTable.getSelectionModel().getSelectedItem() != null) {
+                navCleaningDetail();
+            }
+        });
     }
 
     private ObservableList<CleaningRow> sampleRows() {
@@ -69,10 +76,4 @@ public class DashboardController {
         );
     }
 
-    @FXML private void onNavDashboard() { LOG.info("Nav: Dashboard"); }
-    @FXML private void onNavCalendar() { LOG.info("Nav: Cleaning Calendar"); }
-    @FXML private void onNavCustomers() { LOG.info("Nav: Customers"); }
-    @FXML private void onNavEmployees() { LOG.info("Nav: Employees"); }
-    @FXML private void onNavPlans() { LOG.info("Nav: Cleaning Plans"); }
-    @FXML private void onLogout() { LOG.info("Logout clicked"); }
 }

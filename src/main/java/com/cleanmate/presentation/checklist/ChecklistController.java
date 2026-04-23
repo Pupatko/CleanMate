@@ -21,7 +21,7 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.util.logging.Logger;
 
-public class ChecklistController {
+public class ChecklistController extends com.cleanmate.presentation.nav.BaseNavController {
 
     private static final Logger LOG = Logger.getLogger(ChecklistController.class.getName());
     private static final int THUMB = 120;
@@ -132,5 +132,6 @@ public class ChecklistController {
     @FXML
     private void onBack() {
         LOG.info("Back to schedule");
+        navMySchedule();
     }
 }

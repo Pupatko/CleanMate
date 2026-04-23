@@ -1,26 +1,20 @@
 package com.cleanmate;
 
+import com.cleanmate.presentation.nav.Route;
+import com.cleanmate.presentation.nav.ViewRouter;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.util.Objects;
 
 public class CleanMateApp extends Application {
 
     @Override
-    public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(
-                Objects.requireNonNull(getClass().getResource("/fxml/ChecklistView.fxml")));
-        Scene scene = new Scene(root, 480, 560);
-        scene.getStylesheets().add(
-                Objects.requireNonNull(getClass().getResource("/css/styles.css")).toExternalForm());
-        stage.setTitle("CleanMate – Login");
-        stage.setScene(scene);
+    public void start(Stage stage) {
         stage.setResizable(true);
-        stage.setFullScreen(true);
+        stage.setMaximized(true);
+
+        ViewRouter.init(stage);
+        ViewRouter.get().navigate(Route.LOGIN);
+
         stage.show();
     }
 

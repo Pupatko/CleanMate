@@ -25,7 +25,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Logger;
 
-public class CustomerPortalController {
+public class CustomerPortalController extends com.cleanmate.presentation.nav.BaseNavController {
 
     private static final Logger LOG = Logger.getLogger(CustomerPortalController.class.getName());
     private static final String ALL = "— všetky apartmány —";

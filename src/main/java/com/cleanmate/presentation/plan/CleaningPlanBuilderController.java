@@ -21,7 +21,7 @@ import javafx.scene.layout.Region;
 
 import java.util.logging.Logger;
 
-public class CleaningPlanBuilderController {
+public class CleaningPlanBuilderController extends com.cleanmate.presentation.nav.BaseNavController {
 
     private static final Logger LOG = Logger.getLogger(CleaningPlanBuilderController.class.getName());
 

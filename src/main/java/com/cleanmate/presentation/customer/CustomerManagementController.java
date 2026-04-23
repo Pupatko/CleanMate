@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-public class CustomerManagementController {
+public class CustomerManagementController extends com.cleanmate.presentation.nav.BaseNavController {
 
     private static final Logger LOG = Logger.getLogger(CustomerManagementController.class.getName());
 
