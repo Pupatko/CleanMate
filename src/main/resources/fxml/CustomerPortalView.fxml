@@ -26,8 +26,8 @@
             <Label text="Zákazník" styleClass="sidebar-subtitle"/>
             <Region prefHeight="20"/>
             <Button text="Prehľad upratovaní" onAction="#navPortal" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
-            <Button text="Moje apartmány" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Faktúry" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Moje apartmány" onAction="#navProperties" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Faktúry" onAction="#navInvoices" styleClass="nav-button" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
             <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
         </VBox>

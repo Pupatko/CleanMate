@@ -10,7 +10,11 @@ public enum Route {
     EMPLOYEES       ("/fxml/EmployeeManagementView.fxml", "CleanMate – Zamestnanci"),
     MY_SCHEDULE     ("/fxml/MyScheduleView.fxml",         "CleanMate – Môj plán"),
     CHECKLIST       ("/fxml/ChecklistView.fxml",          "CleanMate – Checklist"),
-    PORTAL          ("/fxml/CustomerPortalView.fxml",     "CleanMate – Prehľad pre zákazníka");
+    EMPLOYEE_HISTORY("/fxml/EmployeeHistoryView.fxml",    "CleanMate – História úloh"),
+    EMPLOYEE_PROFILE("/fxml/EmployeeProfileView.fxml",    "CleanMate – Môj profil"),
+    PORTAL          ("/fxml/CustomerPortalView.fxml",     "CleanMate – Prehľad pre zákazníka"),
+    MY_PROPERTIES   ("/fxml/MyPropertiesView.fxml",       "CleanMate – Moje apartmány"),
+    INVOICES        ("/fxml/InvoicesView.fxml",           "CleanMate – Faktúry");
 
     public final String fxml;
     public final String title;

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cleanmate.presentation.profile.EmployeeProfileController"
+            styleClass="dashboard-root"
+            prefWidth="1080" prefHeight="720">
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="220" spacing="4">
+            <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
+            <Label text="CleanMate" styleClass="sidebar-brand"/>
+            <Label text="Zamestnanec" styleClass="sidebar-subtitle"/>
+            <Region prefHeight="20"/>
+            <Button text="Môj plán" onAction="#navMySchedule" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="História" onAction="#navHistory" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Profil" onAction="#navProfile" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox styleClass="content" spacing="18">
+            <padding><Insets top="28" right="32" bottom="24" left="32"/></padding>
+
+            <Label text="Môj profil" styleClass="page-title"/>
+            <Label text="Osobné údaje a štatistiky" styleClass="page-subtitle"/>
+
+            <HBox spacing="16" styleClass="form-card" alignment="CENTER_LEFT">
+                <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>
+                <StackPane styleClass="avatar">
+                    <Label fx:id="avatarLabel" text="?" styleClass="avatar-text"/>
+                </StackPane>
+                <VBox spacing="4">
+                    <Label fx:id="nameLabel" text="—" styleClass="detail-name"/>
+                    <Label fx:id="roleLabel" text="—" styleClass="page-subtitle"/>
+                    <Label fx:id="sinceLabel" text="—" styleClass="page-subtitle"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="16">
+                <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">
+                    <Label fx:id="totalHoursLabel" text="0 h" styleClass="card-value"/>
+                    <Label text="Hodiny tento mesiac" styleClass="card-label"/>
+                </VBox>
+                <VBox styleClass="summary-card, card-info" HBox.hgrow="ALWAYS">
+                    <Label fx:id="totalTasksLabel" text="0" styleClass="card-value"/>
+                    <Label text="Dokončené úlohy celkom" styleClass="card-label"/>
+                </VBox>
+                <VBox styleClass="summary-card, card-success" HBox.hgrow="ALWAYS">
+                    <Label fx:id="avgRatingLabel" text="0" styleClass="card-value"/>
+                    <Label text="Priemerné hodnotenie" styleClass="card-label"/>
+                </VBox>
+            </HBox>
+
+            <VBox spacing="12" styleClass="form-card" VBox.vgrow="ALWAYS">
+                <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>
+                <Label text="Osobné údaje" styleClass="section-title"/>
+
+                <GridPane hgap="16" vgap="10">
+                    <columnConstraints>
+                        <javafx.scene.layout.ColumnConstraints percentWidth="50"/>
+                        <javafx.scene.layout.ColumnConstraints percentWidth="50"/>
+                    </columnConstraints>
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="Meno" styleClass="field-label"/>
+                        <TextField fx:id="firstNameField" styleClass="input"/>
+                    </VBox>
+                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label text="Priezvisko" styleClass="field-label"/>
+                        <TextField fx:id="lastNameField" styleClass="input"/>
+                    </VBox>
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <Label text="Email" styleClass="field-label"/>
+                        <TextField fx:id="emailField" styleClass="input"/>
+                    </VBox>
+                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <Label text="Telefón" styleClass="field-label"/>
+                        <TextField fx:id="phoneField" styleClass="input"/>
+                    </VBox>
+                </GridPane>
+
+                <Label fx:id="saveStatusLabel" text=""/>
+
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <Button text="Zmeniť heslo" onAction="#onChangePassword" styleClass="secondary-button"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="saveButton" text="Uložiť zmeny" onAction="#onSave" styleClass="primary-button"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

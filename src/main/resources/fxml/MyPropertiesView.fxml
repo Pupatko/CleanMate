@@ -11,7 +11,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.cleanmate.presentation.myschedule.MyScheduleController"
+            fx:controller="com.cleanmate.presentation.properties.MyPropertiesController"
             styleClass="dashboard-root"
             prefWidth="1080" prefHeight="720">
 
@@ -19,32 +19,28 @@
         <VBox styleClass="sidebar" prefWidth="220" spacing="4">
             <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
             <Label text="CleanMate" styleClass="sidebar-brand"/>
-            <Label text="Zamestnanec" styleClass="sidebar-subtitle"/>
+            <Label text="Zákazník" styleClass="sidebar-subtitle"/>
             <Region prefHeight="20"/>
-            <Button text="Môj plán" onAction="#navMySchedule" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
-            <Button text="História" onAction="#navHistory" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Profil" onAction="#navProfile" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Prehľad upratovaní" onAction="#navPortal" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Moje apartmány" onAction="#navProperties" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="Faktúry" onAction="#navInvoices" styleClass="nav-button" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
             <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
         </VBox>
     </left>
 
     <center>
-        <VBox styleClass="content" spacing="18">
+        <VBox styleClass="content" spacing="16">
             <padding><Insets top="28" right="32" bottom="24" left="32"/></padding>
 
-            <HBox alignment="CENTER_LEFT" spacing="16">
-                <VBox spacing="4">
-                    <Label fx:id="greetingLabel" text="Dobrý deň" styleClass="page-title"/>
-                    <Label fx:id="dateLabel" text="—" styleClass="page-subtitle"/>
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <VBox spacing="2">
+                    <Label text="Moje apartmány" styleClass="page-title"/>
+                    <Label text="Nehnuteľnosti v správe upratovacej firmy" styleClass="page-subtitle"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
-                <VBox alignment="CENTER_RIGHT">
-                    <Label fx:id="summaryLabel" text="" styleClass="my-summary"/>
-                </VBox>
+                <Label fx:id="countLabel" text="0 apartmánov" styleClass="my-summary"/>
             </HBox>
-
-            <Label text="Dnešné úlohy" styleClass="section-title"/>
 
             <ListView fx:id="list" VBox.vgrow="ALWAYS" styleClass="task-list"/>
         </VBox>
