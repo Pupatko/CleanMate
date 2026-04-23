@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cleanmate.presentation.portal.CustomerPortalController"
+            styleClass="dashboard-root"
+            prefWidth="1180" prefHeight="720">
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="220" spacing="4">
+            <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
+            <Label text="CleanMate" styleClass="sidebar-brand"/>
+            <Label text="Zákazník" styleClass="sidebar-subtitle"/>
+            <Region prefHeight="20"/>
+            <Button text="Prehľad upratovaní" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="Moje apartmány" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Faktúry" styleClass="nav-button" maxWidth="Infinity"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Button text="Odhlásiť" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox styleClass="content" spacing="16">
+            <padding><Insets top="28" right="32" bottom="24" left="32"/></padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <VBox spacing="2">
+                    <Label text="Prehľad upratovaní" styleClass="page-title"/>
+                    <Label text="História a QC dokumentácia vašich apartmánov (read-only)" styleClass="page-subtitle"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="⬇ Exportovať XML report" onAction="#onExportXml" styleClass="primary-button"/>
+            </HBox>
+
+            <HBox spacing="12" styleClass="filter-bar" alignment="CENTER_LEFT">
+                <VBox spacing="4">
+                    <Label text="Apartmán" styleClass="field-label"/>
+                    <ComboBox fx:id="propertyFilter" prefWidth="280" styleClass="input"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <VBox alignment="BOTTOM_RIGHT">
+                    <Label fx:id="countLabel" text="Záznamov: 0 / 0" styleClass="page-subtitle"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="16" VBox.vgrow="ALWAYS">
+
+                <TableView fx:id="table" HBox.hgrow="ALWAYS" styleClass="data-table">
+                    <columns>
+                        <TableColumn fx:id="colDate" text="Dátum" prefWidth="110"/>
+                        <TableColumn fx:id="colProperty" text="Apartmán" prefWidth="220"/>
+                        <TableColumn fx:id="colEmployee" text="Zamestnanec" prefWidth="160"/>
+                        <TableColumn fx:id="colStatus" text="Stav" prefWidth="120"/>
+                        <TableColumn fx:id="colPhotos" text="Fotky" prefWidth="80"/>
+                        <TableColumn fx:id="colRating" text="Hodnotenie" prefWidth="120"/>
+                    </columns>
+                </TableView>
+
+                <VBox spacing="10" prefWidth="380" styleClass="detail-card">
+                    <padding><Insets top="18" right="18" bottom="18" left="18"/></padding>
+
+                    <Label text="QC Report" styleClass="section-title"/>
+
+                    <Label fx:id="qcPlaceholder" styleClass="empty-hint" wrapText="true"
+                           text="Vyberte záznam v tabuľke pre zobrazenie QC reportu s fotkami."/>
+
+                    <Label fx:id="qcTitle" styleClass="detail-name" wrapText="true"/>
+                    <Label fx:id="qcMeta" styleClass="detail-field" wrapText="true"/>
+                    <Label fx:id="qcRating" styleClass="qc-rating"/>
+                    <Label fx:id="qcNote" styleClass="detail-note" wrapText="true"/>
+
+                    <Label text="Fotodokumentácia" styleClass="field-label"/>
+                    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="photo-scroll">
+                        <FlowPane fx:id="qcPhotos" hgap="8" vgap="8"/>
+                    </ScrollPane>
+                </VBox>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>
