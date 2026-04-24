@@ -259,7 +259,7 @@ public class CleaningCalendarController extends BaseNavController {
         badge.getStyleClass().setAll("status-badge", "status-" + e.status().toLowerCase());
 
         card.getChildren().addAll(timeCol, content, badge);
-        card.setOnMouseClicked(ev -> navCleaningDetail());
+        card.setOnMouseClicked(ev -> { if (ev.getClickCount() == 2) navCleaningDetail(); });
         return card;
     }
 
@@ -362,7 +362,7 @@ public class CleaningCalendarController extends BaseNavController {
         emp.setWrapText(true);
 
         card.getChildren().addAll(time, prop, emp);
-        card.setOnMouseClicked(ev -> navCleaningDetail());
+        card.setOnMouseClicked(ev -> { if (ev.getClickCount() == 2) navCleaningDetail(); });
         return card;
     }
 
@@ -443,7 +443,7 @@ public class CleaningCalendarController extends BaseNavController {
             Label chip = new Label(e.checkOut().format(TIME_FMT) + " " + e.property());
             chip.getStyleClass().setAll("cal-month-event", "event-" + e.status().toLowerCase());
             chip.setMaxWidth(Double.MAX_VALUE);
-            chip.setOnMouseClicked(ev -> navCleaningDetail());
+            chip.setOnMouseClicked(ev -> { if (ev.getClickCount() == 2) navCleaningDetail(); });
             cell.getChildren().add(chip);
         }
         if (onDay.size() > shown) {

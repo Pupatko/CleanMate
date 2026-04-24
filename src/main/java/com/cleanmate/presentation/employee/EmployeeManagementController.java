@@ -107,7 +107,7 @@ public class EmployeeManagementController extends com.cleanmate.presentation.nav
         table.setRowFactory(tv -> {
             TableRow<EmployeeRow> row = new TableRow<>();
             row.setOnMouseClicked(ev -> {
-                if (!row.isEmpty() && ev.getClickCount() >= 1) {
+                if (!row.isEmpty() && ev.getClickCount() == 2) {
                     AddEmployeeController.editTarget = row.getItem();
                     navAddEmployee();
                 }

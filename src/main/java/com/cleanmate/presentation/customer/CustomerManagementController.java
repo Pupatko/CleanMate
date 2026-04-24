@@ -73,7 +73,7 @@ public class CustomerManagementController extends com.cleanmate.presentation.nav
         table.setRowFactory(tv -> {
             TableRow<CustomerRow> row = new TableRow<>();
             row.setOnMouseClicked(ev -> {
-                if (!row.isEmpty() && ev.getClickCount() >= 1) {
+                if (!row.isEmpty() && ev.getClickCount() == 2) {
                     EditCustomerController.editTarget = row.getItem();
                     navEditCustomer();
                 }

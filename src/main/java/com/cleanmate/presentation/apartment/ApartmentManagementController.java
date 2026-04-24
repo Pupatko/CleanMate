@@ -55,7 +55,7 @@ public class ApartmentManagementController extends com.cleanmate.presentation.na
         table.setRowFactory(tv -> {
             TableRow<ApartmentItem> row = new TableRow<>();
             row.setOnMouseClicked(ev -> {
-                if (!row.isEmpty() && ev.getClickCount() >= 1) {
+                if (!row.isEmpty() && ev.getClickCount() == 2) {
                     EditApartmentController.editTarget = row.getItem();
                     navEditApartment();
                 }
