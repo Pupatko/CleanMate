@@ -3,12 +3,12 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
@@ -26,7 +26,7 @@
             <Button text="Dashboard" onAction="#navDashboard" styleClass="nav-button" maxWidth="Infinity"/>
             <Button text="Upratovania" onAction="#navCalendar" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
             <Button text="Zákazníci" onAction="#navCustomers" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Cleaning Plány" onAction="#navPlans" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Apartmány" onAction="#navApartments" styleClass="nav-button" maxWidth="Infinity"/>
             <Button text="Zamestnanci" onAction="#navEmployees" styleClass="nav-button" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
             <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
@@ -34,23 +34,19 @@
     </left>
 
     <center>
-        <VBox styleClass="content" spacing="20">
+        <VBox styleClass="content" spacing="16">
             <padding><Insets top="28" right="32" bottom="24" left="32"/></padding>
 
             <HBox alignment="CENTER_LEFT" spacing="12">
                 <VBox spacing="4">
                     <Label text="Upratovania" styleClass="page-title"/>
-                    <Label text="Prehľad a správa upratovaní apartmánov" styleClass="page-subtitle"/>
+                    <Label text="Kalendárny prehľad upratovaní apartmánov" styleClass="page-subtitle"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
                 <Button text="+ Pridať upratovanie" onAction="#onAdd" styleClass="primary-button"/>
             </HBox>
 
             <HBox spacing="12" styleClass="filter-bar" alignment="CENTER_LEFT">
-                <VBox spacing="4">
-                    <Label text="Dátum" styleClass="field-label"/>
-                    <DatePicker fx:id="datePicker" prefWidth="180" styleClass="input"/>
-                </VBox>
                 <VBox spacing="4">
                     <Label text="Zamestnanec" styleClass="field-label"/>
                     <ComboBox fx:id="employeeCombo" prefWidth="200" styleClass="input"/>
@@ -61,12 +57,25 @@
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
                 <VBox spacing="4" alignment="CENTER_RIGHT">
-                    <Label fx:id="resultsCountLabel" text="Zobrazených: 0" styleClass="page-subtitle"/>
+                    <Label fx:id="resultsCountLabel" text="Upratovaní: 0" styleClass="page-subtitle"/>
                     <Button text="Vymazať filtre" onAction="#onClearFilters" styleClass="secondary-button"/>
                 </VBox>
             </HBox>
 
-            <ListView fx:id="list" VBox.vgrow="ALWAYS" styleClass="cal-list"/>
+            <HBox spacing="10" alignment="CENTER_LEFT" styleClass="calendar-controls">
+                <Button text="◄" onAction="#onPrev" styleClass="calendar-nav-button"/>
+                <Button text="Dnes" onAction="#onToday" styleClass="secondary-button"/>
+                <Button text="►" onAction="#onNext" styleClass="calendar-nav-button"/>
+                <Label fx:id="dateRangeLabel" text="" styleClass="calendar-range-label"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <HBox styleClass="view-toggle" alignment="CENTER">
+                    <ToggleButton fx:id="dayToggle" text="Deň" styleClass="view-toggle-button"/>
+                    <ToggleButton fx:id="weekToggle" text="Týždeň" styleClass="view-toggle-button"/>
+                    <ToggleButton fx:id="monthToggle" text="Mesiac" styleClass="view-toggle-button"/>
+                </HBox>
+            </HBox>
+
+            <StackPane fx:id="calendarHolder" VBox.vgrow="ALWAYS" styleClass="calendar-holder"/>
         </VBox>
     </center>
 </BorderPane>

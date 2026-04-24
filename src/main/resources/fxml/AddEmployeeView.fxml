@@ -3,8 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -15,7 +15,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.cleanmate.presentation.calendar.AddCleaningController"
+            fx:controller="com.cleanmate.presentation.employee.AddEmployeeController"
             styleClass="dashboard-root"
             prefWidth="1180" prefHeight="720">
 
@@ -26,10 +26,10 @@
             <Label text="Firma" styleClass="sidebar-subtitle"/>
             <Region prefHeight="20"/>
             <Button text="Dashboard" onAction="#navDashboard" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Upratovania" onAction="#navCalendar" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="Upratovania" onAction="#navCalendar" styleClass="nav-button" maxWidth="Infinity"/>
             <Button text="Zákazníci" onAction="#navCustomers" styleClass="nav-button" maxWidth="Infinity"/>
             <Button text="Apartmány" onAction="#navApartments" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Zamestnanci" onAction="#navEmployees" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Zamestnanci" onAction="#navEmployees" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
             <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
         </VBox>
@@ -41,8 +41,8 @@
 
             <HBox alignment="CENTER_LEFT" spacing="12">
                 <VBox spacing="4">
-                    <Label text="Nové upratovanie" styleClass="page-title"/>
-                    <Label text="Manuálne pridanie upratovania do kalendára" styleClass="page-subtitle"/>
+                    <Label fx:id="pageTitle" text="Nový zamestnanec" styleClass="page-title"/>
+                    <Label fx:id="pageSubtitle" text="Vyplňte informácie o novom členovi tímu" styleClass="page-subtitle"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
                 <Button text="← Späť" onAction="#onBack" styleClass="secondary-button"/>
@@ -51,7 +51,7 @@
             <VBox spacing="20" styleClass="form-card" VBox.vgrow="ALWAYS">
                 <padding><Insets top="24" right="28" bottom="24" left="28"/></padding>
 
-                <Label text="Základné informácie" styleClass="section-title"/>
+                <Label text="Osobné informácie" styleClass="section-title"/>
 
                 <GridPane hgap="20" vgap="14">
                     <columnConstraints>
@@ -60,46 +60,53 @@
                     </columnConstraints>
 
                     <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                        <Label text="Apartmán" styleClass="field-label"/>
-                        <ComboBox fx:id="propertyCombo" maxWidth="Infinity" styleClass="input"
-                                  promptText="Vyberte apartmán"/>
+                        <Label text="Meno" styleClass="field-label"/>
+                        <TextField fx:id="firstNameField" styleClass="input" promptText="napr. Anna"/>
                     </VBox>
                     <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                        <Label text="Zamestnanec" styleClass="field-label"/>
-                        <ComboBox fx:id="employeeCombo" maxWidth="Infinity" styleClass="input"
-                                  promptText="Vyberte zamestnanca"/>
+                        <Label text="Priezvisko" styleClass="field-label"/>
+                        <TextField fx:id="lastNameField" styleClass="input" promptText="napr. Nová"/>
                     </VBox>
 
                     <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                        <Label text="Stav" styleClass="field-label"/>
-                        <ComboBox fx:id="statusCombo" maxWidth="Infinity" styleClass="input"/>
+                        <Label text="Email" styleClass="field-label"/>
+                        <TextField fx:id="emailField" styleClass="input" promptText="anna.nova@firma.sk"/>
+                    </VBox>
+                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <Label text="Telefón" styleClass="field-label"/>
+                        <TextField fx:id="phoneField" styleClass="input" promptText="+421 9XX XXX XXX"/>
                     </VBox>
                 </GridPane>
 
-                <Label text="Časový plán upratovania" styleClass="section-title"/>
+                <Label text="Pracovné zaradenie" styleClass="section-title"/>
 
                 <GridPane hgap="20" vgap="14">
                     <columnConstraints>
-                        <ColumnConstraints percentWidth="40"/>
-                        <ColumnConstraints percentWidth="30"/>
-                        <ColumnConstraints percentWidth="30"/>
+                        <ColumnConstraints percentWidth="50"/>
+                        <ColumnConstraints percentWidth="50"/>
                     </columnConstraints>
 
-                    <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                        <Label text="Dátum upratovania" styleClass="field-label"/>
-                        <DatePicker fx:id="datePicker" styleClass="input" maxWidth="Infinity"/>
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="Rola" styleClass="field-label"/>
+                        <ComboBox fx:id="roleCombo" maxWidth="Infinity" styleClass="input"/>
                     </VBox>
-                    <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                        <Label text="CHECK-OUT (odchod hostí)" styleClass="field-label"/>
-                        <TextField fx:id="checkOutTime" styleClass="input" promptText="09:00"/>
-                        <Label text="Začiatok upratovania" styleClass="page-subtitle"/>
+                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label text="Dátum nástupu" styleClass="field-label"/>
+                        <TextField fx:id="startDateField" styleClass="input" promptText="DD.MM.YYYY"/>
                     </VBox>
-                    <VBox spacing="6" GridPane.columnIndex="2" GridPane.rowIndex="0">
-                        <Label text="CHECK-IN (príchod hostí)" styleClass="field-label"/>
-                        <TextField fx:id="checkInTime" styleClass="input" promptText="12:00"/>
-                        <Label text="Koniec upratovania" styleClass="page-subtitle"/>
+
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1"
+                          GridPane.columnSpan="2">
+                        <Label text="Adresa bydliska" styleClass="field-label"/>
+                        <TextField fx:id="addressField" styleClass="input" promptText="Ulica č., Mesto"/>
                     </VBox>
                 </GridPane>
+
+                <VBox spacing="4">
+                    <Label text="Poznámky" styleClass="field-label"/>
+                    <TextArea fx:id="notesArea" styleClass="input" promptText="Ďalšie poznámky..."
+                              prefRowCount="3" wrapText="true"/>
+                </VBox>
 
                 <Region VBox.vgrow="ALWAYS"/>
 
@@ -107,7 +114,7 @@
 
                 <HBox spacing="10" alignment="CENTER_RIGHT">
                     <Button text="Zrušiť" onAction="#onBack" styleClass="secondary-button"/>
-                    <Button text="Uložiť upratovanie" onAction="#onSave" styleClass="primary-button"/>
+                    <Button fx:id="saveButton" text="Uložiť zamestnanca" onAction="#onSave" styleClass="primary-button"/>
                 </HBox>
             </VBox>
         </VBox>

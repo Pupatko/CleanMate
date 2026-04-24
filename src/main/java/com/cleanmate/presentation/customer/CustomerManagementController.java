@@ -124,6 +124,8 @@ public class CustomerManagementController extends com.cleanmate.presentation.nav
     }
     @FXML private void onShowProperties() {
         CustomerRow r = table.getSelectionModel().getSelectedItem();
-        if (r != null) LOG.info("Show properties of: " + r.getName());
+        if (r == null) return;
+        com.cleanmate.presentation.apartment.ApartmentManagementController.filterCustomer = r.getName();
+        navApartments();
     }
 }

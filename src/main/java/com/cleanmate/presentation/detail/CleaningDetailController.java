@@ -3,6 +3,7 @@ package com.cleanmate.presentation.detail;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -30,6 +31,8 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
     @FXML private ComboBox<String> employeeCombo;
     @FXML private ComboBox<String> statusCombo;
     @FXML private TextField dateField;
+    @FXML private TextField checkOutTimeField;
+    @FXML private TextField checkInTimeField;
     @FXML private Label statusBadge;
 
     @FXML private ListView<ChecklistStep> checklistView;
@@ -37,8 +40,19 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
 
     @FXML private GridPane photoGrid;
 
+    @FXML private Button editButton;
+    @FXML private Button cancelEditButton;
+    @FXML private Button confirmButton;
+
     private final ObservableList<ChecklistStep> steps = FXCollections.observableArrayList();
     private final ObservableList<File> photos = FXCollections.observableArrayList();
+
+    // Saved values for cancel
+    private String savedEmployee;
+    private String savedStatus;
+    private String savedDate;
+    private String savedCheckOut;
+    private String savedCheckIn;
 
     @FXML
     public void initialize() {
@@ -46,7 +60,9 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
 
         propertyField.setText("Panská 12, Bratislava");
         customerField.setText("Acme Rentals s.r.o.");
-        dateField.setText("22.04.2026  10:30");
+        dateField.setText("22.04.2026");
+        checkOutTimeField.setText("10:30");
+        checkInTimeField.setText("12:00");
 
         employeeCombo.setItems(FXCollections.observableArrayList(
                 "— nepriradený —", "Anna Nová", "Peter Malý", "Eva Horváthová", "Ján Kováč"));
@@ -76,6 +92,62 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
 
         photos.addListener((javafx.collections.ListChangeListener<File>) c -> renderPhotos());
         renderPhotos();
+
+        setEditMode(false);
+    }
+
+    private void setEditMode(boolean editing) {
+        propertyField.setEditable(editing);
+        customerField.setEditable(editing);
+        dateField.setEditable(editing);
+        checkOutTimeField.setEditable(editing);
+        checkInTimeField.setEditable(editing);
+        employeeCombo.setDisable(!editing);
+        statusCombo.setDisable(!editing);
+
+        editButton.setVisible(!editing);
+        editButton.setManaged(!editing);
+        cancelEditButton.setVisible(editing);
+        cancelEditButton.setManaged(editing);
+        confirmButton.setVisible(editing);
+        confirmButton.setManaged(editing);
+
+        String styleOn  = "input-edit";
+        String styleOff = "input-readonly";
+        for (TextField f : new TextField[]{propertyField, customerField, dateField, checkOutTimeField, checkInTimeField}) {
+            f.getStyleClass().removeAll(styleOn, styleOff);
+            f.getStyleClass().add(editing ? styleOn : styleOff);
+        }
+    }
+
+    @FXML
+    private void onEdit() {
+        savedEmployee = employeeCombo.getValue();
+        savedStatus   = statusCombo.getValue();
+        savedDate     = dateField.getText();
+        savedCheckOut = checkOutTimeField.getText();
+        savedCheckIn  = checkInTimeField.getText();
+        setEditMode(true);
+    }
+
+    @FXML
+    private void onCancelEdit() {
+        employeeCombo.setValue(savedEmployee);
+        statusCombo.setValue(savedStatus);
+        dateField.setText(savedDate);
+        checkOutTimeField.setText(savedCheckOut);
+        checkInTimeField.setText(savedCheckIn);
+        setEditMode(false);
+    }
+
+    @FXML
+    private void onConfirmEdit() {
+        LOG.info("Changes confirmed — employee=" + employeeCombo.getValue()
+                + ", status=" + statusCombo.getValue()
+                + ", date=" + dateField.getText()
+                + ", checkOut=" + checkOutTimeField.getText()
+                + ", checkIn=" + checkInTimeField.getText());
+        setEditMode(false);
     }
 
     private void updateStatusBadge(String status) {
@@ -86,7 +158,7 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
 
     private void updateProgress() {
         long done = steps.stream().filter(s -> s.doneProperty().get()).count();
-        progressLabel.setText("Dokončené: " + done + " / " + steps.size());
+        progressLabel.setText("Dokoncene: " + done + " / " + steps.size());
     }
 
     @FXML
@@ -94,7 +166,7 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
         FileChooser fc = new FileChooser();
         fc.setTitle("Vyberte fotografiu");
         fc.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Obrázky", "*.png", "*.jpg", "*.jpeg", "*.gif"));
+                new FileChooser.ExtensionFilter("Obrazky", "*.png", "*.jpg", "*.jpeg", "*.gif"));
         File f = fc.showOpenDialog(photoGrid.getScene().getWindow());
         if (f != null) {
             photos.add(f);
@@ -129,26 +201,6 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
             tile.getChildren().addAll(r, new Label(f.getName()));
         }
         return tile;
-    }
-
-    @FXML
-    private void onSave() {
-        LOG.info("Save clicked — status=" + statusCombo.getValue()
-                + ", employee=" + employeeCombo.getValue()
-                + ", done=" + steps.stream().filter(s -> s.doneProperty().get()).count()
-                + "/" + steps.size()
-                + ", photos=" + photos.size());
-    }
-
-    @FXML
-    private void onAssign() {
-        String emp = employeeCombo.getValue();
-        if (emp == null || emp.startsWith("—")) {
-            LOG.warning("Assign failed: no employee selected");
-            return;
-        }
-        statusCombo.setValue("ASSIGNED");
-        LOG.info("Assigned to " + emp);
     }
 
     @FXML

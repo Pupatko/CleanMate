@@ -21,8 +21,8 @@ public class AddCleaningController extends BaseNavController {
     @FXML private ComboBox<String> employeeCombo;
     @FXML private ComboBox<String> statusCombo;
     @FXML private DatePicker datePicker;
-    @FXML private TextField checkOutField;
-    @FXML private TextField checkInField;
+    @FXML private TextField checkOutTime;
+    @FXML private TextField checkInTime;
     @FXML private Label errorLabel;
 
     @FXML
@@ -30,7 +30,7 @@ public class AddCleaningController extends BaseNavController {
         propertyCombo.setItems(FXCollections.observableArrayList(
                 "Panská 12, BA", "Hviezdoslavovo nám. 4", "Obchodná 27",
                 "Panenská 8", "Laurinská 3", "Grösslingova 45",
-                "Ventúrska 7", "Michalská 22", "Sedlárska 5"));
+                "Ventúrska 7", "Michalská 22", "Sedlárska 5", "Kapitulská 18"));
 
         employeeCombo.setItems(FXCollections.observableArrayList(
                 "Anna Nová", "Peter Malý", "Eva Horváthová", "Ján Kováč",
@@ -40,6 +40,9 @@ public class AddCleaningController extends BaseNavController {
         statusCombo.getSelectionModel().selectFirst();
 
         datePicker.setValue(LocalDate.now());
+        checkOutTime.setText("09:00");
+        checkInTime.setText("12:00");
+
         errorLabel.setText("");
     }
 
@@ -47,58 +50,43 @@ public class AddCleaningController extends BaseNavController {
     private void onSave() {
         errorLabel.setText("");
 
-        String property = propertyCombo.getValue();
-        String employee = employeeCombo.getValue();
-        LocalDate date = datePicker.getValue();
-        String checkOutRaw = checkOutField.getText().trim();
-        String checkInRaw  = checkInField.getText().trim();
+        String property  = propertyCombo.getValue();
+        String employee  = employeeCombo.getValue();
+        String status    = statusCombo.getValue();
+        LocalDate date   = datePicker.getValue();
+        String coTimeRaw = checkOutTime.getText() == null ? "" : checkOutTime.getText().trim();
+        String ciTimeRaw = checkInTime.getText()  == null ? "" : checkInTime.getText().trim();
 
-        if (property == null) {
-            errorLabel.setText("Vyberte apartmán.");
-            return;
-        }
-        if (date == null) {
-            errorLabel.setText("Zadajte dátum.");
-            return;
-        }
-        if (checkOutRaw.isEmpty()) {
-            errorLabel.setText("Zadajte čas CHECK-OUT (napr. 09:00).");
-            return;
-        }
-        if (checkInRaw.isEmpty()) {
-            errorLabel.setText("Zadajte čas CHECK-IN (napr. 12:00).");
-            return;
-        }
+        if (property == null)    { errorLabel.setText("Vyberte apartmán."); return; }
+        if (date == null)        { errorLabel.setText("Zadajte dátum upratovania."); return; }
+        if (coTimeRaw.isEmpty()) { errorLabel.setText("Zadajte čas CHECK-OUT (HH:mm)."); return; }
+        if (ciTimeRaw.isEmpty()) { errorLabel.setText("Zadajte čas CHECK-IN (HH:mm)."); return; }
 
-        LocalTime checkOut;
-        LocalTime checkIn;
-        try {
-            checkOut = LocalTime.parse(checkOutRaw);
-        } catch (DateTimeParseException e) {
-            errorLabel.setText("Neplatný formát CHECK-OUT. Použite HH:mm (napr. 09:00).");
-            return;
-        }
-        try {
-            checkIn = LocalTime.parse(checkInRaw);
-        } catch (DateTimeParseException e) {
-            errorLabel.setText("Neplatný formát CHECK-IN. Použite HH:mm (napr. 12:00).");
+        LocalTime coTime;
+        LocalTime ciTime;
+        try { coTime = LocalTime.parse(coTimeRaw); }
+        catch (DateTimeParseException e) { errorLabel.setText("Neplatný formát CHECK-OUT (napr. 09:00)."); return; }
+        try { ciTime = LocalTime.parse(ciTimeRaw); }
+        catch (DateTimeParseException e) { errorLabel.setText("Neplatný formát CHECK-IN (napr. 12:00)."); return; }
+
+        if (!ciTime.isAfter(coTime)) {
+            errorLabel.setText("Čas CHECK-IN musí byť neskôr ako CHECK-OUT.");
             return;
         }
 
-        if (!checkIn.isAfter(checkOut)) {
-            errorLabel.setText("CHECK-IN musí byť neskôr ako CHECK-OUT.");
-            return;
-        }
+        CleaningCalendarController.addEvent(
+                new CleaningCalendarController.CalendarCleaningItem(
+                        date, coTime, ciTime,
+                        property,
+                        employee == null ? "—" : employee,
+                        status == null ? "NEW" : status));
 
-        LOG.info(String.format("New cleaning saved: %s | %s | %s | CO %s → CI %s | status %s",
-                date, property, employee == null ? "—" : employee,
-                checkOut, checkIn, statusCombo.getValue()));
+        LOG.info(String.format("Saved new cleaning: %s | %s %s–%s | %s | %s",
+                property, date, coTime, ciTime, employee, status));
 
         navCalendar();
     }
 
     @FXML
-    private void onBack() {
-        navCalendar();
-    }
+    private void onBack() { navCalendar(); }
 }

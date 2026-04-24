@@ -10,6 +10,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -30,7 +31,7 @@
             <Button text="Dashboard" onAction="#navDashboard" styleClass="nav-button" maxWidth="Infinity"/>
             <Button text="Upratovania" onAction="#navCalendar" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
             <Button text="Zákazníci" onAction="#navCustomers" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Cleaning Plány" onAction="#navPlans" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Apartmány" onAction="#navApartments" styleClass="nav-button" maxWidth="Infinity"/>
             <Button text="Zamestnanci" onAction="#navEmployees" styleClass="nav-button" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
             <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
@@ -47,37 +48,47 @@
                     <Label text="Kompletné informácie a priebeh" styleClass="page-subtitle"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
+                <Button text="← Späť" onAction="#navBack" styleClass="secondary-button"/>
                 <Label fx:id="statusBadge" text="NEW" styleClass="status-badge, status-new"/>
             </HBox>
 
             <GridPane hgap="16" vgap="10" styleClass="form-card">
                 <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>
                 <columnConstraints>
-                    <javafx.scene.layout.ColumnConstraints percentWidth="50"/>
-                    <javafx.scene.layout.ColumnConstraints percentWidth="50"/>
+                    <ColumnConstraints percentWidth="50"/>
+                    <ColumnConstraints percentWidth="50"/>
                 </columnConstraints>
 
                 <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
                     <Label text="Apartmán (Property)" styleClass="field-label"/>
-                    <TextField fx:id="propertyField" styleClass="input"/>
+                    <TextField fx:id="propertyField" styleClass="input" editable="false"/>
                 </VBox>
                 <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
                     <Label text="Zákazník (Customer)" styleClass="field-label"/>
-                    <TextField fx:id="customerField" styleClass="input"/>
+                    <TextField fx:id="customerField" styleClass="input" editable="false"/>
                 </VBox>
 
                 <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1">
                     <Label text="Zamestnanec" styleClass="field-label"/>
-                    <ComboBox fx:id="employeeCombo" styleClass="input" maxWidth="Infinity"/>
+                    <ComboBox fx:id="employeeCombo" styleClass="input" maxWidth="Infinity" disable="true"/>
                 </VBox>
                 <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <Label text="Stav" styleClass="field-label"/>
-                    <ComboBox fx:id="statusCombo" styleClass="input" maxWidth="Infinity"/>
+                    <ComboBox fx:id="statusCombo" styleClass="input" maxWidth="Infinity" disable="true"/>
                 </VBox>
 
-                <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2">
-                    <Label text="Dátum a čas" styleClass="field-label"/>
-                    <TextField fx:id="dateField" styleClass="input"/>
+                <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                    <Label text="Dátum upratovania" styleClass="field-label"/>
+                    <TextField fx:id="dateField" styleClass="input" editable="false"/>
+                </VBox>
+
+                <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                    <Label text="CHECK-OUT (začiatok)" styleClass="field-label"/>
+                    <TextField fx:id="checkOutTimeField" styleClass="input" editable="false" promptText="09:00"/>
+                </VBox>
+                <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                    <Label text="CHECK-IN (koniec)" styleClass="field-label"/>
+                    <TextField fx:id="checkInTimeField" styleClass="input" editable="false" promptText="12:00"/>
                 </VBox>
             </GridPane>
 
@@ -115,8 +126,13 @@
             <HBox spacing="10" alignment="CENTER_RIGHT">
                 <Button text="Zrušiť upratovanie" onAction="#onCancel" styleClass="danger-button"/>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button text="Priradiť" onAction="#onAssign" styleClass="secondary-button"/>
-                <Button text="Uložiť" onAction="#onSave" styleClass="primary-button"/>
+                <!-- View mode buttons -->
+                <Button fx:id="editButton" text="Upraviť" onAction="#onEdit" styleClass="primary-button"/>
+                <!-- Edit mode buttons (hidden by default) -->
+                <Button fx:id="cancelEditButton" text="Zrušiť úpravy" onAction="#onCancelEdit"
+                        styleClass="secondary-button" visible="false" managed="false"/>
+                <Button fx:id="confirmButton" text="Potvrdiť zmeny" onAction="#onConfirmEdit"
+                        styleClass="primary-button" visible="false" managed="false"/>
             </HBox>
         </VBox>
     </center>

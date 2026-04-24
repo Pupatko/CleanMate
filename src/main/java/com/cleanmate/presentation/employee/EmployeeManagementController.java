@@ -129,10 +129,16 @@ public class EmployeeManagementController extends com.cleanmate.presentation.nav
         countLabel.setText("Zobrazených: " + filtered.size() + " / " + data.size());
     }
 
-    @FXML private void onAdd() { LOG.info("Add employee clicked"); }
+    @FXML private void onAdd() {
+        AddEmployeeController.editTarget = null;
+        navAddEmployee();
+    }
     @FXML private void onEdit() {
         EmployeeRow r = table.getSelectionModel().getSelectedItem();
-        if (r != null) LOG.info("Edit employee: " + r.getName());
+        if (r != null) {
+            AddEmployeeController.editTarget = r;
+            navAddEmployee();
+        }
     }
     @FXML private void onDeactivate() {
         EmployeeRow r = table.getSelectionModel().getSelectedItem();
