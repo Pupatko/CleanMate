@@ -480,6 +480,70 @@ public class CleaningCalendarController extends BaseNavController {
         list.add(new CalendarCleaningItem(t.plusDays(2), LocalTime.of(10, 0), LocalTime.of(12, 30), "Michalská 22",          "Eva Horváthová", "ASSIGNED"));
         list.add(new CalendarCleaningItem(t.minusDays(1),LocalTime.of(14, 0), LocalTime.of(16, 30), "Sedlárska 5",           "Ján Kováč",      "DONE"));
         list.add(new CalendarCleaningItem(t.plusDays(3), LocalTime.of(9, 0),  LocalTime.of(11, 0),  "Kapitulská 18",         "Anna Nová",      "NEW"));
+
+        // Historical data for statistics/invoicing (last 6 months)
+        addHistoricalData(list, t);
         return list;
+    }
+
+    /** Generates ~70 past cleanings spread across the last 6 months for invoice/stat testing. */
+    private static void addHistoricalData(List<CalendarCleaningItem> list, LocalDate today) {
+        // (property, employee) pairings — kept stable so month-to-month assignment looks realistic.
+        String[][] assignments = {
+                {"Panská 12, BA",         "Anna Nová"},
+                {"Hviezdoslavovo nám. 4", "Anna Nová"},
+                {"Obchodná 27",           "Peter Malý"},
+                {"Panenská 8",            "Peter Malý"},
+                {"Laurinská 3",           "Eva Horváthová"},
+                {"Grösslingova 45",       "Eva Horváthová"},
+                {"Ventúrska 7",           "Ján Kováč"},
+                {"Michalská 22",          "Ján Kováč"},
+                {"Sedlárska 5",           "Anna Nová"},
+                {"Kapitulská 18",         "Peter Malý"}
+        };
+
+        // Time slot templates (checkOut, checkIn) — varying durations for realistic stats.
+        LocalTime[][] slots = {
+                { LocalTime.of(9, 0),  LocalTime.of(11, 30) },
+                { LocalTime.of(10, 0), LocalTime.of(13, 0)  },
+                { LocalTime.of(11, 30),LocalTime.of(14, 0)  },
+                { LocalTime.of(13, 0), LocalTime.of(16, 0)  },
+                { LocalTime.of(14, 30),LocalTime.of(17, 0)  }
+        };
+
+        // Spread over 6 past months, with varying frequency
+        int[] monthsBack    = {6, 5, 4, 3, 2, 1};
+        int[] perMonthCount = {8, 10, 12, 11, 14, 13}; // rising trend — nice for the bar chart
+
+        for (int m = 0; m < monthsBack.length; m++) {
+            LocalDate monthAnchor = today.minusMonths(monthsBack[m]).withDayOfMonth(1);
+            int days = monthAnchor.lengthOfMonth();
+            for (int i = 0; i < perMonthCount[m]; i++) {
+                int dayOfMonth = 1 + ((i * 7 + m * 3) % days);
+                LocalDate d = monthAnchor.withDayOfMonth(dayOfMonth);
+                String[] pair  = assignments[(i + m) % assignments.length];
+                LocalTime[] s  = slots[(i + m * 2) % slots.length];
+
+                // Most past items are DONE, sprinkle a few CANCELLED for realism
+                String status = (i % 11 == 0) ? "CANCELLED" : "DONE";
+
+                list.add(new CalendarCleaningItem(d, s[0], s[1], pair[0], pair[1], status));
+            }
+        }
+
+        // Some future planned items for upcoming months
+        int[] monthsForward = {1, 2};
+        for (int m : monthsForward) {
+            LocalDate monthAnchor = today.plusMonths(m).withDayOfMonth(1);
+            int days = monthAnchor.lengthOfMonth();
+            for (int i = 0; i < 6; i++) {
+                int dayOfMonth = 1 + ((i * 5 + m * 2) % days);
+                LocalDate d = monthAnchor.withDayOfMonth(dayOfMonth);
+                String[] pair = assignments[(i + m) % assignments.length];
+                LocalTime[] s = slots[(i + m) % slots.length];
+                String status = (i % 2 == 0) ? "ASSIGNED" : "NEW";
+                list.add(new CalendarCleaningItem(d, s[0], s[1], pair[0], pair[1], status));
+            }
+        }
     }
 }
