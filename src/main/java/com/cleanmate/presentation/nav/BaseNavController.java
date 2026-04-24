@@ -6,9 +6,11 @@ public abstract class BaseNavController {
     public void navCalendar()     { ViewRouter.get().navigate(Route.CALENDAR); }
     public void navAddCleaning()  { ViewRouter.get().navigate(Route.ADD_CLEANING); }
     public void navCustomers()    { ViewRouter.get().navigate(Route.CUSTOMERS); }
-    public void navApartments()   { ViewRouter.get().navigate(Route.APARTMENTS); }
-    public void navEmployees()    { ViewRouter.get().navigate(Route.EMPLOYEES); }
-    public void navAddEmployee()  { ViewRouter.get().navigate(Route.ADD_EMPLOYEE); }
+    public void navApartments()    { ViewRouter.get().navigate(Route.APARTMENTS); }
+    public void navEditApartment() { ViewRouter.get().navigate(Route.EDIT_APARTMENT); }
+    public void navEditCustomer()  { ViewRouter.get().navigate(Route.EDIT_CUSTOMER); }
+    public void navEmployees()     { ViewRouter.get().navigate(Route.EMPLOYEES); }
+    public void navAddEmployee()   { ViewRouter.get().navigate(Route.ADD_EMPLOYEE); }
     public void navMySchedule()   { ViewRouter.get().navigate(Route.MY_SCHEDULE); }
     public void navChecklist()    { ViewRouter.get().navigate(Route.CHECKLIST); }
     public void navCleaningDetail(){ ViewRouter.get().navigate(Route.CLEANING_DETAIL); }

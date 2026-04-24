@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cleanmate.presentation.apartment.EditApartmentController"
+            styleClass="dashboard-root"
+            prefWidth="1180" prefHeight="720">
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="220" spacing="4">
+            <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
+            <Label text="CleanMate" styleClass="sidebar-brand"/>
+            <Label text="Firma" styleClass="sidebar-subtitle"/>
+            <Region prefHeight="20"/>
+            <Button text="Dashboard" onAction="#navDashboard" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Upratovania" onAction="#navCalendar" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Zákazníci" onAction="#navCustomers" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="Apartmány" onAction="#navApartments" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="Zamestnanci" onAction="#navEmployees" styleClass="nav-button" maxWidth="Infinity"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox styleClass="content" spacing="16">
+            <padding><Insets top="28" right="32" bottom="24" left="32"/></padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <VBox spacing="4">
+                    <Label fx:id="pageTitle" text="Apartmán" styleClass="page-title"/>
+                    <Label fx:id="pageSubtitle" text="Detail a úprava apartmánu" styleClass="page-subtitle"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="← Späť" onAction="#onBack" styleClass="secondary-button"/>
+            </HBox>
+
+            <VBox spacing="14" styleClass="form-card">
+                <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+
+                <Label text="Informácie o apartmáne" styleClass="section-title"/>
+
+                <GridPane hgap="16" vgap="12">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="50"/>
+                        <ColumnConstraints percentWidth="50"/>
+                    </columnConstraints>
+
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="Adresa" styleClass="field-label"/>
+                        <TextField fx:id="addressField" styleClass="input"/>
+                    </VBox>
+                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label text="Zákazník" styleClass="field-label"/>
+                        <TextField fx:id="customerField" styleClass="input"/>
+                    </VBox>
+
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <Label text="Izby" styleClass="field-label"/>
+                        <TextField fx:id="roomsField" styleClass="input" promptText="2"/>
+                    </VBox>
+                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <Label text="Plocha (m²)" styleClass="field-label"/>
+                        <TextField fx:id="areaField" styleClass="input" promptText="65"/>
+                    </VBox>
+
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2">
+                        <Label text="Poznámka" styleClass="field-label"/>
+                        <TextArea fx:id="noteArea" styleClass="input" prefRowCount="2" wrapText="true"/>
+                    </VBox>
+                </GridPane>
+            </VBox>
+
+            <VBox fx:id="planCard" spacing="12" styleClass="form-card" VBox.vgrow="ALWAYS">
+                <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Cleaning plán" styleClass="section-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="planHint" text="Úprava plánu je k dispozícii iba v režime úprav."
+                           styleClass="page-subtitle"/>
+                </HBox>
+
+                <ListView fx:id="tasksView" prefHeight="220" styleClass="data-table"/>
+
+                <VBox fx:id="taskEditor" spacing="8" visible="false" managed="false">
+                    <Label text="Nová úloha" styleClass="field-label"/>
+                    <GridPane hgap="10" vgap="8">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="45"/>
+                            <ColumnConstraints percentWidth="25"/>
+                            <ColumnConstraints percentWidth="30"/>
+                        </columnConstraints>
+                        <TextField fx:id="taskNameField" promptText="Názov úlohy"
+                                   styleClass="input" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <ComboBox fx:id="taskTypeCombo" maxWidth="Infinity" styleClass="input"
+                                  GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                        <HBox spacing="6" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                            <Button text="+ Pridať" onAction="#onAddTask" styleClass="primary-button"
+                                    HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            <Button text="− Zmazať" onAction="#onRemoveTask" styleClass="danger-button"
+                                    HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                        </HBox>
+                    </GridPane>
+                    <TextArea fx:id="taskDescArea" promptText="Popis úlohy..." styleClass="input"
+                              prefRowCount="2" wrapText="true"/>
+                </VBox>
+            </VBox>
+
+            <Label fx:id="errorLabel" text="" styleClass="error-label"/>
+
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button fx:id="deleteButton" text="Zmazať apartmán" onAction="#onDelete"
+                        styleClass="danger-button" visible="false" managed="false"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="editButton" text="Upraviť" onAction="#onEdit" styleClass="primary-button"/>
+                <Button fx:id="cancelEditButton" text="Zrušiť úpravy" onAction="#onCancelEdit"
+                        styleClass="secondary-button" visible="false" managed="false"/>
+                <Button fx:id="confirmButton" text="Potvrdiť zmeny" onAction="#onConfirm"
+                        styleClass="primary-button" visible="false" managed="false"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

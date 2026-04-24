@@ -30,4 +30,8 @@ public class EmployeeRow {
     public SimpleDoubleProperty monthHoursProperty() { return monthHours; }
     public SimpleBooleanProperty activeProperty() { return active; }
     public SimpleStringProperty availabilityProperty() { return availability; }
+
+    public void setName(String v)         { name.set(v); }
+    public void setRole(String v)         { role.set(v); }
+    public void setAvailability(String v) { availability.set(v); }
 }

@@ -288,10 +288,6 @@ public class CleaningCalendarController extends BaseNavController {
         }
         root.getChildren().add(headerRow);
 
-        ScrollPane scroll = new ScrollPane();
-        scroll.setFitToWidth(true);
-        scroll.getStyleClass().add("cal-scroll");
-
         GridPane body = new GridPane();
         body.getStyleClass().add("cal-week-body");
         for (int i = 0; i < 7; i++) {
@@ -304,37 +300,47 @@ public class CleaningCalendarController extends BaseNavController {
         RowConstraints rc = new RowConstraints();
         rc.setVgrow(Priority.ALWAYS);
         rc.setValignment(VPos.TOP);
+        rc.setFillHeight(true);
         body.getRowConstraints().add(rc);
 
         for (int i = 0; i < 7; i++) {
             LocalDate day = weekStart.plusDays(i);
-            VBox col = new VBox(6);
-            col.getStyleClass().add("cal-week-day");
-            if (day.equals(LocalDate.now())) col.getStyleClass().add("cal-week-day-today");
-            col.setPadding(new Insets(8, 6, 8, 6));
-            col.setMaxWidth(Double.MAX_VALUE);
-            col.setMinHeight(400);
 
             List<CalendarCleaningItem> onDay = all.stream()
                     .filter(e -> e.date().equals(day))
                     .sorted(Comparator.comparing(CalendarCleaningItem::checkOut))
                     .toList();
 
+            VBox eventsList = new VBox(6);
+            eventsList.setPadding(new Insets(8, 6, 8, 6));
             if (onDay.isEmpty()) {
                 Label empty = new Label("—");
                 empty.getStyleClass().add("cal-week-empty");
                 empty.setMaxWidth(Double.MAX_VALUE);
                 empty.setAlignment(Pos.CENTER);
-                col.getChildren().add(empty);
+                eventsList.getChildren().add(empty);
             } else {
-                for (CalendarCleaningItem e : onDay) col.getChildren().add(buildSmallEventCard(e));
+                for (CalendarCleaningItem e : onDay) eventsList.getChildren().add(buildSmallEventCard(e));
             }
+
+            ScrollPane colScroll = new ScrollPane(eventsList);
+            colScroll.setFitToWidth(true);
+            colScroll.getStyleClass().add("cal-day-scroll");
+            colScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            colScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+            VBox col = new VBox();
+            col.getStyleClass().add("cal-week-day");
+            if (day.equals(LocalDate.now())) col.getStyleClass().add("cal-week-day-today");
+            col.setMaxWidth(Double.MAX_VALUE);
+            VBox.setVgrow(colScroll, Priority.ALWAYS);
+            col.getChildren().add(colScroll);
+
             body.add(col, i, 0);
         }
 
-        scroll.setContent(body);
-        VBox.setVgrow(scroll, Priority.ALWAYS);
-        root.getChildren().add(scroll);
+        VBox.setVgrow(body, Priority.ALWAYS);
+        root.getChildren().add(body);
         return root;
     }
 

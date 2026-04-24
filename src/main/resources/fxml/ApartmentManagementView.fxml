@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -41,7 +40,7 @@
             <HBox alignment="CENTER_LEFT" spacing="12">
                 <VBox spacing="4">
                     <Label text="Apartmány" styleClass="page-title"/>
-                    <Label text="Správa apartmánov a cleaning plánov" styleClass="page-subtitle"/>
+                    <Label text="Kliknite na apartmán pre zobrazenie detailu a cleaning plánu" styleClass="page-subtitle"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
                 <Button text="+ Pridať apartmán" onAction="#onAdd" styleClass="primary-button"/>
@@ -58,54 +57,15 @@
                 </VBox>
             </HBox>
 
-            <HBox spacing="16" VBox.vgrow="ALWAYS">
-
-                <VBox spacing="10" HBox.hgrow="ALWAYS">
-                    <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
-                        <columns>
-                            <TableColumn fx:id="colAddress"  text="Adresa"    prefWidth="240"/>
-                            <TableColumn fx:id="colCustomer" text="Zákazník"  prefWidth="200"/>
-                            <TableColumn fx:id="colRooms"    text="Izby"      prefWidth="80"/>
-                            <TableColumn fx:id="colArea"     text="Plocha m²" prefWidth="100"/>
-                            <TableColumn fx:id="colSteps"    text="Plán (kroky)" prefWidth="120"/>
-                        </columns>
-                    </TableView>
-                </VBox>
-
-                <VBox spacing="12" prefWidth="320" styleClass="detail-card">
-                    <padding><Insets top="18" right="18" bottom="18" left="18"/></padding>
-
-                    <Label text="Detail apartmánu" styleClass="section-title"/>
-
-                    <Label fx:id="detailPlaceholder" styleClass="empty-hint"
-                           text="Vyberte apartmán v tabuľke vľavo."
-                           wrapText="true"/>
-
-                    <VBox fx:id="detailContent" spacing="8" visible="false" managed="false">
-                        <Label fx:id="detailAddress"  styleClass="detail-name"  wrapText="true"/>
-                        <Label fx:id="detailCustomer" styleClass="detail-field"/>
-                        <Label fx:id="detailRooms"    styleClass="detail-field"/>
-                        <Label fx:id="detailNote"     styleClass="detail-note"  wrapText="true"/>
-
-                        <Label text="Cleaning plán" styleClass="section-title"/>
-
-                        <ListView fx:id="stepsView" prefHeight="200" styleClass="data-table"/>
-
-                        <HBox spacing="8">
-                            <TextField fx:id="newStepField" promptText="Nový krok..." styleClass="input"
-                                       HBox.hgrow="ALWAYS"/>
-                            <Button text="+" onAction="#onAddStep" styleClass="primary-button" minWidth="36"/>
-                        </HBox>
-                        <Button text="Odstrániť vybraný krok" onAction="#onRemoveStep"
-                                styleClass="danger-button" maxWidth="Infinity"/>
-                    </VBox>
-
-                    <Region VBox.vgrow="ALWAYS"/>
-
-                    <Button fx:id="editApartmentButton" text="Editovať apartmán" onAction="#onEditApartment"
-                            styleClass="secondary-button" maxWidth="Infinity" disable="true"/>
-                </VBox>
-            </HBox>
+            <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+                <columns>
+                    <TableColumn fx:id="colAddress"  text="Adresa"        prefWidth="280"/>
+                    <TableColumn fx:id="colCustomer" text="Zákazník"      prefWidth="240"/>
+                    <TableColumn fx:id="colRooms"    text="Izby"          prefWidth="90"/>
+                    <TableColumn fx:id="colArea"     text="Plocha m²"     prefWidth="130"/>
+                    <TableColumn fx:id="colSteps"    text="Plán (úlohy)"  prefWidth="140"/>
+                </columns>
+            </TableView>
         </VBox>
     </center>
 </BorderPane>

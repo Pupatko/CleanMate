@@ -142,12 +142,20 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
 
     @FXML
     private void onConfirmEdit() {
+        com.cleanmate.presentation.util.ChangeSummary diff = new com.cleanmate.presentation.util.ChangeSummary()
+                .add("Zamestnanec", savedEmployee, employeeCombo.getValue())
+                .add("Stav",        savedStatus,   statusCombo.getValue())
+                .add("Dátum",       savedDate,     dateField.getText())
+                .add("CHECK-OUT",   savedCheckOut, checkOutTimeField.getText())
+                .add("CHECK-IN",    savedCheckIn,  checkInTimeField.getText());
+
         LOG.info("Changes confirmed — employee=" + employeeCombo.getValue()
                 + ", status=" + statusCombo.getValue()
                 + ", date=" + dateField.getText()
                 + ", checkOut=" + checkOutTimeField.getText()
                 + ", checkIn=" + checkInTimeField.getText());
         setEditMode(false);
+        diff.show("Úpravy upratovania");
     }
 
     private void updateStatusBadge(String status) {

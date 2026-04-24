@@ -9,15 +9,15 @@ public class ApartmentItem {
     private int rooms;
     private double area;
     private String note;
-    private final ObservableList<String> steps = FXCollections.observableArrayList();
+    private final ObservableList<ApartmentTask> tasks = FXCollections.observableArrayList();
 
-    public ApartmentItem(String address, String customer, int rooms, double area, String note, String... initialSteps) {
+    public ApartmentItem(String address, String customer, int rooms, double area, String note, ApartmentTask... initialTasks) {
         this.address  = address;
         this.customer = customer;
         this.rooms    = rooms;
         this.area     = area;
         this.note     = note;
-        steps.addAll(initialSteps);
+        for (ApartmentTask t : initialTasks) tasks.add(t);
     }
 
     public String getAddress()  { return address; }
@@ -25,8 +25,8 @@ public class ApartmentItem {
     public int    getRooms()    { return rooms; }
     public double getArea()     { return area; }
     public String getNote()     { return note; }
-    public int    getStepCount(){ return steps.size(); }
-    public ObservableList<String> getSteps() { return steps; }
+    public int    getStepCount(){ return tasks.size(); }
+    public ObservableList<ApartmentTask> getTasks() { return tasks; }
 
     public void setAddress(String v)  { address  = v; }
     public void setCustomer(String v) { customer = v; }

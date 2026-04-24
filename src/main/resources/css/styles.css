@@ -407,6 +407,14 @@
 }
 .cal-scroll > .viewport { -fx-background-color: transparent; }
 
+.cal-day-scroll {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+.cal-day-scroll > .viewport { -fx-background-color: transparent; }
+
 /* Day-view title */
 .cal-day-title {
     -fx-font-size: 18px;

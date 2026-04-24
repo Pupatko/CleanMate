@@ -10,6 +10,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -20,6 +21,22 @@ public class EmployeeManagementController extends com.cleanmate.presentation.nav
 
     private static final Logger LOG = Logger.getLogger(EmployeeManagementController.class.getName());
     private static final String ALL = "— všetci —";
+
+    private static final ObservableList<EmployeeRow> DATA = FXCollections.observableArrayList();
+    static {
+        DATA.addAll(
+                new EmployeeRow("Anna Nová",       "CLEANER",    128.5, true,  "AVAILABLE"),
+                new EmployeeRow("Peter Malý",      "CLEANER",    142.0, true,  "ON_DUTY"),
+                new EmployeeRow("Eva Horváthová",  "SUPERVISOR", 160.0, true,  "ON_DUTY"),
+                new EmployeeRow("Ján Kováč",       "CLEANER",     94.5, true,  "AVAILABLE"),
+                new EmployeeRow("Mária Tóthová",   "CLEANER",      0.0, false, "INACTIVE"),
+                new EmployeeRow("Tomáš Urban",     "CLEANER",     72.0, true,  "OFF_DUTY"),
+                new EmployeeRow("Katarína Veselá", "SUPERVISOR", 148.0, true,  "AVAILABLE"),
+                new EmployeeRow("Milan Dvořák",    "CLEANER",     38.0, true,  "OFF_DUTY")
+        );
+    }
+
+    public static void addEmployee(EmployeeRow e) { DATA.add(e); }
 
     @FXML private TextField searchField;
     @FXML private ComboBox<String> availabilityFilter;
@@ -35,23 +52,11 @@ public class EmployeeManagementController extends com.cleanmate.presentation.nav
     @FXML private Button editButton;
     @FXML private Button deactivateButton;
 
-    private final ObservableList<EmployeeRow> data = FXCollections.observableArrayList();
     private FilteredList<EmployeeRow> filtered;
 
     @FXML
     public void initialize() {
         LOG.info("Employee management initialized");
-
-        data.setAll(
-                new EmployeeRow("Anna Nová",       "CLEANER",    128.5, true,  "AVAILABLE"),
-                new EmployeeRow("Peter Malý",      "CLEANER",    142.0, true,  "ON_DUTY"),
-                new EmployeeRow("Eva Horváthová",  "SUPERVISOR", 160.0, true,  "ON_DUTY"),
-                new EmployeeRow("Ján Kováč",       "CLEANER",     94.5, true,  "AVAILABLE"),
-                new EmployeeRow("Mária Tóthová",   "CLEANER",      0.0, false, "INACTIVE"),
-                new EmployeeRow("Tomáš Urban",     "CLEANER",     72.0, true,  "OFF_DUTY"),
-                new EmployeeRow("Katarína Veselá", "SUPERVISOR", 148.0, true,  "AVAILABLE"),
-                new EmployeeRow("Milan Dvořák",    "CLEANER",     38.0, true,  "OFF_DUTY")
-        );
 
         colName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colRole.setCellValueFactory(new PropertyValueFactory<>("role"));
@@ -95,8 +100,20 @@ public class EmployeeManagementController extends com.cleanmate.presentation.nav
                 ALL, "AVAILABLE", "ON_DUTY", "OFF_DUTY", "INACTIVE"));
         availabilityFilter.getSelectionModel().selectFirst();
 
-        filtered = new FilteredList<>(data, r -> true);
+        filtered = new FilteredList<>(DATA, r -> true);
         table.setItems(filtered);
+
+        // Row click → navigate to AddEmployeeView in view/edit mode
+        table.setRowFactory(tv -> {
+            TableRow<EmployeeRow> row = new TableRow<>();
+            row.setOnMouseClicked(ev -> {
+                if (!row.isEmpty() && ev.getClickCount() >= 1) {
+                    AddEmployeeController.editTarget = row.getItem();
+                    navAddEmployee();
+                }
+            });
+            return row;
+        });
 
         searchField.textProperty().addListener((obs, o, n) -> applyFilter());
         availabilityFilter.valueProperty().addListener((obs, o, n) -> applyFilter());
@@ -126,7 +143,7 @@ public class EmployeeManagementController extends com.cleanmate.presentation.nav
             return true;
         });
 
-        countLabel.setText("Zobrazených: " + filtered.size() + " / " + data.size());
+        countLabel.setText("Zobrazených: " + filtered.size() + " / " + DATA.size());
     }
 
     @FXML private void onAdd() {

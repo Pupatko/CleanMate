@@ -29,4 +29,9 @@ public class CustomerRow {
     public String getPhone() { return phone.get(); }
     public int getPropertyCount() { return propertyCount.get(); }
     public String getNote() { return note.get(); }
+
+    public void setName(String v)  { name.set(v); }
+    public void setEmail(String v) { email.set(v); }
+    public void setPhone(String v) { phone.set(v); }
+    public void setNote(String v)  { note.set(v); }
 }

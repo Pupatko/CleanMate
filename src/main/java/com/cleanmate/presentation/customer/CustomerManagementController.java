@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -18,6 +19,22 @@ import java.util.regex.PatternSyntaxException;
 public class CustomerManagementController extends com.cleanmate.presentation.nav.BaseNavController {
 
     private static final Logger LOG = Logger.getLogger(CustomerManagementController.class.getName());
+
+    private static final ObservableList<CustomerRow> DATA = FXCollections.observableArrayList();
+    static {
+        DATA.addAll(
+                new CustomerRow("Acme Rentals s.r.o.",     "info@acme-rentals.sk", "+421 902 111 222", 12, "Platinum klient, zmluva do 2027"),
+                new CustomerRow("Jana Kováčová",           "jana.kovacova@gmail.com", "+421 905 333 444", 2, "Dva apartmány v Starom Meste"),
+                new CustomerRow("Bratislava Stays s.r.o.", "kontakt@bastays.sk", "+421 903 555 666", 28, "Najväčší zákazník, vyžaduje týždenné reporty"),
+                new CustomerRow("Martin Novák",            "m.novak@seznam.cz", "+421 907 777 888", 1, "Apartmán Panská 12"),
+                new CustomerRow("Riverside Apartments",    "hello@riverside.sk", "+421 904 999 000", 6, "Nábrežie Dunaja"),
+                new CustomerRow("Eva Horáková",            "eva.horakova@outlook.com", "+421 910 123 456", 3, "Individuálna klientka"),
+                new CustomerRow("City Nest Bratislava",    "booking@citynest.sk", "+421 908 234 567", 9, "Boutique apartmány"),
+                new CustomerRow("Peter Svoboda",           "p.svoboda@gmail.com", "+421 911 345 678", 1, "Nový zákazník od 2026-03")
+        );
+    }
+
+    public static void addCustomer(CustomerRow c) { DATA.add(c); }
 
     @FXML private TextField searchField;
     @FXML private Label searchHintLabel;
@@ -38,31 +55,31 @@ public class CustomerManagementController extends com.cleanmate.presentation.nav
     @FXML private Button editButton;
     @FXML private Button showPropertiesButton;
 
-    private final ObservableList<CustomerRow> data = FXCollections.observableArrayList();
     private FilteredList<CustomerRow> filtered;
 
     @FXML
     public void initialize() {
         LOG.info("Customer management initialized");
 
-        data.setAll(
-                new CustomerRow("Acme Rentals s.r.o.", "info@acme-rentals.sk", "+421 902 111 222", 12, "Platinum klient, zmluva do 2027"),
-                new CustomerRow("Jana Kováčová", "jana.kovacova@gmail.com", "+421 905 333 444", 2, "Dva apartmány v Starom Meste"),
-                new CustomerRow("Bratislava Stays s.r.o.", "kontakt@bastays.sk", "+421 903 555 666", 28, "Najväčší zákazník, vyžaduje týždenné reporty"),
-                new CustomerRow("Martin Novák", "m.novak@seznam.cz", "+421 907 777 888", 1, "Apartmán Panská 12"),
-                new CustomerRow("Riverside Apartments", "hello@riverside.sk", "+421 904 999 000", 6, "Nábrežie Dunaja"),
-                new CustomerRow("Eva Horáková", "eva.horakova@outlook.com", "+421 910 123 456", 3, "Individuálna klientka"),
-                new CustomerRow("City Nest Bratislava", "booking@citynest.sk", "+421 908 234 567", 9, "Boutique apartmány"),
-                new CustomerRow("Peter Svoboda", "p.svoboda@gmail.com", "+421 911 345 678", 1, "Nový zákazník od 2026-03")
-        );
-
         colName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         colPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
         colProperties.setCellValueFactory(new PropertyValueFactory<>("propertyCount"));
 
-        filtered = new FilteredList<>(data, r -> true);
+        filtered = new FilteredList<>(DATA, r -> true);
         table.setItems(filtered);
+
+        // Row click → navigate to EditCustomerView
+        table.setRowFactory(tv -> {
+            TableRow<CustomerRow> row = new TableRow<>();
+            row.setOnMouseClicked(ev -> {
+                if (!row.isEmpty() && ev.getClickCount() >= 1) {
+                    EditCustomerController.editTarget = row.getItem();
+                    navEditCustomer();
+                }
+            });
+            return row;
+        });
 
         searchField.textProperty().addListener((obs, o, n) -> applyRegexFilter(n));
         table.getSelectionModel().selectedItemProperty().addListener((obs, o, n) -> showDetail(n));
@@ -117,10 +134,16 @@ public class CustomerManagementController extends com.cleanmate.presentation.nav
         detailNote.setText(r.getNote());
     }
 
-    @FXML private void onAdd() { LOG.info("Add customer clicked"); }
+    @FXML private void onAdd() {
+        EditCustomerController.editTarget = null;
+        navEditCustomer();
+    }
     @FXML private void onEdit() {
         CustomerRow r = table.getSelectionModel().getSelectedItem();
-        if (r != null) LOG.info("Edit customer: " + r.getName());
+        if (r != null) {
+            EditCustomerController.editTarget = r;
+            navEditCustomer();
+        }
     }
     @FXML private void onShowProperties() {
         CustomerRow r = table.getSelectionModel().getSelectedItem();
