@@ -25,6 +25,7 @@ public class ApartmentManagementController extends com.cleanmate.presentation.na
 
     public static void addApartment(ApartmentItem a)    { DATA.add(a); }
     public static void removeApartment(ApartmentItem a) { DATA.remove(a); }
+    public static ObservableList<ApartmentItem> data()  { return DATA; }
 
     @FXML private TextField searchField;
     @FXML private Label countLabel;

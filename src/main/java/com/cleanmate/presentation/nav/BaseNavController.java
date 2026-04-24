@@ -9,6 +9,7 @@ public abstract class BaseNavController {
     public void navApartments()    { ViewRouter.get().navigate(Route.APARTMENTS); }
     public void navEditApartment() { ViewRouter.get().navigate(Route.EDIT_APARTMENT); }
     public void navEditCustomer()  { ViewRouter.get().navigate(Route.EDIT_CUSTOMER); }
+    public void navOwnerInvoices() { ViewRouter.get().navigate(Route.OWNER_INVOICES); }
     public void navEmployees()     { ViewRouter.get().navigate(Route.EMPLOYEES); }
     public void navAddEmployee()   { ViewRouter.get().navigate(Route.ADD_EMPLOYEE); }
     public void navMySchedule()   { ViewRouter.get().navigate(Route.MY_SCHEDULE); }

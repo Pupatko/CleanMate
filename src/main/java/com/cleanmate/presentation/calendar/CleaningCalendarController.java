@@ -46,6 +46,7 @@ public class CleaningCalendarController extends BaseNavController {
     static { DATA.addAll(sampleData()); }
 
     public static void addEvent(CalendarCleaningItem item) { DATA.add(item); }
+    public static ObservableList<CalendarCleaningItem> data() { return DATA; }
 
     @FXML private ComboBox<String> employeeCombo;
     @FXML private ComboBox<String> statusCombo;

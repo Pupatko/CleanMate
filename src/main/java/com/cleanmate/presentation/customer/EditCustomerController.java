@@ -29,6 +29,7 @@ public class EditCustomerController extends BaseNavController {
     @FXML private Button editButton;
     @FXML private Button cancelEditButton;
     @FXML private Button confirmButton;
+    @FXML private Button invoicesButton;
 
     private CustomerRow target;
     private boolean addMode;
@@ -49,6 +50,8 @@ public class EditCustomerController extends BaseNavController {
             editButton.setManaged(false);
             confirmButton.setText("Uložiť zákazníka");
             cancelEditButton.setText("Zrušiť");
+            invoicesButton.setVisible(false);
+            invoicesButton.setManaged(false);
         } else {
             pageTitle.setText(target.getName());
             pageSubtitle.setText("Detail zákazníka");
@@ -147,4 +150,11 @@ public class EditCustomerController extends BaseNavController {
 
     @FXML
     private void onBack() { navCustomers(); }
+
+    @FXML
+    private void onShowInvoices() {
+        if (addMode || target == null) return;
+        CustomerInvoicesController.target = target;
+        navOwnerInvoices();
+    }
 }

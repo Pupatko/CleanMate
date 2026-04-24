@@ -10,6 +10,7 @@ public enum Route {
     APARTMENTS      ("/fxml/ApartmentManagementView.fxml",  "CleanMate – Apartmány"),
     EDIT_APARTMENT  ("/fxml/EditApartmentView.fxml",        "CleanMate – Apartmán"),
     EDIT_CUSTOMER   ("/fxml/EditCustomerView.fxml",         "CleanMate – Zákazník"),
+    OWNER_INVOICES  ("/fxml/CustomerInvoicesView.fxml",     "CleanMate – Fakturácia zákazníka"),
     EMPLOYEES       ("/fxml/EmployeeManagementView.fxml",   "CleanMate – Zamestnanci"),
     ADD_EMPLOYEE    ("/fxml/AddEmployeeView.fxml",          "CleanMate – Zamestnanec"),
     MY_SCHEDULE     ("/fxml/MyScheduleView.fxml",           "CleanMate – Môj plán"),
