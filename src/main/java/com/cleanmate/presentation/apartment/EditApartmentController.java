@@ -3,6 +3,9 @@ package com.cleanmate.presentation.apartment;
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.ChangeSummary;
+import com.cleanmate.presentation.util.ConfirmDialog;
+
+import java.text.MessageFormat;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -234,11 +237,14 @@ public class EditApartmentController extends BaseNavController {
 
     @FXML
     private void onDelete() {
-        if (target != null) {
-            ApartmentManagementController.removeApartment(target);
-            LOG.info("Deleted apartment: " + target.getAddress());
-            navApartments();
-        }
+        if (target == null) return;
+        String msg = MessageFormat.format(
+                LanguageManager.getBundle().getString("confirm.delete.apartment.content"),
+                target.getAddress());
+        if (!ConfirmDialog.show("confirm.delete.apartment.header", msg)) return;
+        ApartmentManagementController.removeApartment(target);
+        LOG.info("Deleted apartment: " + target.getAddress());
+        navApartments();
     }
 
     @FXML

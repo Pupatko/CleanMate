@@ -1,5 +1,6 @@
 package com.cleanmate.presentation.nav;
 
+import com.cleanmate.presentation.util.ConfirmDialog;
 import java.util.Locale;
 
 public abstract class BaseNavController {
@@ -22,7 +23,12 @@ public abstract class BaseNavController {
     public void navProfile()       { ViewRouter.get().navigate(Route.EMPLOYEE_PROFILE); }
     public void navProperties()    { ViewRouter.get().navigate(Route.MY_PROPERTIES); }
     public void navInvoices()      { ViewRouter.get().navigate(Route.INVOICES); }
-    public void navLogout()        { ViewRouter.get().navigate(Route.LOGIN); }
+    public void navLogout() {
+        if (ConfirmDialog.show("confirm.logout.header",
+                LanguageManager.getBundle().getString("confirm.logout.content"))) {
+            ViewRouter.get().navigate(Route.LOGIN);
+        }
+    }
     public void navBack()          { ViewRouter.get().back(); }
 
     public void onLangSk() {

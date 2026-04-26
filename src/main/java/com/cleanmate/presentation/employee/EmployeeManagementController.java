@@ -1,6 +1,7 @@
 package com.cleanmate.presentation.employee;
 
 import com.cleanmate.presentation.nav.LanguageManager;
+import com.cleanmate.presentation.util.ConfirmDialog;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -160,11 +161,14 @@ public class EmployeeManagementController extends com.cleanmate.presentation.nav
     }
     @FXML private void onDeactivate() {
         EmployeeRow r = table.getSelectionModel().getSelectedItem();
-        if (r != null) {
-            r.activeProperty().set(false);
-            r.availabilityProperty().set("INACTIVE");
-            table.refresh();
-            LOG.info("Deactivated: " + r.getName());
-        }
+        if (r == null) return;
+        String msg = java.text.MessageFormat.format(
+                LanguageManager.getBundle().getString("confirm.deactivate.employee.content"),
+                r.getName());
+        if (!ConfirmDialog.show("confirm.deactivate.employee.header", msg)) return;
+        r.activeProperty().set(false);
+        r.availabilityProperty().set("INACTIVE");
+        table.refresh();
+        LOG.info("Deactivated: " + r.getName());
     }
 }

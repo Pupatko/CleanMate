@@ -1,6 +1,7 @@
 package com.cleanmate.presentation.detail;
 
 import com.cleanmate.presentation.nav.LanguageManager;
+import com.cleanmate.presentation.util.ConfirmDialog;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -214,6 +215,8 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
 
     @FXML
     private void onCancel() {
+        if (!ConfirmDialog.show("confirm.cancel.cleaning.header",
+                LanguageManager.getBundle().getString("confirm.cancel.cleaning.content"))) return;
         statusCombo.setValue("CANCELLED");
         LOG.info("Cleaning cancelled");
     }
