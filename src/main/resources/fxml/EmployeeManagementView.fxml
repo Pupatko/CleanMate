@@ -22,15 +22,19 @@
         <VBox styleClass="sidebar" prefWidth="220" spacing="4">
             <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
             <Label text="CleanMate" styleClass="sidebar-brand"/>
-            <Label text="Firma" styleClass="sidebar-subtitle"/>
+            <Label text="%role.firma" styleClass="sidebar-subtitle"/>
             <Region prefHeight="20"/>
-            <Button text="Dashboard" onAction="#navDashboard" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Upratovania" onAction="#navCalendar" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Zákazníci" onAction="#navCustomers" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Apartmány" onAction="#navApartments" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Zamestnanci" onAction="#navEmployees" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="%nav.dashboard" onAction="#navDashboard" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.upratovania" onAction="#navCalendar" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.zakaznici" onAction="#navCustomers" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.apartmany" onAction="#navApartments" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.zamestnanci" onAction="#navEmployees" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
-            <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+            <HBox spacing="4">
+                <Button text="SK" onAction="#onLangSk" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="EN" onAction="#onLangEn" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            </HBox>
+            <Button text="%nav.odhlasit" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
         </VBox>
     </left>
 
@@ -40,37 +44,37 @@
 
             <HBox alignment="CENTER_LEFT" spacing="12">
                 <VBox spacing="4">
-                    <Label text="Zamestnanci" styleClass="page-title"/>
-                    <Label text="Správa upratovacieho tímu" styleClass="page-subtitle"/>
+                    <Label text="%employees.title" styleClass="page-title"/>
+                    <Label text="%employees.subtitle" styleClass="page-subtitle"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button fx:id="editButton" text="Editovať" onAction="#onEdit" styleClass="secondary-button"/>
-                <Button fx:id="deactivateButton" text="Deaktivovať" onAction="#onDeactivate" styleClass="danger-button"/>
-                <Button text="+ Pridať zamestnanca" onAction="#onAdd" styleClass="primary-button"/>
+                <Button fx:id="editButton" text="%btn.edit.customer" onAction="#onEdit" styleClass="secondary-button"/>
+                <Button fx:id="deactivateButton" text="%btn.deactivate" onAction="#onDeactivate" styleClass="danger-button"/>
+                <Button text="%employees.add" onAction="#onAdd" styleClass="primary-button"/>
             </HBox>
 
             <HBox spacing="12" styleClass="filter-bar" alignment="CENTER_LEFT">
                 <VBox spacing="4" HBox.hgrow="ALWAYS">
-                    <Label text="Vyhľadávanie (meno, rola)" styleClass="field-label"/>
-                    <TextField fx:id="searchField" promptText="napr. Anna, SUPERVISOR" styleClass="input"/>
+                    <Label text="%employees.search.label" styleClass="field-label"/>
+                    <TextField fx:id="searchField" promptText="%employees.search.prompt" styleClass="input"/>
                 </VBox>
                 <VBox spacing="4">
-                    <Label text="Dostupnosť" styleClass="field-label"/>
+                    <Label text="%employees.filter.availability" styleClass="field-label"/>
                     <ComboBox fx:id="availabilityFilter" prefWidth="180" styleClass="input"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
                 <VBox spacing="4" alignment="CENTER_RIGHT">
-                    <Label fx:id="countLabel" text="Zobrazených: 0 / 0" styleClass="page-subtitle"/>
+                    <Label fx:id="countLabel" text="0 / 0" styleClass="page-subtitle"/>
                 </VBox>
             </HBox>
 
             <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
                 <columns>
-                    <TableColumn fx:id="colName" text="Meno" prefWidth="220"/>
-                    <TableColumn fx:id="colRole" text="Rola" prefWidth="140"/>
-                    <TableColumn fx:id="colHours" text="Hodiny (mesiac)" prefWidth="150"/>
-                    <TableColumn fx:id="colAvailability" text="Dostupnosť" prefWidth="160"/>
-                    <TableColumn fx:id="colActive" text="Aktívny" prefWidth="140"/>
+                    <TableColumn fx:id="colName"         text="%col.employee.name"         prefWidth="220"/>
+                    <TableColumn fx:id="colRole"         text="%col.employee.role"         prefWidth="140"/>
+                    <TableColumn fx:id="colHours"        text="%col.employee.hours"        prefWidth="150"/>
+                    <TableColumn fx:id="colAvailability" text="%col.employee.availability" prefWidth="160"/>
+                    <TableColumn fx:id="colActive"       text="%col.employee.active"       prefWidth="140"/>
                 </columns>
             </TableView>
         </VBox>

@@ -20,13 +20,17 @@
         <VBox styleClass="sidebar" prefWidth="220" spacing="4">
             <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
             <Label text="CleanMate" styleClass="sidebar-brand"/>
-            <Label text="Zákazník" styleClass="sidebar-subtitle"/>
+            <Label text="%role.zakaznik" styleClass="sidebar-subtitle"/>
             <Region prefHeight="20"/>
-            <Button text="Prehľad upratovaní" onAction="#navPortal" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Moje apartmány" onAction="#navProperties" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Faktúry" onAction="#navInvoices" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="%nav.prehlad.upratovani" onAction="#navPortal" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.moje.apartmany" onAction="#navProperties" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.faktury" onAction="#navInvoices" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
-            <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+            <HBox spacing="4">
+                <Button text="SK" onAction="#onLangSk" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="EN" onAction="#onLangEn" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            </HBox>
+            <Button text="%nav.odhlasit" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
         </VBox>
     </left>
 
@@ -36,37 +40,37 @@
 
             <HBox alignment="CENTER_LEFT" spacing="12">
                 <VBox spacing="4">
-                    <Label text="Faktúry" styleClass="page-title"/>
-                    <Label text="Mesačné faktúry od upratovacej firmy" styleClass="page-subtitle"/>
+                    <Label text="%invoices.customer.title" styleClass="page-title"/>
+                    <Label text="%invoices.customer.subtitle" styleClass="page-subtitle"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button fx:id="downloadButton" text="⬇ Stiahnuť faktúru (XML)"
+                <Button fx:id="downloadButton" text="%invoices.customer.download"
                         onAction="#onDownload" styleClass="primary-button"/>
             </HBox>
 
             <HBox spacing="16">
                 <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">
                     <Label fx:id="yearTotalLabel" text="0 €" styleClass="card-value"/>
-                    <Label text="Zaplatené tento rok" styleClass="card-label"/>
+                    <Label text="%invoices.customer.card.year" styleClass="card-label"/>
                 </VBox>
                 <VBox styleClass="summary-card, card-warning" HBox.hgrow="ALWAYS">
                     <Label fx:id="unpaidLabel" text="0 €" styleClass="card-value"/>
-                    <Label text="Nezaplatené" styleClass="card-label"/>
+                    <Label text="%invoices.customer.card.unpaid" styleClass="card-label"/>
                 </VBox>
                 <VBox styleClass="summary-card, card-info" HBox.hgrow="ALWAYS">
                     <Label fx:id="countLabel" text="0" styleClass="card-value"/>
-                    <Label text="Celkom faktúr" styleClass="card-label"/>
+                    <Label text="%invoices.customer.card.count" styleClass="card-label"/>
                 </VBox>
             </HBox>
 
             <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
                 <columns>
-                    <TableColumn fx:id="colNumber" text="Číslo" prefWidth="130"/>
-                    <TableColumn fx:id="colPeriod" text="Obdobie" prefWidth="150"/>
-                    <TableColumn fx:id="colDueDate" text="Splatnosť" prefWidth="120"/>
-                    <TableColumn fx:id="colCleanings" text="Upratovaní" prefWidth="100"/>
-                    <TableColumn fx:id="colAmount" text="Suma" prefWidth="120"/>
-                    <TableColumn fx:id="colStatus" text="Stav" prefWidth="110"/>
+                    <TableColumn fx:id="colNumber"   text="%col.invoices.number"   prefWidth="130"/>
+                    <TableColumn fx:id="colPeriod"   text="%col.invoices.period"   prefWidth="150"/>
+                    <TableColumn fx:id="colDueDate"  text="%col.invoices.due"      prefWidth="120"/>
+                    <TableColumn fx:id="colCleanings" text="%col.invoices.cleanings" prefWidth="100"/>
+                    <TableColumn fx:id="colAmount"   text="%col.invoices.amount"   prefWidth="120"/>
+                    <TableColumn fx:id="colStatus"   text="%col.invoices.status"   prefWidth="110"/>
                 </columns>
             </TableView>
         </VBox>

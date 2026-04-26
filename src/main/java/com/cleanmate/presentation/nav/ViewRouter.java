@@ -48,12 +48,21 @@ public final class ViewRouter {
         }
     }
 
+    public void reload() {
+        if (!history.isEmpty()) {
+            Route current = history.pop();
+            navigate(current, true);
+        }
+    }
+
     private void navigate(Route route, boolean pushHistory) {
         try {
             LOG.info("Navigate -> " + route);
-            Parent root = FXMLLoader.load(Objects.requireNonNull(
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(
                     getClass().getResource(route.fxml),
                     "Missing FXML resource: " + route.fxml));
+            loader.setResources(LanguageManager.getBundle());
+            Parent root = loader.load();
 
             Scene scene = stage.getScene();
             if (scene == null) {
@@ -64,7 +73,7 @@ public final class ViewRouter {
             } else {
                 scene.setRoot(root);
             }
-            stage.setTitle(route.title);
+            stage.setTitle(LanguageManager.getBundle().getString(route.titleKey));
 
             if (pushHistory) history.push(route);
         } catch (IOException e) {

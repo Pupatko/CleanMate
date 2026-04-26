@@ -21,13 +21,17 @@
         <VBox styleClass="sidebar" prefWidth="220" spacing="4">
             <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
             <Label text="CleanMate" styleClass="sidebar-brand"/>
-            <Label text="Zamestnanec" styleClass="sidebar-subtitle"/>
+            <Label text="%role.zamestnanec" styleClass="sidebar-subtitle"/>
             <Region prefHeight="20"/>
-            <Button text="Môj plán" onAction="#navMySchedule" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="História" onAction="#navHistory" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Profil" onAction="#navProfile" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="%nav.moj.plan" onAction="#navMySchedule" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.historia" onAction="#navHistory" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.profil" onAction="#navProfile" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
-            <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+            <HBox spacing="4">
+                <Button text="SK" onAction="#onLangSk" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="EN" onAction="#onLangEn" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            </HBox>
+            <Button text="%nav.odhlasit" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
         </VBox>
     </left>
 
@@ -36,8 +40,8 @@
             <padding><Insets top="28" right="32" bottom="24" left="32"/></padding>
 
             <VBox spacing="4">
-                <Label text="Môj profil" styleClass="page-title"/>
-                <Label text="Osobné údaje a štatistiky" styleClass="page-subtitle"/>
+                <Label text="%profile.title" styleClass="page-title"/>
+                <Label text="%profile.subtitle" styleClass="page-subtitle"/>
             </VBox>
 
             <HBox spacing="16" styleClass="form-card" alignment="CENTER_LEFT">
@@ -55,21 +59,21 @@
             <HBox spacing="16">
                 <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">
                     <Label fx:id="totalHoursLabel" text="0 h" styleClass="card-value"/>
-                    <Label text="Hodiny tento mesiac" styleClass="card-label"/>
+                    <Label text="%profile.card.hours" styleClass="card-label"/>
                 </VBox>
                 <VBox styleClass="summary-card, card-info" HBox.hgrow="ALWAYS">
                     <Label fx:id="totalTasksLabel" text="0" styleClass="card-value"/>
-                    <Label text="Dokončené úlohy celkom" styleClass="card-label"/>
+                    <Label text="%profile.card.tasks" styleClass="card-label"/>
                 </VBox>
                 <VBox styleClass="summary-card, card-success" HBox.hgrow="ALWAYS">
                     <Label fx:id="avgRatingLabel" text="0" styleClass="card-value"/>
-                    <Label text="Priemerné hodnotenie" styleClass="card-label"/>
+                    <Label text="%profile.card.rating" styleClass="card-label"/>
                 </VBox>
             </HBox>
 
             <VBox spacing="12" styleClass="form-card" VBox.vgrow="ALWAYS">
                 <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>
-                <Label text="Osobné údaje" styleClass="section-title"/>
+                <Label text="%profile.section" styleClass="section-title"/>
 
                 <GridPane hgap="16" vgap="10">
                     <columnConstraints>
@@ -77,19 +81,19 @@
                         <javafx.scene.layout.ColumnConstraints percentWidth="50"/>
                     </columnConstraints>
                     <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                        <Label text="Meno" styleClass="field-label"/>
+                        <Label text="%profile.field.firstname" styleClass="field-label"/>
                         <TextField fx:id="firstNameField" styleClass="input"/>
                     </VBox>
                     <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                        <Label text="Priezvisko" styleClass="field-label"/>
+                        <Label text="%profile.field.lastname" styleClass="field-label"/>
                         <TextField fx:id="lastNameField" styleClass="input"/>
                     </VBox>
                     <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                        <Label text="Email" styleClass="field-label"/>
+                        <Label text="%profile.field.email" styleClass="field-label"/>
                         <TextField fx:id="emailField" styleClass="input"/>
                     </VBox>
                     <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                        <Label text="Telefón" styleClass="field-label"/>
+                        <Label text="%profile.field.phone" styleClass="field-label"/>
                         <TextField fx:id="phoneField" styleClass="input"/>
                     </VBox>
                 </GridPane>
@@ -97,9 +101,9 @@
                 <Label fx:id="saveStatusLabel" text=""/>
 
                 <HBox spacing="10" alignment="CENTER_RIGHT">
-                    <Button text="Zmeniť heslo" onAction="#onChangePassword" styleClass="secondary-button"/>
+                    <Button text="%profile.btn.password" onAction="#onChangePassword" styleClass="secondary-button"/>
                     <Region HBox.hgrow="ALWAYS"/>
-                    <Button fx:id="saveButton" text="Uložiť zmeny" onAction="#onSave" styleClass="primary-button"/>
+                    <Button fx:id="saveButton" text="%profile.btn.save" onAction="#onSave" styleClass="primary-button"/>
                 </HBox>
             </VBox>
         </VBox>

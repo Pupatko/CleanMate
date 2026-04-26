@@ -1,5 +1,6 @@
 package com.cleanmate.presentation;
 
+import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.nav.Route;
 import com.cleanmate.presentation.nav.ViewRouter;
 import javafx.collections.FXCollections;
@@ -10,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
+import java.util.Locale;
 import java.util.logging.Logger;
 
 public class LoginController {
@@ -35,7 +37,7 @@ public class LoginController {
         String role = roleCombo.getValue();
 
         if (username.isEmpty() || password.isEmpty() || role == null) {
-            showError("Vyplňte meno, heslo a rolu.");
+            showError(LanguageManager.getBundle().getString("login.error.fields"));
             LOG.warning("Login attempt failed: missing fields (user='" + username + "', role=" + role + ")");
             return;
         }
@@ -49,6 +51,18 @@ public class LoginController {
             default            -> Route.DASHBOARD;
         };
         ViewRouter.get().navigate(target);
+    }
+
+    @FXML
+    public void onLangSk() {
+        LanguageManager.setLocale(Locale.forLanguageTag("sk"));
+        ViewRouter.get().navigate(Route.LOGIN);
+    }
+
+    @FXML
+    public void onLangEn() {
+        LanguageManager.setLocale(Locale.ENGLISH);
+        ViewRouter.get().navigate(Route.LOGIN);
     }
 
     private void showError(String message) {

@@ -23,13 +23,17 @@
         <VBox styleClass="sidebar" prefWidth="220" spacing="4">
             <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
             <Label text="CleanMate" styleClass="sidebar-brand"/>
-            <Label text="Zákazník" styleClass="sidebar-subtitle"/>
+            <Label text="%role.zakaznik" styleClass="sidebar-subtitle"/>
             <Region prefHeight="20"/>
-            <Button text="Prehľad upratovaní" onAction="#navPortal" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
-            <Button text="Moje apartmány" onAction="#navProperties" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Faktúry" onAction="#navInvoices" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.prehlad.upratovani" onAction="#navPortal" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="%nav.moje.apartmany" onAction="#navProperties" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.faktury" onAction="#navInvoices" styleClass="nav-button" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
-            <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+            <HBox spacing="4">
+                <Button text="SK" onAction="#onLangSk" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="EN" onAction="#onLangEn" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            </HBox>
+            <Button text="%nav.odhlasit" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
         </VBox>
     </left>
 
@@ -39,21 +43,21 @@
 
             <HBox alignment="CENTER_LEFT" spacing="12">
                 <VBox spacing="4">
-                    <Label text="Prehľad upratovaní" styleClass="page-title"/>
-                    <Label text="História a QC dokumentácia vašich apartmánov (read-only)" styleClass="page-subtitle"/>
+                    <Label text="%portal.title" styleClass="page-title"/>
+                    <Label text="%portal.subtitle" styleClass="page-subtitle"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button text="⬇ Exportovať XML report" onAction="#onExportXml" styleClass="primary-button"/>
+                <Button text="%portal.export" onAction="#onExportXml" styleClass="primary-button"/>
             </HBox>
 
             <HBox spacing="12" styleClass="filter-bar" alignment="CENTER_LEFT">
                 <VBox spacing="4">
-                    <Label text="Apartmán" styleClass="field-label"/>
+                    <Label text="%portal.filter.property" styleClass="field-label"/>
                     <ComboBox fx:id="propertyFilter" prefWidth="280" styleClass="input"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
                 <VBox spacing="4" alignment="CENTER_RIGHT">
-                    <Label fx:id="countLabel" text="Záznamov: 0 / 0" styleClass="page-subtitle"/>
+                    <Label fx:id="countLabel" text="0 / 0" styleClass="page-subtitle"/>
                 </VBox>
             </HBox>
 
@@ -61,29 +65,29 @@
 
                 <TableView fx:id="table" HBox.hgrow="ALWAYS" styleClass="data-table">
                     <columns>
-                        <TableColumn fx:id="colDate" text="Dátum" prefWidth="110"/>
-                        <TableColumn fx:id="colProperty" text="Apartmán" prefWidth="220"/>
-                        <TableColumn fx:id="colEmployee" text="Zamestnanec" prefWidth="160"/>
-                        <TableColumn fx:id="colStatus" text="Stav" prefWidth="120"/>
-                        <TableColumn fx:id="colPhotos" text="Fotky" prefWidth="80"/>
-                        <TableColumn fx:id="colRating" text="Hodnotenie" prefWidth="120"/>
+                        <TableColumn fx:id="colDate"     text="%col.portal.date"     prefWidth="110"/>
+                        <TableColumn fx:id="colProperty" text="%col.portal.property" prefWidth="220"/>
+                        <TableColumn fx:id="colEmployee" text="%col.portal.employee" prefWidth="160"/>
+                        <TableColumn fx:id="colStatus"   text="%col.portal.status"   prefWidth="120"/>
+                        <TableColumn fx:id="colPhotos"   text="%col.portal.photos"   prefWidth="80"/>
+                        <TableColumn fx:id="colRating"   text="%col.portal.rating"   prefWidth="120"/>
                     </columns>
                 </TableView>
 
                 <VBox spacing="10" prefWidth="380" styleClass="detail-card">
                     <padding><Insets top="18" right="18" bottom="18" left="18"/></padding>
 
-                    <Label text="QC Report" styleClass="section-title"/>
+                    <Label text="%portal.qc.title" styleClass="section-title"/>
 
                     <Label fx:id="qcPlaceholder" styleClass="empty-hint" wrapText="true"
-                           text="Vyberte záznam v tabuľke pre zobrazenie QC reportu s fotkami."/>
+                           text="%portal.qc.hint"/>
 
                     <Label fx:id="qcTitle" styleClass="detail-name" wrapText="true"/>
                     <Label fx:id="qcMeta" styleClass="detail-field" wrapText="true"/>
                     <Label fx:id="qcRating" styleClass="qc-rating"/>
                     <Label fx:id="qcNote" styleClass="detail-note" wrapText="true"/>
 
-                    <Label text="Fotodokumentácia" styleClass="field-label"/>
+                    <Label text="%portal.qc.photos" styleClass="field-label"/>
                     <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="photo-scroll">
                         <FlowPane fx:id="qcPhotos" hgap="8" vgap="8"/>
                     </ScrollPane>

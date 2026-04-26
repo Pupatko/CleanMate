@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns="http://javafx.com/javafx"
@@ -19,24 +20,29 @@
     </padding>
 
     <Label text="CleanMate" styleClass="app-title"/>
-    <Label text="Prihlásenie" styleClass="app-subtitle"/>
+    <Label text="%login.subtitle" styleClass="app-subtitle"/>
 
     <VBox spacing="6" styleClass="form-group">
-        <Label text="Používateľské meno" styleClass="field-label"/>
-        <TextField fx:id="usernameField" promptText="napr. admin" styleClass="input"/>
+        <Label text="%login.username" styleClass="field-label"/>
+        <TextField fx:id="usernameField" promptText="%login.username.prompt" styleClass="input"/>
     </VBox>
 
     <VBox spacing="6" styleClass="form-group">
-        <Label text="Heslo" styleClass="field-label"/>
+        <Label text="%login.password" styleClass="field-label"/>
         <PasswordField fx:id="passwordField" promptText="••••••••" styleClass="input"/>
     </VBox>
 
     <VBox spacing="6" styleClass="form-group">
-        <Label text="Rola" styleClass="field-label"/>
+        <Label text="%login.role" styleClass="field-label"/>
         <ComboBox fx:id="roleCombo" styleClass="input" maxWidth="Infinity"/>
     </VBox>
 
     <Label fx:id="errorLabel" styleClass="error-label" managed="true" visible="false"/>
 
-    <Button text="Prihlásiť sa" onAction="#onLogin" styleClass="primary-button" maxWidth="Infinity"/>
+    <Button text="%login.submit" onAction="#onLogin" styleClass="primary-button" maxWidth="Infinity"/>
+
+    <HBox spacing="8" alignment="CENTER">
+        <Button text="SK" onAction="#onLangSk" styleClass="lang-button"/>
+        <Button text="EN" onAction="#onLangEn" styleClass="lang-button"/>
+    </HBox>
 </VBox>

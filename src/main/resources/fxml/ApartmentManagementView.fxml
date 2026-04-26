@@ -21,15 +21,19 @@
         <VBox styleClass="sidebar" prefWidth="220" spacing="4">
             <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
             <Label text="CleanMate" styleClass="sidebar-brand"/>
-            <Label text="Firma" styleClass="sidebar-subtitle"/>
+            <Label text="%role.firma" styleClass="sidebar-subtitle"/>
             <Region prefHeight="20"/>
-            <Button text="Dashboard" onAction="#navDashboard" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Upratovania" onAction="#navCalendar" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Zákazníci" onAction="#navCustomers" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Apartmány" onAction="#navApartments" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
-            <Button text="Zamestnanci" onAction="#navEmployees" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.dashboard" onAction="#navDashboard" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.upratovania" onAction="#navCalendar" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.zakaznici" onAction="#navCustomers" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.apartmany" onAction="#navApartments" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="%nav.zamestnanci" onAction="#navEmployees" styleClass="nav-button" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
-            <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+            <HBox spacing="4">
+                <Button text="SK" onAction="#onLangSk" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="EN" onAction="#onLangEn" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            </HBox>
+            <Button text="%nav.odhlasit" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
         </VBox>
     </left>
 
@@ -39,31 +43,31 @@
 
             <HBox alignment="CENTER_LEFT" spacing="12">
                 <VBox spacing="4">
-                    <Label text="Apartmány" styleClass="page-title"/>
-                    <Label text="Kliknite na apartmán pre zobrazenie detailu a cleaning plánu" styleClass="page-subtitle"/>
+                    <Label text="%apartments.title" styleClass="page-title"/>
+                    <Label text="%apartments.subtitle" styleClass="page-subtitle"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button text="+ Pridať apartmán" onAction="#onAdd" styleClass="primary-button"/>
+                <Button text="%apartments.add" onAction="#onAdd" styleClass="primary-button"/>
             </HBox>
 
             <HBox spacing="12" styleClass="filter-bar" alignment="CENTER_LEFT">
                 <VBox spacing="4" HBox.hgrow="ALWAYS">
-                    <Label text="Vyhľadávanie (adresa, zákazník)" styleClass="field-label"/>
-                    <TextField fx:id="searchField" promptText="napr. Panská, Acme..." styleClass="input"/>
+                    <Label text="%apartments.search.label" styleClass="field-label"/>
+                    <TextField fx:id="searchField" promptText="%apartments.search.prompt" styleClass="input"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
                 <VBox spacing="4" alignment="CENTER_RIGHT">
-                    <Label fx:id="countLabel" text="Apartmánov: 0" styleClass="page-subtitle"/>
+                    <Label fx:id="countLabel" text="0" styleClass="page-subtitle"/>
                 </VBox>
             </HBox>
 
             <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
                 <columns>
-                    <TableColumn fx:id="colAddress"  text="Adresa"        prefWidth="280"/>
-                    <TableColumn fx:id="colCustomer" text="Zákazník"      prefWidth="240"/>
-                    <TableColumn fx:id="colRooms"    text="Izby"          prefWidth="90"/>
-                    <TableColumn fx:id="colArea"     text="Plocha m²"     prefWidth="130"/>
-                    <TableColumn fx:id="colSteps"    text="Plán (úlohy)"  prefWidth="140"/>
+                    <TableColumn fx:id="colAddress"  text="%col.apartment.address"  prefWidth="280"/>
+                    <TableColumn fx:id="colCustomer" text="%col.apartment.customer" prefWidth="240"/>
+                    <TableColumn fx:id="colRooms"    text="%col.apartment.rooms"    prefWidth="90"/>
+                    <TableColumn fx:id="colArea"     text="%col.apartment.area"     prefWidth="130"/>
+                    <TableColumn fx:id="colSteps"    text="%col.apartment.steps"    prefWidth="140"/>
                 </columns>
             </TableView>
         </VBox>

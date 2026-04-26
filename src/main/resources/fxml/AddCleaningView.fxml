@@ -23,15 +23,19 @@
         <VBox styleClass="sidebar" prefWidth="220" spacing="4">
             <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
             <Label text="CleanMate" styleClass="sidebar-brand"/>
-            <Label text="Firma" styleClass="sidebar-subtitle"/>
+            <Label text="%role.firma" styleClass="sidebar-subtitle"/>
             <Region prefHeight="20"/>
-            <Button text="Dashboard" onAction="#navDashboard" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Upratovania" onAction="#navCalendar" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
-            <Button text="Zákazníci" onAction="#navCustomers" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Apartmány" onAction="#navApartments" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Zamestnanci" onAction="#navEmployees" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.dashboard" onAction="#navDashboard" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.upratovania" onAction="#navCalendar" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="%nav.zakaznici" onAction="#navCustomers" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.apartmany" onAction="#navApartments" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.zamestnanci" onAction="#navEmployees" styleClass="nav-button" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
-            <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+            <HBox spacing="4">
+                <Button text="SK" onAction="#onLangSk" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="EN" onAction="#onLangEn" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            </HBox>
+            <Button text="%nav.odhlasit" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
         </VBox>
     </left>
 
@@ -41,17 +45,17 @@
 
             <HBox alignment="CENTER_LEFT" spacing="12">
                 <VBox spacing="4">
-                    <Label text="Nové upratovanie" styleClass="page-title"/>
-                    <Label text="Manuálne pridanie upratovania do kalendára" styleClass="page-subtitle"/>
+                    <Label text="%add.cleaning.title" styleClass="page-title"/>
+                    <Label text="%add.cleaning.subtitle" styleClass="page-subtitle"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button text="← Späť" onAction="#onBack" styleClass="secondary-button"/>
+                <Button text="%btn.back" onAction="#onBack" styleClass="secondary-button"/>
             </HBox>
 
             <VBox spacing="20" styleClass="form-card" VBox.vgrow="ALWAYS">
                 <padding><Insets top="24" right="28" bottom="24" left="28"/></padding>
 
-                <Label text="Základné informácie" styleClass="section-title"/>
+                <Label text="%add.cleaning.section.basic" styleClass="section-title"/>
 
                 <GridPane hgap="20" vgap="14">
                     <columnConstraints>
@@ -60,23 +64,23 @@
                     </columnConstraints>
 
                     <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                        <Label text="Apartmán" styleClass="field-label"/>
+                        <Label text="%add.cleaning.field.property" styleClass="field-label"/>
                         <ComboBox fx:id="propertyCombo" maxWidth="Infinity" styleClass="input"
-                                  promptText="Vyberte apartmán"/>
+                                  promptText="%add.cleaning.field.property.prompt"/>
                     </VBox>
                     <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                        <Label text="Zamestnanec" styleClass="field-label"/>
+                        <Label text="%add.cleaning.field.employee" styleClass="field-label"/>
                         <ComboBox fx:id="employeeCombo" maxWidth="Infinity" styleClass="input"
-                                  promptText="Vyberte zamestnanca"/>
+                                  promptText="%add.cleaning.field.employee.prompt"/>
                     </VBox>
 
                     <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                        <Label text="Stav" styleClass="field-label"/>
+                        <Label text="%add.cleaning.field.status" styleClass="field-label"/>
                         <ComboBox fx:id="statusCombo" maxWidth="Infinity" styleClass="input"/>
                     </VBox>
                 </GridPane>
 
-                <Label text="Časový plán upratovania" styleClass="section-title"/>
+                <Label text="%add.cleaning.section.time" styleClass="section-title"/>
 
                 <GridPane hgap="20" vgap="14">
                     <columnConstraints>
@@ -86,18 +90,18 @@
                     </columnConstraints>
 
                     <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                        <Label text="Dátum upratovania" styleClass="field-label"/>
+                        <Label text="%add.cleaning.field.date" styleClass="field-label"/>
                         <DatePicker fx:id="datePicker" styleClass="input" maxWidth="Infinity"/>
                     </VBox>
                     <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                        <Label text="CHECK-OUT (odchod hostí)" styleClass="field-label"/>
-                        <TextField fx:id="checkOutTime" styleClass="input" promptText="09:00"/>
-                        <Label text="Začiatok upratovania" styleClass="page-subtitle"/>
+                        <Label text="%add.cleaning.field.checkout" styleClass="field-label"/>
+                        <TextField fx:id="checkOutTime" styleClass="input" promptText="%add.cleaning.field.checkout.prompt"/>
+                        <Label text="%add.cleaning.hint.checkout" styleClass="page-subtitle"/>
                     </VBox>
                     <VBox spacing="6" GridPane.columnIndex="2" GridPane.rowIndex="0">
-                        <Label text="CHECK-IN (príchod hostí)" styleClass="field-label"/>
-                        <TextField fx:id="checkInTime" styleClass="input" promptText="12:00"/>
-                        <Label text="Koniec upratovania" styleClass="page-subtitle"/>
+                        <Label text="%add.cleaning.field.checkin" styleClass="field-label"/>
+                        <TextField fx:id="checkInTime" styleClass="input" promptText="%add.cleaning.field.checkin.prompt"/>
+                        <Label text="%add.cleaning.hint.checkin" styleClass="page-subtitle"/>
                     </VBox>
                 </GridPane>
 
@@ -106,8 +110,8 @@
                 <Label fx:id="errorLabel" text="" styleClass="error-label"/>
 
                 <HBox spacing="10" alignment="CENTER_RIGHT">
-                    <Button text="Zrušiť" onAction="#onBack" styleClass="secondary-button"/>
-                    <Button text="Uložiť upratovanie" onAction="#onSave" styleClass="primary-button"/>
+                    <Button text="%btn.cancel" onAction="#onBack" styleClass="secondary-button"/>
+                    <Button text="%add.cleaning.save" onAction="#onSave" styleClass="primary-button"/>
                 </HBox>
             </VBox>
         </VBox>

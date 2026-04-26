@@ -19,13 +19,17 @@
         <VBox styleClass="sidebar" prefWidth="220" spacing="4">
             <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
             <Label text="CleanMate" styleClass="sidebar-brand"/>
-            <Label text="Zamestnanec" styleClass="sidebar-subtitle"/>
+            <Label text="%role.zamestnanec" styleClass="sidebar-subtitle"/>
             <Region prefHeight="20"/>
-            <Button text="Môj plán" onAction="#navMySchedule" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
-            <Button text="História" onAction="#navHistory" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Profil" onAction="#navProfile" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.moj.plan" onAction="#navMySchedule" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="%nav.historia" onAction="#navHistory" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.profil" onAction="#navProfile" styleClass="nav-button" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
-            <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+            <HBox spacing="4">
+                <Button text="SK" onAction="#onLangSk" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="EN" onAction="#onLangEn" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            </HBox>
+            <Button text="%nav.odhlasit" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
         </VBox>
     </left>
 
@@ -35,7 +39,7 @@
 
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox spacing="4">
-                    <Label fx:id="greetingLabel" text="Dobrý deň" styleClass="page-title"/>
+                    <Label fx:id="greetingLabel" text="%schedule.greeting" styleClass="page-title"/>
                     <Label fx:id="dateLabel" text="—" styleClass="page-subtitle"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
@@ -44,7 +48,7 @@
                 </VBox>
             </HBox>
 
-            <Label text="Dnešné úlohy" styleClass="section-title"/>
+            <Label text="%schedule.tasks.title" styleClass="section-title"/>
 
             <ListView fx:id="list" VBox.vgrow="ALWAYS" styleClass="task-list"/>
         </VBox>

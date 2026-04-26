@@ -21,15 +21,19 @@
         <VBox styleClass="sidebar" prefWidth="220" spacing="4">
             <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
             <Label text="CleanMate" styleClass="sidebar-brand"/>
-            <Label text="Firma" styleClass="sidebar-subtitle"/>
+            <Label text="%role.firma" styleClass="sidebar-subtitle"/>
             <Region prefHeight="20"/>
-            <Button text="Dashboard" onAction="#navDashboard" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Upratovania" onAction="#navCalendar" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Zákazníci" onAction="#navCustomers" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
-            <Button text="Apartmány" onAction="#navApartments" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Zamestnanci" onAction="#navEmployees" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.dashboard" onAction="#navDashboard" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.upratovania" onAction="#navCalendar" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.zakaznici" onAction="#navCustomers" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="%nav.apartmany" onAction="#navApartments" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.zamestnanci" onAction="#navEmployees" styleClass="nav-button" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
-            <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+            <HBox spacing="4">
+                <Button text="SK" onAction="#onLangSk" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="EN" onAction="#onLangEn" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            </HBox>
+            <Button text="%nav.odhlasit" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
         </VBox>
     </left>
 
@@ -39,21 +43,21 @@
 
             <HBox alignment="CENTER_LEFT" spacing="12">
                 <VBox spacing="4">
-                    <Label text="Zákazníci" styleClass="page-title"/>
-                    <Label text="Správa klientov upratovacej firmy" styleClass="page-subtitle"/>
+                    <Label text="%customers.title" styleClass="page-title"/>
+                    <Label text="%customers.subtitle" styleClass="page-subtitle"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button text="+ Pridať zákazníka" onAction="#onAdd" styleClass="primary-button"/>
+                <Button text="%customers.add" onAction="#onAdd" styleClass="primary-button"/>
             </HBox>
 
             <HBox spacing="12" styleClass="filter-bar" alignment="CENTER_LEFT">
                 <VBox spacing="4" HBox.hgrow="ALWAYS">
-                    <Label text="Vyhľadávanie (regex)" styleClass="field-label"/>
-                    <TextField fx:id="searchField" promptText="napr. ^Bra.*s\.r\.o\.$  alebo  @gmail" styleClass="input"/>
+                    <Label text="%customers.search.label" styleClass="field-label"/>
+                    <TextField fx:id="searchField" promptText="%customers.search.prompt" styleClass="input"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
                 <VBox spacing="4" alignment="CENTER_RIGHT">
-                    <Label fx:id="searchHintLabel" text="Regex vyhľadávanie v mene, emaili a telefóne." styleClass="page-subtitle"/>
+                    <Label fx:id="searchHintLabel" text="%customers.search.hint" styleClass="page-subtitle"/>
                 </VBox>
             </HBox>
 
@@ -62,10 +66,10 @@
                 <VBox spacing="10" HBox.hgrow="ALWAYS">
                     <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
                         <columns>
-                            <TableColumn fx:id="colName" text="Meno / Firma" prefWidth="220"/>
-                            <TableColumn fx:id="colEmail" text="Email" prefWidth="220"/>
-                            <TableColumn fx:id="colPhone" text="Telefón" prefWidth="160"/>
-                            <TableColumn fx:id="colProperties" text="Apartmány" prefWidth="110"/>
+                            <TableColumn fx:id="colName" text="%col.customer.name" prefWidth="220"/>
+                            <TableColumn fx:id="colEmail" text="%col.customer.email" prefWidth="220"/>
+                            <TableColumn fx:id="colPhone" text="%col.customer.phone" prefWidth="160"/>
+                            <TableColumn fx:id="colProperties" text="%col.customer.properties" prefWidth="110"/>
                         </columns>
                     </TableView>
                 </VBox>
@@ -73,10 +77,10 @@
                 <VBox spacing="12" prefWidth="320" styleClass="detail-card">
                     <padding><Insets top="18" right="18" bottom="18" left="18"/></padding>
 
-                    <Label text="Detail zákazníka" styleClass="section-title"/>
+                    <Label text="%customers.detail.title" styleClass="section-title"/>
 
                     <Label fx:id="detailPlaceholder" styleClass="empty-hint"
-                           text="Vyberte zákazníka v tabuľke vľavo pre zobrazenie detailu."
+                           text="%customers.detail.hint"
                            wrapText="true"/>
 
                     <Label fx:id="detailName" styleClass="detail-name" wrapText="true"/>
@@ -87,9 +91,9 @@
 
                     <Region VBox.vgrow="ALWAYS"/>
 
-                    <Button fx:id="editButton" text="Editovať" onAction="#onEdit"
+                    <Button fx:id="editButton" text="%btn.edit.customer" onAction="#onEdit"
                             styleClass="secondary-button" maxWidth="Infinity"/>
-                    <Button fx:id="showPropertiesButton" text="Zobraziť apartmány"
+                    <Button fx:id="showPropertiesButton" text="%btn.show.properties"
                             onAction="#onShowProperties" styleClass="primary-button" maxWidth="Infinity"/>
                 </VBox>
             </HBox>

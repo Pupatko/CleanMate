@@ -23,15 +23,19 @@
         <VBox styleClass="sidebar" prefWidth="220" spacing="4">
             <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
             <Label text="CleanMate" styleClass="sidebar-brand"/>
-            <Label text="Firma" styleClass="sidebar-subtitle"/>
+            <Label text="%role.firma" styleClass="sidebar-subtitle"/>
             <Region prefHeight="20"/>
-            <Button text="Dashboard" onAction="#navDashboard" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Upratovania" onAction="#navCalendar" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Zákazníci" onAction="#navCustomers" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Apartmány" onAction="#navApartments" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Zamestnanci" onAction="#navEmployees" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="%nav.dashboard" onAction="#navDashboard" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.upratovania" onAction="#navCalendar" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.zakaznici" onAction="#navCustomers" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.apartmany" onAction="#navApartments" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.zamestnanci" onAction="#navEmployees" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
-            <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+            <HBox spacing="4">
+                <Button text="SK" onAction="#onLangSk" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="EN" onAction="#onLangEn" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            </HBox>
+            <Button text="%nav.odhlasit" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
         </VBox>
     </left>
 
@@ -41,17 +45,17 @@
 
             <HBox alignment="CENTER_LEFT" spacing="12">
                 <VBox spacing="4">
-                    <Label fx:id="pageTitle" text="Nový zamestnanec" styleClass="page-title"/>
-                    <Label fx:id="pageSubtitle" text="Vyplňte informácie o novom členovi tímu" styleClass="page-subtitle"/>
+                    <Label fx:id="pageTitle" text="%add.employee.page.title" styleClass="page-title"/>
+                    <Label fx:id="pageSubtitle" text="%add.employee.page.subtitle" styleClass="page-subtitle"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button text="← Späť" onAction="#onBack" styleClass="secondary-button"/>
+                <Button text="%btn.back" onAction="#onBack" styleClass="secondary-button"/>
             </HBox>
 
             <VBox spacing="20" styleClass="form-card" VBox.vgrow="ALWAYS">
                 <padding><Insets top="24" right="28" bottom="24" left="28"/></padding>
 
-                <Label text="Osobné informácie" styleClass="section-title"/>
+                <Label text="%add.employee.section.personal" styleClass="section-title"/>
 
                 <GridPane hgap="20" vgap="14">
                     <columnConstraints>
@@ -60,25 +64,25 @@
                     </columnConstraints>
 
                     <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                        <Label text="Meno" styleClass="field-label"/>
-                        <TextField fx:id="firstNameField" styleClass="input" promptText="napr. Anna"/>
+                        <Label text="%add.employee.field.firstname" styleClass="field-label"/>
+                        <TextField fx:id="firstNameField" styleClass="input" promptText="%add.employee.field.firstname.prompt"/>
                     </VBox>
                     <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                        <Label text="Priezvisko" styleClass="field-label"/>
-                        <TextField fx:id="lastNameField" styleClass="input" promptText="napr. Nová"/>
+                        <Label text="%add.employee.field.lastname" styleClass="field-label"/>
+                        <TextField fx:id="lastNameField" styleClass="input" promptText="%add.employee.field.lastname.prompt"/>
                     </VBox>
 
                     <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                        <Label text="Email" styleClass="field-label"/>
-                        <TextField fx:id="emailField" styleClass="input" promptText="anna.nova@firma.sk"/>
+                        <Label text="%add.employee.field.email" styleClass="field-label"/>
+                        <TextField fx:id="emailField" styleClass="input" promptText="%add.employee.field.email.prompt"/>
                     </VBox>
                     <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                        <Label text="Telefón" styleClass="field-label"/>
-                        <TextField fx:id="phoneField" styleClass="input" promptText="+421 9XX XXX XXX"/>
+                        <Label text="%add.employee.field.phone" styleClass="field-label"/>
+                        <TextField fx:id="phoneField" styleClass="input" promptText="%add.employee.field.phone.prompt"/>
                     </VBox>
                 </GridPane>
 
-                <Label text="Pracovné zaradenie" styleClass="section-title"/>
+                <Label text="%add.employee.section.work" styleClass="section-title"/>
 
                 <GridPane hgap="20" vgap="14">
                     <columnConstraints>
@@ -87,24 +91,24 @@
                     </columnConstraints>
 
                     <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                        <Label text="Rola" styleClass="field-label"/>
+                        <Label text="%add.employee.field.role" styleClass="field-label"/>
                         <ComboBox fx:id="roleCombo" maxWidth="Infinity" styleClass="input"/>
                     </VBox>
                     <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                        <Label text="Dátum nástupu" styleClass="field-label"/>
-                        <TextField fx:id="startDateField" styleClass="input" promptText="DD.MM.YYYY"/>
+                        <Label text="%add.employee.field.startdate" styleClass="field-label"/>
+                        <TextField fx:id="startDateField" styleClass="input" promptText="%add.employee.field.startdate.prompt"/>
                     </VBox>
 
                     <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1"
                           GridPane.columnSpan="2">
-                        <Label text="Adresa bydliska" styleClass="field-label"/>
-                        <TextField fx:id="addressField" styleClass="input" promptText="Ulica č., Mesto"/>
+                        <Label text="%add.employee.field.address" styleClass="field-label"/>
+                        <TextField fx:id="addressField" styleClass="input" promptText="%add.employee.field.address.prompt"/>
                     </VBox>
                 </GridPane>
 
                 <VBox spacing="4">
-                    <Label text="Poznámky" styleClass="field-label"/>
-                    <TextArea fx:id="notesArea" styleClass="input" promptText="Ďalšie poznámky..."
+                    <Label text="%add.employee.field.notes" styleClass="field-label"/>
+                    <TextArea fx:id="notesArea" styleClass="input" promptText="%add.employee.field.notes.prompt"
                               prefRowCount="3" wrapText="true"/>
                 </VBox>
 
@@ -114,10 +118,10 @@
 
                 <HBox spacing="10" alignment="CENTER_RIGHT">
                     <Region HBox.hgrow="ALWAYS"/>
-                    <Button fx:id="editButton" text="Upraviť" onAction="#onEdit" styleClass="primary-button"/>
-                    <Button fx:id="cancelEditButton" text="Zrušiť úpravy" onAction="#onCancelEdit"
+                    <Button fx:id="editButton" text="%btn.edit" onAction="#onEdit" styleClass="primary-button"/>
+                    <Button fx:id="cancelEditButton" text="%btn.cancel.edit" onAction="#onCancelEdit"
                             styleClass="secondary-button" visible="false" managed="false"/>
-                    <Button fx:id="confirmButton" text="Potvrdiť zmeny" onAction="#onConfirm"
+                    <Button fx:id="confirmButton" text="%btn.confirm" onAction="#onConfirm"
                             styleClass="primary-button" visible="false" managed="false"/>
                 </HBox>
             </VBox>

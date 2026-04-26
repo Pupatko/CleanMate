@@ -24,15 +24,19 @@
         <VBox styleClass="sidebar" prefWidth="220" spacing="4">
             <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
             <Label text="CleanMate" styleClass="sidebar-brand"/>
-            <Label text="Firma" styleClass="sidebar-subtitle"/>
+            <Label text="%role.firma" styleClass="sidebar-subtitle"/>
             <Region prefHeight="20"/>
-            <Button text="Dashboard" onAction="#navDashboard" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Upratovania" onAction="#navCalendar" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Zákazníci" onAction="#navCustomers" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
-            <Button text="Apartmány" onAction="#navApartments" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Zamestnanci" onAction="#navEmployees" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.dashboard" onAction="#navDashboard" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.upratovania" onAction="#navCalendar" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.zakaznici" onAction="#navCustomers" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="%nav.apartmany" onAction="#navApartments" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.zamestnanci" onAction="#navEmployees" styleClass="nav-button" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
-            <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+            <HBox spacing="4">
+                <Button text="SK" onAction="#onLangSk" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="EN" onAction="#onLangEn" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            </HBox>
+            <Button text="%nav.odhlasit" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
         </VBox>
     </left>
 
@@ -42,45 +46,45 @@
 
             <HBox alignment="CENTER_LEFT" spacing="12">
                 <VBox spacing="4">
-                    <Label fx:id="pageTitle" text="Fakturácia" styleClass="page-title"/>
-                    <Label fx:id="pageSubtitle" text="Prehľad upratovaní a generovanie faktúr" styleClass="page-subtitle"/>
+                    <Label fx:id="pageTitle" text="%invoices.owner.title" styleClass="page-title"/>
+                    <Label fx:id="pageSubtitle" text="%invoices.owner.subtitle" styleClass="page-subtitle"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button text="← Späť" onAction="#onBack" styleClass="secondary-button"/>
+                <Button text="%btn.back" onAction="#onBack" styleClass="secondary-button"/>
             </HBox>
 
             <HBox spacing="12" styleClass="filter-bar" alignment="CENTER_LEFT">
                 <VBox spacing="4">
-                    <Label text="Apartmán" styleClass="field-label"/>
+                    <Label text="%invoices.filter.apartment" styleClass="field-label"/>
                     <ComboBox fx:id="apartmentCombo" prefWidth="240" styleClass="input"/>
                 </VBox>
                 <VBox spacing="4">
-                    <Label text="Obdobie" styleClass="field-label"/>
+                    <Label text="%invoices.filter.period" styleClass="field-label"/>
                     <ComboBox fx:id="periodCombo" prefWidth="200" styleClass="input"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button text="Generovať faktúru" onAction="#onGenerateInvoice" styleClass="primary-button"/>
+                <Button text="%invoices.btn.generate" onAction="#onGenerateInvoice" styleClass="primary-button"/>
             </HBox>
 
             <HBox spacing="14">
                 <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" spacing="4">
                     <padding><Insets top="14" right="16" bottom="14" left="16"/></padding>
-                    <Label text="Celkom upratovaní" styleClass="stat-label"/>
+                    <Label text="%invoices.stat.total" styleClass="stat-label"/>
                     <Label fx:id="statTotal" text="0" styleClass="stat-value"/>
                 </VBox>
                 <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" spacing="4">
                     <padding><Insets top="14" right="16" bottom="14" left="16"/></padding>
-                    <Label text="Dokončené" styleClass="stat-label"/>
+                    <Label text="%invoices.stat.done" styleClass="stat-label"/>
                     <Label fx:id="statDone" text="0" styleClass="stat-value"/>
                 </VBox>
                 <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" spacing="4">
                     <padding><Insets top="14" right="16" bottom="14" left="16"/></padding>
-                    <Label text="Celkom hodín" styleClass="stat-label"/>
+                    <Label text="%invoices.stat.hours" styleClass="stat-label"/>
                     <Label fx:id="statHours" text="0 h" styleClass="stat-value"/>
                 </VBox>
                 <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" spacing="4">
                     <padding><Insets top="14" right="16" bottom="14" left="16"/></padding>
-                    <Label text="Fakturácia" styleClass="stat-label"/>
+                    <Label text="%invoices.stat.revenue" styleClass="stat-label"/>
                     <Label fx:id="statRevenue" text="0 €" styleClass="stat-value stat-revenue"/>
                 </VBox>
             </HBox>
@@ -89,24 +93,24 @@
 
                 <VBox styleClass="form-card" HBox.hgrow="ALWAYS" spacing="8" prefWidth="600">
                     <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
-                    <Label text="Mesačný prehľad upratovaní" styleClass="section-title"/>
+                    <Label text="%invoices.chart.title" styleClass="section-title"/>
                     <BarChart fx:id="monthlyChart" VBox.vgrow="ALWAYS" legendVisible="false"
                               animated="false" prefHeight="280">
-                        <xAxis><CategoryAxis label="Mesiac"/></xAxis>
-                        <yAxis><NumberAxis label="Počet upratovaní"/></yAxis>
+                        <xAxis><CategoryAxis label="%invoices.chart.xaxis"/></xAxis>
+                        <yAxis><NumberAxis label="%invoices.chart.yaxis"/></yAxis>
                     </BarChart>
                 </VBox>
 
                 <VBox styleClass="form-card" HBox.hgrow="ALWAYS" spacing="8" prefWidth="560">
                     <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
-                    <Label text="Položky fakturácie" styleClass="section-title"/>
+                    <Label text="%invoices.table.title" styleClass="section-title"/>
                     <TableView fx:id="itemsTable" VBox.vgrow="ALWAYS" styleClass="data-table">
                         <columns>
-                            <TableColumn fx:id="colDate"     text="Dátum"    prefWidth="100"/>
-                            <TableColumn fx:id="colProperty" text="Apartmán" prefWidth="200"/>
-                            <TableColumn fx:id="colHours"    text="Hodiny"   prefWidth="80"/>
-                            <TableColumn fx:id="colStatus"   text="Stav"     prefWidth="100"/>
-                            <TableColumn fx:id="colPrice"    text="Cena"     prefWidth="80"/>
+                            <TableColumn fx:id="colDate"     text="%col.invoice.date"     prefWidth="100"/>
+                            <TableColumn fx:id="colProperty" text="%col.invoice.property" prefWidth="200"/>
+                            <TableColumn fx:id="colHours"    text="%col.invoice.hours"    prefWidth="80"/>
+                            <TableColumn fx:id="colStatus"   text="%col.invoice.status"   prefWidth="100"/>
+                            <TableColumn fx:id="colPrice"    text="%col.invoice.price"    prefWidth="80"/>
                         </columns>
                     </TableView>
                 </VBox>

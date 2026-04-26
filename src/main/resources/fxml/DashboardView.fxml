@@ -19,20 +19,20 @@
     <left>
         <VBox styleClass="sidebar" prefWidth="220" spacing="4">
             <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
-
             <Label text="CleanMate" styleClass="sidebar-brand"/>
-            <Label text="Firma" styleClass="sidebar-subtitle"/>
-
+            <Label text="%role.firma" styleClass="sidebar-subtitle"/>
             <Region prefHeight="20"/>
-
-            <Button text="Dashboard" onAction="#navDashboard" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
-            <Button text="Upratovania" onAction="#navCalendar" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Zákazníci" onAction="#navCustomers" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Apartmány" onAction="#navApartments" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Zamestnanci" onAction="#navEmployees" styleClass="nav-button" maxWidth="Infinity"/>
-
+            <Button text="%nav.dashboard" onAction="#navDashboard" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="%nav.upratovania" onAction="#navCalendar" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.zakaznici" onAction="#navCustomers" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.apartmany" onAction="#navApartments" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.zamestnanci" onAction="#navEmployees" styleClass="nav-button" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
-            <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+            <HBox spacing="4">
+                <Button text="SK" onAction="#onLangSk" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="EN" onAction="#onLangEn" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            </HBox>
+            <Button text="%nav.odhlasit" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
         </VBox>
     </left>
 
@@ -41,37 +41,37 @@
             <padding><Insets top="28" right="32" bottom="24" left="32"/></padding>
 
             <VBox spacing="4">
-                <Label text="Dashboard" styleClass="page-title"/>
-                <Label text="Prehľad operácií na dnes" styleClass="page-subtitle"/>
+                <Label text="%dashboard.title" styleClass="page-title"/>
+                <Label text="%dashboard.subtitle" styleClass="page-subtitle"/>
             </VBox>
 
             <HBox spacing="16" styleClass="cards-row">
                 <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">
                     <Label fx:id="todayCountLabel" text="0" styleClass="card-value"/>
-                    <Label text="Dnešné upratovania" styleClass="card-label"/>
+                    <Label text="%dashboard.card.today" styleClass="card-label"/>
                 </VBox>
                 <VBox styleClass="summary-card, card-warning" HBox.hgrow="ALWAYS">
                     <Label fx:id="unassignedCountLabel" text="0" styleClass="card-value"/>
-                    <Label text="Nepriradené" styleClass="card-label"/>
+                    <Label text="%dashboard.card.unassigned" styleClass="card-label"/>
                 </VBox>
                 <VBox styleClass="summary-card, card-info" HBox.hgrow="ALWAYS">
                     <Label fx:id="onDutyCountLabel" text="0" styleClass="card-value"/>
-                    <Label text="Zamestnanci on-duty" styleClass="card-label"/>
+                    <Label text="%dashboard.card.onduty" styleClass="card-label"/>
                 </VBox>
                 <VBox styleClass="summary-card, card-success" HBox.hgrow="ALWAYS">
                     <Label fx:id="doneCountLabel" text="0" styleClass="card-value"/>
-                    <Label text="Dokončené" styleClass="card-label"/>
+                    <Label text="%dashboard.card.done" styleClass="card-label"/>
                 </VBox>
             </HBox>
 
-            <Label text="Posledných 5 upratovaní" styleClass="section-title"/>
+            <Label text="%dashboard.section.recent" styleClass="section-title"/>
 
             <TableView fx:id="recentTable" VBox.vgrow="ALWAYS" styleClass="data-table">
                 <columns>
-                    <TableColumn fx:id="colTime" text="Čas" prefWidth="100"/>
-                    <TableColumn fx:id="colProperty" text="Apartmán" prefWidth="320"/>
-                    <TableColumn fx:id="colEmployee" text="Zamestnanec" prefWidth="220"/>
-                    <TableColumn fx:id="colStatus" text="Stav" prefWidth="160"/>
+                    <TableColumn fx:id="colTime" text="%col.dashboard.time" prefWidth="100"/>
+                    <TableColumn fx:id="colProperty" text="%col.dashboard.property" prefWidth="320"/>
+                    <TableColumn fx:id="colEmployee" text="%col.dashboard.employee" prefWidth="220"/>
+                    <TableColumn fx:id="colStatus" text="%col.dashboard.status" prefWidth="160"/>
                 </columns>
             </TableView>
         </VBox>

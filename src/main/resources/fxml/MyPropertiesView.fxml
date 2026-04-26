@@ -19,13 +19,17 @@
         <VBox styleClass="sidebar" prefWidth="220" spacing="4">
             <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
             <Label text="CleanMate" styleClass="sidebar-brand"/>
-            <Label text="Zákazník" styleClass="sidebar-subtitle"/>
+            <Label text="%role.zakaznik" styleClass="sidebar-subtitle"/>
             <Region prefHeight="20"/>
-            <Button text="Prehľad upratovaní" onAction="#navPortal" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Moje apartmány" onAction="#navProperties" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
-            <Button text="Faktúry" onAction="#navInvoices" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.prehlad.upratovani" onAction="#navPortal" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.moje.apartmany" onAction="#navProperties" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="%nav.faktury" onAction="#navInvoices" styleClass="nav-button" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
-            <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+            <HBox spacing="4">
+                <Button text="SK" onAction="#onLangSk" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="EN" onAction="#onLangEn" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            </HBox>
+            <Button text="%nav.odhlasit" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
         </VBox>
     </left>
 
@@ -35,11 +39,11 @@
 
             <HBox alignment="CENTER_LEFT" spacing="12">
                 <VBox spacing="4">
-                    <Label text="Moje apartmány" styleClass="page-title"/>
-                    <Label text="Nehnuteľnosti v správe upratovacej firmy" styleClass="page-subtitle"/>
+                    <Label text="%properties.title" styleClass="page-title"/>
+                    <Label text="%properties.subtitle" styleClass="page-subtitle"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Label fx:id="countLabel" text="0 apartmánov" styleClass="my-summary"/>
+                <Label fx:id="countLabel" text="0" styleClass="my-summary"/>
             </HBox>
 
             <ListView fx:id="list" VBox.vgrow="ALWAYS" styleClass="task-list"/>

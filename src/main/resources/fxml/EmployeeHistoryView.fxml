@@ -21,13 +21,17 @@
         <VBox styleClass="sidebar" prefWidth="220" spacing="4">
             <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
             <Label text="CleanMate" styleClass="sidebar-brand"/>
-            <Label text="Zamestnanec" styleClass="sidebar-subtitle"/>
+            <Label text="%role.zamestnanec" styleClass="sidebar-subtitle"/>
             <Region prefHeight="20"/>
-            <Button text="Môj plán" onAction="#navMySchedule" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="História" onAction="#navHistory" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
-            <Button text="Profil" onAction="#navProfile" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.moj.plan" onAction="#navMySchedule" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.historia" onAction="#navHistory" styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Button text="%nav.profil" onAction="#navProfile" styleClass="nav-button" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
-            <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+            <HBox spacing="4">
+                <Button text="SK" onAction="#onLangSk" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="EN" onAction="#onLangEn" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            </HBox>
+            <Button text="%nav.odhlasit" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
         </VBox>
     </left>
 
@@ -36,28 +40,28 @@
             <padding><Insets top="28" right="32" bottom="24" left="32"/></padding>
 
             <VBox spacing="4">
-                <Label text="História úloh" styleClass="page-title"/>
-                <Label text="Prehľad všetkých dokončených upratovaní" styleClass="page-subtitle"/>
+                <Label text="%history.title" styleClass="page-title"/>
+                <Label text="%history.subtitle" styleClass="page-subtitle"/>
             </VBox>
 
             <HBox spacing="16">
                 <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">
                     <Label fx:id="countLabel" text="0" styleClass="card-value"/>
-                    <Label text="Úloh za obdobie" styleClass="card-label"/>
+                    <Label text="%history.card.count" styleClass="card-label"/>
                 </VBox>
                 <VBox styleClass="summary-card, card-info" HBox.hgrow="ALWAYS">
                     <Label fx:id="hoursLabel" text="0.0 h" styleClass="card-value"/>
-                    <Label text="Odpracované hodiny" styleClass="card-label"/>
+                    <Label text="%history.card.hours" styleClass="card-label"/>
                 </VBox>
                 <VBox styleClass="summary-card, card-success" HBox.hgrow="ALWAYS">
                     <Label fx:id="avgRatingLabel" text="0.0 / 5" styleClass="card-value"/>
-                    <Label text="Priemerné hodnotenie" styleClass="card-label"/>
+                    <Label text="%history.card.rating" styleClass="card-label"/>
                 </VBox>
             </HBox>
 
             <HBox spacing="12" styleClass="filter-bar" alignment="CENTER_LEFT">
                 <VBox spacing="4">
-                    <Label text="Obdobie" styleClass="field-label"/>
+                    <Label text="%history.filter.period" styleClass="field-label"/>
                     <ComboBox fx:id="rangeCombo" prefWidth="220" styleClass="input"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
@@ -65,12 +69,12 @@
 
             <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
                 <columns>
-                    <TableColumn fx:id="colDate" text="Dátum" prefWidth="110"/>
-                    <TableColumn fx:id="colProperty" text="Apartmán" prefWidth="280"/>
-                    <TableColumn fx:id="colTime" text="Čas" prefWidth="80"/>
-                    <TableColumn fx:id="colStatus" text="Stav" prefWidth="110"/>
-                    <TableColumn fx:id="colHours" text="Hodiny" prefWidth="90"/>
-                    <TableColumn fx:id="colRating" text="Hodnotenie" prefWidth="120"/>
+                    <TableColumn fx:id="colDate"     text="%col.history.date"     prefWidth="110"/>
+                    <TableColumn fx:id="colProperty" text="%col.history.property" prefWidth="280"/>
+                    <TableColumn fx:id="colTime"     text="%col.history.time"     prefWidth="80"/>
+                    <TableColumn fx:id="colStatus"   text="%col.history.status"   prefWidth="110"/>
+                    <TableColumn fx:id="colHours"    text="%col.history.hours"    prefWidth="90"/>
+                    <TableColumn fx:id="colRating"   text="%col.history.rating"   prefWidth="120"/>
                 </columns>
             </TableView>
         </VBox>

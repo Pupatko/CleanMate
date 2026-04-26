@@ -143,6 +143,20 @@
     -fx-text-fill: white;
 }
 
+.lang-button {
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+    -fx-text-fill: #94A3B8;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 0 3 0;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+.lang-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.18);
+    -fx-text-fill: #E2E8F0;
+}
+
 .content {
     -fx-background-color: #F1F5F9;
 }

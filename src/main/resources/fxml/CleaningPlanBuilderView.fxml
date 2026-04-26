@@ -22,15 +22,19 @@
         <VBox styleClass="sidebar" prefWidth="220" spacing="4">
             <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
             <Label text="CleanMate" styleClass="sidebar-brand"/>
-            <Label text="Firma" styleClass="sidebar-subtitle"/>
+            <Label text="%role.firma" styleClass="sidebar-subtitle"/>
             <Region prefHeight="20"/>
-            <Button text="Dashboard" onAction="#navDashboard" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Upratovania" onAction="#navCalendar" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Zákazníci" onAction="#navCustomers" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Apartmány" onAction="#navApartments" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="Zamestnanci" onAction="#navEmployees" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.dashboard" onAction="#navDashboard" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.upratovania" onAction="#navCalendar" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.zakaznici" onAction="#navCustomers" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.apartmany" onAction="#navApartments" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.zamestnanci" onAction="#navEmployees" styleClass="nav-button" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
-            <Button text="Odhlásiť" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+            <HBox spacing="4">
+                <Button text="SK" onAction="#onLangSk" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="EN" onAction="#onLangEn" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            </HBox>
+            <Button text="%nav.odhlasit" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
         </VBox>
     </left>
 
@@ -39,8 +43,8 @@
             <padding><Insets top="28" right="32" bottom="24" left="32"/></padding>
 
             <VBox spacing="4">
-                <Label text="Cleaning Plan Builder" styleClass="page-title"/>
-                <Label text="Šablóna checklistu priradená k apartmánu" styleClass="page-subtitle"/>
+                <Label text="%plan.title" styleClass="page-title"/>
+                <Label text="%plan.subtitle" styleClass="page-subtitle"/>
             </VBox>
 
             <GridPane hgap="16" vgap="10" styleClass="form-card">
@@ -51,11 +55,11 @@
                 </columnConstraints>
 
                 <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                    <Label text="Názov šablóny" styleClass="field-label"/>
-                    <TextField fx:id="planNameField" promptText="napr. Štandardná 1-izbová" styleClass="input"/>
+                    <Label text="%plan.field.name.label" styleClass="field-label"/>
+                    <TextField fx:id="planNameField" promptText="%plan.field.name.prompt" styleClass="input"/>
                 </VBox>
                 <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                    <Label text="Priradený apartmán" styleClass="field-label"/>
+                    <Label text="%plan.field.property" styleClass="field-label"/>
                     <ComboBox fx:id="propertyCombo" styleClass="input" maxWidth="Infinity"/>
                 </VBox>
             </GridPane>
@@ -64,29 +68,29 @@
                 <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>
 
                 <HBox alignment="CENTER_LEFT" spacing="12">
-                    <Label text="Kroky checklistu" styleClass="section-title"/>
+                    <Label text="%plan.steps.title" styleClass="section-title"/>
                     <Region HBox.hgrow="ALWAYS"/>
-                    <Label fx:id="countLabel" text="Krokov: 0" styleClass="page-subtitle"/>
+                    <Label fx:id="countLabel" text="0" styleClass="page-subtitle"/>
                 </HBox>
 
                 <HBox spacing="10" alignment="CENTER_LEFT">
-                    <TextField fx:id="stepNameField" promptText="Názov kroku (napr. Vysávanie kuchyne)"
+                    <TextField fx:id="stepNameField" promptText="%plan.step.name.prompt"
                                styleClass="input" HBox.hgrow="ALWAYS"/>
                     <ComboBox fx:id="stepTypeCombo" styleClass="input" prefWidth="150"/>
-                    <Button fx:id="addStepButton" text="+ Pridať" onAction="#onAddStep" styleClass="primary-button"/>
+                    <Button fx:id="addStepButton" text="%plan.btn.add.step" onAction="#onAddStep" styleClass="primary-button"/>
                 </HBox>
 
                 <Label fx:id="errorLabel" styleClass="error-label"/>
 
-                <Label text="Tip: kroky môžete preusporiadať potiahnutím (drag &amp; drop)." styleClass="page-subtitle"/>
+                <Label text="%plan.tip" styleClass="page-subtitle"/>
 
                 <ListView fx:id="stepList" VBox.vgrow="ALWAYS" styleClass="step-list"/>
             </VBox>
 
             <HBox spacing="10" alignment="CENTER_RIGHT">
-                <Button text="Vymazať všetko" onAction="#onClear" styleClass="danger-button"/>
+                <Button text="%plan.btn.clear" onAction="#onClear" styleClass="danger-button"/>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button text="Uložiť šablónu" onAction="#onSave" styleClass="primary-button"/>
+                <Button text="%plan.btn.save" onAction="#onSave" styleClass="primary-button"/>
             </HBox>
         </VBox>
     </center>
