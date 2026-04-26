@@ -11,6 +11,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import com.cleanmate.presentation.nav.LanguageManager;
+
 import java.util.logging.Logger;
 
 public class ApartmentManagementController extends com.cleanmate.presentation.nav.BaseNavController {
@@ -81,7 +83,7 @@ public class ApartmentManagementController extends com.cleanmate.presentation.na
             return r.getAddress().toLowerCase().contains(q)
                 || r.getCustomer().toLowerCase().contains(q);
         });
-        countLabel.setText("Apartmánov: " + filtered.size());
+        countLabel.setText(LanguageManager.getBundle().getString("apartments.count.prefix") + " " + filtered.size());
     }
 
     @FXML

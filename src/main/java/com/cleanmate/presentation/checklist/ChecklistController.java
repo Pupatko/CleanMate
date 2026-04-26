@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 
+import com.cleanmate.presentation.nav.LanguageManager;
 import java.io.File;
 import java.util.logging.Logger;
 
@@ -80,9 +81,9 @@ public class ChecklistController extends com.cleanmate.presentation.nav.BaseNavC
     @FXML
     private void onAddPhoto() {
         FileChooser fc = new FileChooser();
-        fc.setTitle("Vyberte fotografiu");
+        fc.setTitle(LanguageManager.getBundle().getString("checklist.photo.dialog"));
         fc.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Obrázky", "*.png", "*.jpg", "*.jpeg", "*.gif"));
+                new FileChooser.ExtensionFilter(LanguageManager.getBundle().getString("checklist.photo.filter"), "*.png", "*.jpg", "*.jpeg", "*.gif"));
         File f = fc.showOpenDialog(addPhotoButton.getScene().getWindow());
         if (f != null) {
             photos.add(f);
@@ -93,7 +94,7 @@ public class ChecklistController extends com.cleanmate.presentation.nav.BaseNavC
     private void renderPhotos() {
         photoGrid.getChildren().clear();
         if (photos.isEmpty()) {
-            Label hint = new Label("Zatial ziadne fotografie. Kliknite na \"Nahrat fotku\" pre pridanie.");
+            Label hint = new Label(LanguageManager.getBundle().getString("checklist.photo.hint"));
             hint.getStyleClass().add("empty-hint");
             photoGrid.add(hint, 0, 0);
             return;
@@ -126,7 +127,7 @@ public class ChecklistController extends com.cleanmate.presentation.nav.BaseNavC
     private void onComplete() {
         LOG.info("Cleaning completed — photos=" + photos.size() + ", steps=" + steps.size() + "/100%");
         completeButton.setDisable(true);
-        completeButton.setText("✓ Dokončené");
+        completeButton.setText(LanguageManager.getBundle().getString("checklist.complete.done"));
     }
 
     @FXML

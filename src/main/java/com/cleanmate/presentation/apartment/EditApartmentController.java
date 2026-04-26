@@ -1,6 +1,7 @@
 package com.cleanmate.presentation.apartment;
 
 import com.cleanmate.presentation.nav.BaseNavController;
+import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.ChangeSummary;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -64,8 +65,8 @@ public class EditApartmentController extends BaseNavController {
         editTarget = null;
 
         if (addMode) {
-            pageTitle.setText("Nový apartmán");
-            pageSubtitle.setText("Vytvorenie nového apartmánu");
+            pageTitle.setText(LanguageManager.getBundle().getString("edit.apartment.new.title"));
+            pageSubtitle.setText(LanguageManager.getBundle().getString("edit.apartment.new.subtitle"));
             deleteButton.setVisible(false);
             deleteButton.setManaged(false);
             // In add mode, start directly in edit mode so user can fill in
@@ -74,8 +75,8 @@ public class EditApartmentController extends BaseNavController {
             // Replace Upraviť with nothing, Confirm becomes Save
             editButton.setVisible(false);
             editButton.setManaged(false);
-            confirmButton.setText("Uložiť apartmán");
-            cancelEditButton.setText("Zrušiť");
+            confirmButton.setText(LanguageManager.getBundle().getString("edit.apartment.save"));
+            cancelEditButton.setText(LanguageManager.getBundle().getString("btn.cancel"));
         } else {
             populateFromTarget();
             setEditMode(false);
@@ -88,7 +89,7 @@ public class EditApartmentController extends BaseNavController {
 
     private void populateFromTarget() {
         pageTitle.setText(target.getAddress());
-        pageSubtitle.setText("Detail apartmánu zákazníka " + target.getCustomer());
+        pageSubtitle.setText(LanguageManager.getBundle().getString("edit.apartment.view.subtitle.prefix") + " " + target.getCustomer());
 
         addressField.setText(target.getAddress());
         customerField.setText(target.getCustomer());
@@ -167,15 +168,15 @@ public class EditApartmentController extends BaseNavController {
         String customer = customerField.getText() == null ? "" : customerField.getText().trim();
         String note     = noteArea.getText() == null ? "" : noteArea.getText().trim();
 
-        if (address.isEmpty())  { errorLabel.setText("Adresa nesmie byť prázdna."); return; }
-        if (customer.isEmpty()) { errorLabel.setText("Zákazník nesmie byť prázdny."); return; }
+        if (address.isEmpty())  { errorLabel.setText(LanguageManager.getBundle().getString("error.apartment.address")); return; }
+        if (customer.isEmpty()) { errorLabel.setText(LanguageManager.getBundle().getString("error.apartment.customer")); return; }
 
         int rooms;
         double area;
         try { rooms = Integer.parseInt(roomsField.getText().trim()); }
-        catch (NumberFormatException ex) { errorLabel.setText("Neplatný počet izieb."); return; }
+        catch (NumberFormatException ex) { errorLabel.setText(LanguageManager.getBundle().getString("error.apartment.rooms")); return; }
         try { area = Double.parseDouble(areaField.getText().trim()); }
-        catch (NumberFormatException ex) { errorLabel.setText("Neplatná plocha."); return; }
+        catch (NumberFormatException ex) { errorLabel.setText(LanguageManager.getBundle().getString("error.apartment.area")); return; }
 
         if (addMode) {
             ApartmentItem created = new ApartmentItem(address, customer, rooms, area, note);
@@ -205,14 +206,14 @@ public class EditApartmentController extends BaseNavController {
 
         setEditMode(false);
         pageTitle.setText(target.getAddress());
-        pageSubtitle.setText("Detail apartmánu zákazníka " + target.getCustomer());
+        pageSubtitle.setText(LanguageManager.getBundle().getString("edit.apartment.view.subtitle.prefix") + " " + target.getCustomer());
         diff.show("Úpravy apartmánu");
     }
 
     @FXML
     private void onAddTask() {
         String name = taskNameField.getText() == null ? "" : taskNameField.getText().trim();
-        if (name.isEmpty()) { errorLabel.setText("Zadajte názov úlohy."); return; }
+        if (name.isEmpty()) { errorLabel.setText(LanguageManager.getBundle().getString("error.apartment.task.name")); return; }
         errorLabel.setText("");
         ApartmentTask.Type type = taskTypeCombo.getValue();
         String desc = taskDescArea.getText() == null ? "" : taskDescArea.getText().trim();

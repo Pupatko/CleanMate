@@ -1,6 +1,7 @@
 package com.cleanmate.presentation.calendar;
 
 import com.cleanmate.presentation.nav.BaseNavController;
+import com.cleanmate.presentation.nav.LanguageManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -141,7 +142,7 @@ public class CleaningCalendarController extends BaseNavController {
     private void renderCalendar() {
         if (calendarHolder == null) return;
         List<CalendarCleaningItem> events = filteredEvents();
-        resultsCountLabel.setText("Upratovaní: " + events.size());
+        resultsCountLabel.setText(LanguageManager.getBundle().getString("calendar.count.prefix") + " " + events.size());
 
         Node view = switch (viewMode) {
             case DAY   -> buildDayView(anchorDate, events);

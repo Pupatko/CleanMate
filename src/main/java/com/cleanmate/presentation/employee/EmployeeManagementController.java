@@ -1,5 +1,6 @@
 package com.cleanmate.presentation.employee;
 
+import com.cleanmate.presentation.nav.LanguageManager;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -143,7 +144,7 @@ public class EmployeeManagementController extends com.cleanmate.presentation.nav
             return true;
         });
 
-        countLabel.setText("Zobrazených: " + filtered.size() + " / " + DATA.size());
+        countLabel.setText(LanguageManager.getBundle().getString("employees.count.prefix") + " " + filtered.size() + " / " + DATA.size());
     }
 
     @FXML private void onAdd() {

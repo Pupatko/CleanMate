@@ -1,5 +1,6 @@
 package com.cleanmate.presentation.myschedule;
 
+import com.cleanmate.presentation.nav.LanguageManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,10 +14,10 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.logging.Logger;
 
 public class MyScheduleController extends com.cleanmate.presentation.nav.BaseNavController {
@@ -32,9 +33,9 @@ public class MyScheduleController extends com.cleanmate.presentation.nav.BaseNav
     public void initialize() {
         LOG.info("My schedule initialized");
 
-        greetingLabel.setText("Dobrý deň, Peter");
+        greetingLabel.setText(LanguageManager.getBundle().getString("schedule.greeting") + ", Peter");
         dateLabel.setText(LocalDate.now().format(
-                DateTimeFormatter.ofPattern("EEEE d. MMMM yyyy", Locale.of("sk"))));
+                DateTimeFormatter.ofPattern("EEEE d. MMMM yyyy", LanguageManager.getLocale())));
 
         ObservableList<MyTaskItem> items = FXCollections.observableArrayList(
                 new MyTaskItem(LocalTime.of(9, 0),  "Panská 12, Bratislava",       "Acme Rentals",          "DONE",        7, 7),
@@ -44,7 +45,7 @@ public class MyScheduleController extends com.cleanmate.presentation.nav.BaseNav
         );
 
         long done = items.stream().filter(i -> "DONE".equals(i.status())).count();
-        summaryLabel.setText("Dnes máš " + items.size() + " úloh, " + done + " dokončené");
+        summaryLabel.setText(MessageFormat.format(LanguageManager.getBundle().getString("schedule.summary"), items.size(), done));
 
         list.setItems(items);
         list.setCellFactory(l -> new TaskCell());
@@ -81,7 +82,7 @@ public class MyScheduleController extends com.cleanmate.presentation.nav.BaseNav
             Label propLbl = new Label(item.property());
             propLbl.getStyleClass().add("task-property");
 
-            Label custLbl = new Label("Zákazník: " + item.customer());
+            Label custLbl = new Label(LanguageManager.getBundle().getString("schedule.task.customer.prefix") + " " + item.customer());
             custLbl.getStyleClass().add("task-customer");
 
             ProgressBar pb = new ProgressBar(
@@ -89,7 +90,7 @@ public class MyScheduleController extends com.cleanmate.presentation.nav.BaseNav
             pb.getStyleClass().add("task-progress");
             pb.setPrefWidth(220);
 
-            Label progressLbl = new Label(item.stepsDone() + " / " + item.stepsTotal() + " krokov");
+            Label progressLbl = new Label(item.stepsDone() + " / " + item.stepsTotal() + LanguageManager.getBundle().getString("schedule.task.steps.suffix"));
             progressLbl.getStyleClass().add("task-progress-label");
 
             HBox pbBox = new HBox(10, pb, progressLbl);

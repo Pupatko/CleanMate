@@ -1,6 +1,7 @@
 package com.cleanmate.presentation.customer;
 
 import com.cleanmate.presentation.nav.BaseNavController;
+import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.ChangeSummary;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -43,18 +44,18 @@ public class EditCustomerController extends BaseNavController {
         editTarget = null;
 
         if (addMode) {
-            pageTitle.setText("Nový zákazník");
-            pageSubtitle.setText("Pridanie nového zákazníka");
+            pageTitle.setText(LanguageManager.getBundle().getString("edit.customer.new.title"));
+            pageSubtitle.setText(LanguageManager.getBundle().getString("edit.customer.new.subtitle"));
             setEditMode(true);
             editButton.setVisible(false);
             editButton.setManaged(false);
-            confirmButton.setText("Uložiť zákazníka");
-            cancelEditButton.setText("Zrušiť");
+            confirmButton.setText(LanguageManager.getBundle().getString("edit.customer.save"));
+            cancelEditButton.setText(LanguageManager.getBundle().getString("btn.cancel"));
             invoicesButton.setVisible(false);
             invoicesButton.setManaged(false);
         } else {
             pageTitle.setText(target.getName());
-            pageSubtitle.setText("Detail zákazníka");
+            pageSubtitle.setText(LanguageManager.getBundle().getString("edit.customer.view.subtitle"));
             nameField.setText(target.getName());
             emailField.setText(target.getEmail());
             phoneField.setText(target.getPhone());
@@ -121,9 +122,9 @@ public class EditCustomerController extends BaseNavController {
         String phone = phoneField.getText() == null ? "" : phoneField.getText().trim();
         String note  = noteArea.getText() == null ? "" : noteArea.getText().trim();
 
-        if (name.isEmpty())  { errorLabel.setText("Zadajte meno / názov firmy."); return; }
-        if (email.isEmpty()) { errorLabel.setText("Zadajte email."); return; }
-        if (phone.isEmpty()) { errorLabel.setText("Zadajte telefón."); return; }
+        if (name.isEmpty())  { errorLabel.setText(LanguageManager.getBundle().getString("error.customer.name")); return; }
+        if (email.isEmpty()) { errorLabel.setText(LanguageManager.getBundle().getString("error.customer.email")); return; }
+        if (phone.isEmpty()) { errorLabel.setText(LanguageManager.getBundle().getString("error.customer.phone")); return; }
 
         if (addMode) {
             CustomerManagementController.addCustomer(new CustomerRow(name, email, phone, 0, note));

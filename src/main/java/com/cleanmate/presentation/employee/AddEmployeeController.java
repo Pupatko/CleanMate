@@ -1,6 +1,7 @@
 package com.cleanmate.presentation.employee;
 
 import com.cleanmate.presentation.nav.BaseNavController;
+import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.ChangeSummary;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -50,16 +51,16 @@ public class AddEmployeeController extends BaseNavController {
         editTarget = null;
 
         if (addMode) {
-            pageTitle.setText("Nový zamestnanec");
-            pageSubtitle.setText("Vyplňte informácie o novom členovi tímu");
+            pageTitle.setText(LanguageManager.getBundle().getString("add.employee.page.title"));
+            pageSubtitle.setText(LanguageManager.getBundle().getString("add.employee.page.subtitle"));
             setEditMode(true);
             editButton.setVisible(false);
             editButton.setManaged(false);
-            confirmButton.setText("Uložiť zamestnanca");
-            cancelEditButton.setText("Zrušiť");
+            confirmButton.setText(LanguageManager.getBundle().getString("add.employee.save"));
+            cancelEditButton.setText(LanguageManager.getBundle().getString("btn.cancel"));
         } else {
             pageTitle.setText(target.getName());
-            pageSubtitle.setText("Detail zamestnanca");
+            pageSubtitle.setText(LanguageManager.getBundle().getString("add.employee.view.subtitle"));
             String[] parts = target.getName().split(" ", 2);
             firstNameField.setText(parts.length > 0 ? parts[0] : "");
             lastNameField.setText(parts.length > 1 ? parts[1] : "");
@@ -140,10 +141,10 @@ public class AddEmployeeController extends BaseNavController {
         String phone     = phoneField.getText()     == null ? "" : phoneField.getText().trim();
         String role      = roleCombo.getValue();
 
-        if (firstName.isEmpty()) { errorLabel.setText("Zadajte meno."); return; }
-        if (lastName.isEmpty())  { errorLabel.setText("Zadajte priezvisko."); return; }
-        if (email.isEmpty())     { errorLabel.setText("Zadajte emailovú adresu."); return; }
-        if (phone.isEmpty())     { errorLabel.setText("Zadajte telefónne číslo."); return; }
+        if (firstName.isEmpty()) { errorLabel.setText(LanguageManager.getBundle().getString("error.employee.firstname")); return; }
+        if (lastName.isEmpty())  { errorLabel.setText(LanguageManager.getBundle().getString("error.employee.lastname")); return; }
+        if (email.isEmpty())     { errorLabel.setText(LanguageManager.getBundle().getString("error.employee.email")); return; }
+        if (phone.isEmpty())     { errorLabel.setText(LanguageManager.getBundle().getString("error.employee.phone")); return; }
 
         String fullName = firstName + " " + lastName;
 

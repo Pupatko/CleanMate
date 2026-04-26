@@ -1,5 +1,6 @@
 package com.cleanmate.presentation.detail;
 
+import com.cleanmate.presentation.nav.LanguageManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -166,7 +167,7 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
 
     private void updateProgress() {
         long done = steps.stream().filter(s -> s.doneProperty().get()).count();
-        progressLabel.setText("Dokoncene: " + done + " / " + steps.size());
+        progressLabel.setText(LanguageManager.getBundle().getString("detail.progress.prefix") + " " + done + " / " + steps.size());
     }
 
     @FXML

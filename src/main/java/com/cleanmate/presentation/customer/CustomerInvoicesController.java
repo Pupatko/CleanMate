@@ -4,6 +4,7 @@ import com.cleanmate.presentation.apartment.ApartmentItem;
 import com.cleanmate.presentation.calendar.CleaningCalendarController;
 import com.cleanmate.presentation.calendar.CleaningCalendarController.CalendarCleaningItem;
 import com.cleanmate.presentation.nav.BaseNavController;
+import com.cleanmate.presentation.nav.LanguageManager;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -75,13 +76,13 @@ public class CustomerInvoicesController extends BaseNavController {
         target = null;
 
         if (customer == null) {
-            pageTitle.setText("Fakturácia");
-            pageSubtitle.setText("Žiadny zákazník nie je vybraný — vráťte sa späť.");
+            pageTitle.setText(LanguageManager.getBundle().getString("invoices.owner.title"));
+            pageSubtitle.setText(LanguageManager.getBundle().getString("invoices.owner.no.customer"));
             return;
         }
 
-        pageTitle.setText("Fakturácia — " + customer.getName());
-        pageSubtitle.setText("Prehľad upratovaní a faktúr pre zákazníka");
+        pageTitle.setText(LanguageManager.getBundle().getString("invoices.owner.title.prefix") + " " + customer.getName());
+        pageSubtitle.setText(LanguageManager.getBundle().getString("invoices.owner.subtitle.customer"));
 
         customerProperties = apartmentsForCustomer(customer.getName());
 

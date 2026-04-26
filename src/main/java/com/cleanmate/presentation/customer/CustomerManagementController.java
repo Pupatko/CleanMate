@@ -1,5 +1,6 @@
 package com.cleanmate.presentation.customer;
 
+import com.cleanmate.presentation.nav.LanguageManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -130,7 +131,7 @@ public class CustomerManagementController extends com.cleanmate.presentation.nav
         detailName.setText(r.getName());
         detailEmail.setText("✉  " + r.getEmail());
         detailPhone.setText("☎  " + r.getPhone());
-        detailProperties.setText("🏠  " + r.getPropertyCount() + " apartmánov");
+        detailProperties.setText("🏠  " + r.getPropertyCount() + LanguageManager.getBundle().getString("customers.properties.suffix"));
         detailNote.setText(r.getNote());
     }
 
