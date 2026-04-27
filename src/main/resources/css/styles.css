@@ -960,6 +960,24 @@
     -fx-font-size: 28px;
 }
 
+/* ── QC Star Rating ─────────────────────────────────────────────────── */
+.star-btn {
+    -fx-font-size: 34px;
+    -fx-text-fill: #CBD5E1;
+    -fx-cursor: hand;
+    -fx-padding: 0 4 0 0;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+.star-btn-filled {
+    -fx-font-size: 34px;
+    -fx-text-fill: #F59E0B;
+    -fx-cursor: hand;
+    -fx-padding: 0 4 0 0;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
 /* ── Confirm Dialog ─────────────────────────────────────────────────── */
 .confirm-dialog {
     -fx-background-color: #FFFFFF;

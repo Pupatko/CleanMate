@@ -17,6 +17,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
+import com.cleanmate.presentation.nav.LanguageManager;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -124,7 +125,7 @@ public class CustomerPortalController extends com.cleanmate.presentation.nav.Bas
     private void applyFilter() {
         String sel = propertyFilter.getValue();
         filtered.setPredicate(r -> sel == null || ALL.equals(sel) || sel.equals(r.getProperty()));
-        countLabel.setText("Záznamov: " + filtered.size() + " / " + data.size());
+        countLabel.setText(LanguageManager.getBundle().getString("portal.count.prefix") + " " + filtered.size() + " / " + data.size());
     }
 
     private void showQC(HistoryRow r) {
@@ -140,9 +141,11 @@ public class CustomerPortalController extends com.cleanmate.presentation.nav.Bas
 
         qcTitle.setText(r.getProperty());
         qcMeta.setText(r.getDate().format(DATE_FMT) + "  •  " + r.getEmployee() + "  •  " + r.getStatus());
-        qcRating.setText("Hodnotenie: " + "★".repeat(r.getRating()) + "☆".repeat(5 - r.getRating()));
+        qcRating.setText(LanguageManager.getBundle().getString("portal.qc.rating.prefix") + " "
+                + "★".repeat(r.getRating()) + "☆".repeat(5 - r.getRating()));
         qcNote.setText(r.getNote() == null || r.getNote().isBlank()
-                ? "Bez poznámok" : "„" + r.getNote() + "\"");
+                ? LanguageManager.getBundle().getString("portal.qc.no.note")
+                : "„" + r.getNote() + "\"");
 
         qcPhotos.getChildren().clear();
         for (int i = 0; i < r.getPhotoCount(); i++) {
