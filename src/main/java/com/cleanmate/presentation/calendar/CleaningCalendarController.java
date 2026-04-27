@@ -157,12 +157,14 @@ public class CleaningCalendarController extends BaseNavController {
 
         assignPanel.setVisible(true);
         assignPanel.setManaged(true);
+        renderCalendar();
     }
 
     @FXML private void onClosePanel() {
         assignPanel.setVisible(false);
         assignPanel.setManaged(false);
         selectedEvent = null;
+        renderCalendar();
     }
 
     @FXML private void onAssign() {
@@ -288,6 +290,7 @@ public class CleaningCalendarController extends BaseNavController {
     private Node buildLargeEventCard(CalendarCleaningItem e) {
         HBox card = new HBox(18);
         card.getStyleClass().setAll("cal-event-card", "event-" + e.status().toLowerCase());
+        if (e.equals(selectedEvent)) card.getStyleClass().add("cal-event-selected");
         card.setAlignment(Pos.CENTER_LEFT);
         card.setPadding(new Insets(14, 18, 14, 18));
 
@@ -418,6 +421,7 @@ public class CleaningCalendarController extends BaseNavController {
     private Node buildSmallEventCard(CalendarCleaningItem e) {
         VBox card = new VBox(3);
         card.getStyleClass().setAll("cal-small-event", "event-" + e.status().toLowerCase());
+        if (e.equals(selectedEvent)) card.getStyleClass().add("cal-event-selected");
         card.setPadding(new Insets(8, 10, 8, 10));
         card.setMaxWidth(Double.MAX_VALUE);
 
@@ -516,6 +520,7 @@ public class CleaningCalendarController extends BaseNavController {
             CalendarCleaningItem e = onDay.get(i);
             Label chip = new Label(e.checkOut().format(TIME_FMT) + " " + e.property());
             chip.getStyleClass().setAll("cal-month-event", "event-" + e.status().toLowerCase());
+            if (e.equals(selectedEvent)) chip.getStyleClass().add("cal-event-selected");
             chip.setMaxWidth(Double.MAX_VALUE);
             chip.setOnMouseClicked(ev -> {
                 if (ev.getClickCount() == 1) selectEvent(e);

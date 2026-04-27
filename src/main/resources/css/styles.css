@@ -1141,6 +1141,15 @@
 .stepper-line-done   { -fx-background-color: #10B981; }
 .stepper-line-future { -fx-background-color: #E2E8F0; }
 
+/* ─── Calendar selected event highlight ─────────────────── */
+.cal-event-selected {
+    -fx-border-color: #2563EB;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(37,99,235,0.35), 10, 0, 0, 2);
+}
+
 /* ─── Calendar Assign Panel ─────────────────────────────── */
 .assign-panel {
     -fx-background-color: white;
