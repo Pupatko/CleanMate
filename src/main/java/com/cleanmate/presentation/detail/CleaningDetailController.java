@@ -271,14 +271,14 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
 
             Label dot = new Label(i < currentIdx ? "✓" : icons[i]);
             dot.getStyleClass().addAll("stepper-dot", dotStyle);
-            dot.setAlignment(javafx.geometry.Pos.CENTER);
+            dot.setAlignment(Pos.CENTER);
 
             Label lbl = new Label(b.getString(keys[i]));
             lbl.getStyleClass().setAll(labelStyle.split(" "));
-            lbl.setAlignment(javafx.geometry.Pos.CENTER);
+            lbl.setAlignment(Pos.CENTER);
 
             VBox step = new VBox(4, dot, lbl);
-            step.setAlignment(javafx.geometry.Pos.CENTER);
+            step.setAlignment(Pos.CENTER);
             stepperBox.getChildren().add(step);
         }
 

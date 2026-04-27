@@ -3,6 +3,7 @@ package com.cleanmate.presentation.calendar;
 import com.cleanmate.presentation.detail.CleaningDetailController;
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.nav.LanguageManager;
+import com.cleanmate.presentation.util.ToastManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -43,6 +44,7 @@ public class CleaningCalendarController extends BaseNavController {
     private static final String ALL_STATUS = "— všetky —";
     private static final Locale SK = Locale.of("sk");
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
+    private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("d.M.yyyy");
 
     private static final ObservableList<CalendarCleaningItem> DATA = FXCollections.observableArrayList();
     static { DATA.addAll(sampleData()); }
@@ -58,6 +60,15 @@ public class CleaningCalendarController extends BaseNavController {
     @FXML private ToggleButton weekToggle;
     @FXML private ToggleButton monthToggle;
     @FXML private StackPane calendarHolder;
+
+    // ── Assign panel ─────────────────────────────────────────────────────────
+    @FXML private VBox assignPanel;
+    @FXML private Label panelProperty;
+    @FXML private Label panelDateTime;
+    @FXML private Label panelStatus;
+    @FXML private ComboBox<String> assignCombo;
+
+    private CalendarCleaningItem selectedEvent = null;
 
     private enum ViewMode { DAY, WEEK, MONTH }
     private ViewMode viewMode = ViewMode.WEEK;
@@ -126,6 +137,60 @@ public class CleaningCalendarController extends BaseNavController {
     private void onClearFilters() {
         employeeCombo.getSelectionModel().selectFirst();
         statusCombo.getSelectionModel().selectFirst();
+    }
+
+    // ── Assign panel handlers ─────────────────────────────────────────────────
+
+    private void selectEvent(CalendarCleaningItem e) {
+        selectedEvent = e;
+        panelProperty.setText(e.property());
+        panelDateTime.setText(e.date().format(DATE_FMT) + "  " +
+                e.checkOut().format(TIME_FMT) + " → " + e.checkIn().format(TIME_FMT));
+        panelStatus.setText(e.status().replace('_', ' '));
+        panelStatus.getStyleClass().setAll("status-badge", "status-" + e.status().toLowerCase());
+
+        if (assignCombo.getItems().isEmpty()) {
+            assignCombo.setItems(FXCollections.observableArrayList(
+                    "Anna Nová", "Peter Malý", "Eva Horváthová", "Ján Kováč"));
+        }
+        assignCombo.setValue(e.employee());
+
+        assignPanel.setVisible(true);
+        assignPanel.setManaged(true);
+    }
+
+    @FXML private void onClosePanel() {
+        assignPanel.setVisible(false);
+        assignPanel.setManaged(false);
+        selectedEvent = null;
+    }
+
+    @FXML private void onAssign() {
+        if (selectedEvent == null) return;
+        String newEmployee = assignCombo.getValue();
+        if (newEmployee == null || newEmployee.isBlank()) return;
+
+        CalendarCleaningItem updated = new CalendarCleaningItem(
+                selectedEvent.date(), selectedEvent.checkOut(), selectedEvent.checkIn(),
+                selectedEvent.property(), selectedEvent.customer(),
+                newEmployee,
+                "ASSIGNED".equals(selectedEvent.status()) || "NEW".equals(selectedEvent.status())
+                        ? "ASSIGNED" : selectedEvent.status());
+
+        DATA.remove(selectedEvent);
+        DATA.add(updated);
+        selectedEvent = updated;
+        panelStatus.setText(updated.status().replace('_', ' '));
+        panelStatus.getStyleClass().setAll("status-badge", "status-" + updated.status().toLowerCase());
+
+        toast(LanguageManager.getBundle().getString("toast.changes.saved"), ToastManager.Type.SUCCESS);
+    }
+
+    @FXML private void onOpenDetail() {
+        if (selectedEvent == null) return;
+        CleaningDetailController.selected = selectedEvent;
+        onClosePanel();
+        navCleaningDetail();
     }
 
     private List<CalendarCleaningItem> filteredEvents() {
@@ -262,7 +327,10 @@ public class CleaningCalendarController extends BaseNavController {
         badge.getStyleClass().setAll("status-badge", "status-" + e.status().toLowerCase());
 
         card.getChildren().addAll(timeCol, content, badge);
-        card.setOnMouseClicked(ev -> { if (ev.getClickCount() == 2) { CleaningDetailController.selected = e; navCleaningDetail(); } });
+        card.setOnMouseClicked(ev -> {
+            if (ev.getClickCount() == 1) selectEvent(e);
+            else { CleaningDetailController.selected = e; navCleaningDetail(); }
+        });
         return card;
     }
 
@@ -365,7 +433,10 @@ public class CleaningCalendarController extends BaseNavController {
         emp.setWrapText(true);
 
         card.getChildren().addAll(time, prop, emp);
-        card.setOnMouseClicked(ev -> { if (ev.getClickCount() == 2) { CleaningDetailController.selected = e; navCleaningDetail(); } });
+        card.setOnMouseClicked(ev -> {
+            if (ev.getClickCount() == 1) selectEvent(e);
+            else { CleaningDetailController.selected = e; navCleaningDetail(); }
+        });
         return card;
     }
 
@@ -446,7 +517,10 @@ public class CleaningCalendarController extends BaseNavController {
             Label chip = new Label(e.checkOut().format(TIME_FMT) + " " + e.property());
             chip.getStyleClass().setAll("cal-month-event", "event-" + e.status().toLowerCase());
             chip.setMaxWidth(Double.MAX_VALUE);
-            chip.setOnMouseClicked(ev -> { if (ev.getClickCount() == 2) { CleaningDetailController.selected = e; navCleaningDetail(); } });
+            chip.setOnMouseClicked(ev -> {
+                if (ev.getClickCount() == 1) selectEvent(e);
+                else { CleaningDetailController.selected = e; navCleaningDetail(); }
+            });
             cell.getChildren().add(chip);
         }
         if (onDay.size() > shown) {

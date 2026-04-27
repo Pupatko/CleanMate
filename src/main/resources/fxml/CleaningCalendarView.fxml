@@ -38,6 +38,28 @@
         </VBox>
     </left>
 
+    <right>
+        <VBox fx:id="assignPanel" styleClass="assign-panel" spacing="14"
+              visible="false" managed="false">
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <Label text="%cal.assign.title" styleClass="assign-panel-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="✕" onAction="#onClosePanel" styleClass="assign-panel-close"/>
+            </HBox>
+            <Label fx:id="panelProperty" text="" styleClass="assign-panel-property" wrapText="true"/>
+            <Label fx:id="panelDateTime" text="" styleClass="assign-panel-meta"/>
+            <Label fx:id="panelStatus"   text="" styleClass="status-badge"/>
+            <VBox spacing="4">
+                <Label text="%cal.assign.employee" styleClass="field-label"/>
+                <ComboBox fx:id="assignCombo" maxWidth="Infinity" styleClass="input"/>
+            </VBox>
+            <Button text="%cal.assign.save" onAction="#onAssign"
+                    styleClass="primary-button" maxWidth="Infinity"/>
+            <Button text="%cal.assign.open.detail" onAction="#onOpenDetail"
+                    styleClass="secondary-button" maxWidth="Infinity"/>
+        </VBox>
+    </right>
+
     <center>
         <VBox styleClass="content" spacing="16">
             <padding><Insets top="28" right="32" bottom="24" left="32"/></padding>
