@@ -58,6 +58,8 @@
                 <Label fx:id="statusBadge" text="NEW" styleClass="status-badge, status-new"/>
             </HBox>
 
+            <HBox fx:id="stepperBox" alignment="CENTER" styleClass="stepper" spacing="0"/>
+
             <GridPane hgap="16" vgap="10" styleClass="form-card">
                 <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>
                 <columnConstraints>

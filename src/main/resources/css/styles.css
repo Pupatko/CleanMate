@@ -1105,3 +1105,72 @@
     -fx-text-fill: white;
     -fx-font-size: 13px;
 }
+
+/* ─── Status Stepper ────────────────────────────────────── */
+.stepper {
+    -fx-padding: 10 0 10 0;
+}
+.stepper-dot {
+    -fx-min-width: 32;
+    -fx-min-height: 32;
+    -fx-max-width: 32;
+    -fx-max-height: 32;
+    -fx-background-radius: 16;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-text-fill: white;
+}
+.stepper-dot-done     { -fx-background-color: #10B981; }
+.stepper-dot-current  { -fx-background-color: #2563EB; -fx-effect: dropshadow(gaussian, rgba(37,99,235,0.4), 8, 0, 0, 2); }
+.stepper-dot-future   { -fx-background-color: #CBD5E1; -fx-text-fill: #94A3B8; }
+.stepper-dot-cancelled{ -fx-background-color: #EF4444; }
+.stepper-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #64748B;
+    -fx-alignment: center;
+}
+.stepper-label-done    { -fx-text-fill: #10B981; -fx-font-weight: bold; }
+.stepper-label-current { -fx-text-fill: #2563EB; -fx-font-weight: bold; }
+.stepper-label-cancelled { -fx-text-fill: #EF4444; -fx-font-weight: bold; }
+.stepper-line {
+    -fx-min-height: 3;
+    -fx-max-height: 3;
+    -fx-background-radius: 2;
+}
+.stepper-line-done   { -fx-background-color: #10B981; }
+.stepper-line-future { -fx-background-color: #E2E8F0; }
+
+/* ─── Calendar Assign Panel ─────────────────────────────── */
+.assign-panel {
+    -fx-background-color: white;
+    -fx-border-color: #E2E8F0;
+    -fx-border-width: 0 0 0 1;
+    -fx-padding: 20 16 20 16;
+    -fx-min-width: 240;
+    -fx-max-width: 260;
+}
+.assign-panel-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1E293B;
+}
+.assign-panel-property {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1E293B;
+    -fx-wrap-text: true;
+}
+.assign-panel-meta {
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748B;
+}
+.assign-panel-close {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-font-size: 16px;
+    -fx-text-fill: #94A3B8;
+    -fx-cursor: hand;
+    -fx-padding: 0 4 0 4;
+}
+.assign-panel-close:hover { -fx-text-fill: #475569; }

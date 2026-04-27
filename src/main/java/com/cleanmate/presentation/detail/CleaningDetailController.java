@@ -15,8 +15,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -57,6 +60,9 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
     @FXML private HBox  starBox;
     @FXML private TextArea qcNoteArea;
     @FXML private Label qcSavedLabel;
+
+    // ── Status stepper ───────────────────────────────────────────────────────
+    @FXML private HBox stepperBox;
 
     // ── Edit buttons ─────────────────────────────────────────────────────────
     @FXML private Button editButton;
@@ -116,8 +122,10 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
         statusCombo.valueProperty().addListener((obs, o, n) -> {
             updateStatusBadge(n);
             updateQcVisibility(n);
+            buildStepper(n);
         });
         updateStatusBadge(statusCombo.getValue());
+        buildStepper(statusCombo.getValue());
 
         steps.setAll(
                 new ChecklistStep("Vysávanie obývačky",          true),
@@ -218,6 +226,71 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
         if (status == null) return;
         statusBadge.setText(status);
         statusBadge.getStyleClass().setAll("status-badge", "status-" + status.toLowerCase());
+    }
+
+    private void buildStepper(String status) {
+        if (stepperBox == null || status == null) return;
+        stepperBox.getChildren().clear();
+
+        var b = LanguageManager.getBundle();
+        String[] keys    = {"stepper.new", "stepper.assigned", "stepper.in_progress", "stepper.done"};
+        String[] statuses = {"NEW", "ASSIGNED", "IN_PROGRESS", "DONE"};
+        String[] icons    = {"1", "2", "3", "4"};
+
+        boolean cancelled = "CANCELLED".equals(status);
+        int currentIdx = -1;
+        if (!cancelled) {
+            for (int i = 0; i < statuses.length; i++) {
+                if (statuses[i].equals(status)) { currentIdx = i; break; }
+            }
+        }
+
+        for (int i = 0; i < statuses.length; i++) {
+            // connecting line before each dot (except the first)
+            if (i > 0) {
+                Region line = new Region();
+                line.getStyleClass().add("stepper-line");
+                line.getStyleClass().add(cancelled || i <= currentIdx ? "stepper-line-done" : "stepper-line-future");
+                HBox.setHgrow(line, Priority.ALWAYS);
+                stepperBox.getChildren().add(line);
+            }
+
+            String dotStyle;
+            String labelStyle = "stepper-label";
+            if (cancelled) {
+                dotStyle = "stepper-dot-future";
+            } else if (i < currentIdx) {
+                dotStyle = "stepper-dot-done";
+                labelStyle = "stepper-label stepper-label-done";
+            } else if (i == currentIdx) {
+                dotStyle = "stepper-dot-current";
+                labelStyle = "stepper-label stepper-label-current";
+            } else {
+                dotStyle = "stepper-dot-future";
+            }
+
+            Label dot = new Label(i < currentIdx ? "✓" : icons[i]);
+            dot.getStyleClass().addAll("stepper-dot", dotStyle);
+            dot.setAlignment(javafx.geometry.Pos.CENTER);
+
+            Label lbl = new Label(b.getString(keys[i]));
+            lbl.getStyleClass().setAll(labelStyle.split(" "));
+            lbl.setAlignment(javafx.geometry.Pos.CENTER);
+
+            VBox step = new VBox(4, dot, lbl);
+            step.setAlignment(javafx.geometry.Pos.CENTER);
+            stepperBox.getChildren().add(step);
+        }
+
+        if (cancelled) {
+            Region spacer = new Region();
+            spacer.setMinWidth(12);
+            stepperBox.getChildren().add(spacer);
+
+            Label badge = new Label("✕ CANCELLED");
+            badge.getStyleClass().setAll("status-badge", "status-cancelled");
+            stepperBox.getChildren().add(badge);
+        }
     }
 
     // ── Photos ───────────────────────────────────────────────────────────────
