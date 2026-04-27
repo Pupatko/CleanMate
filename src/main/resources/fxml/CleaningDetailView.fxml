@@ -34,6 +34,7 @@
             <Button text="%nav.zakaznici" onAction="#navCustomers" styleClass="nav-button" maxWidth="Infinity"/>
             <Button text="%nav.apartmany" onAction="#navApartments" styleClass="nav-button" maxWidth="Infinity"/>
             <Button text="%nav.zamestnanci" onAction="#navEmployees" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.statistiky" onAction="#navStatistics" styleClass="nav-button" maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
             <HBox spacing="4">
                 <Button text="SK" onAction="#onLangSk" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>

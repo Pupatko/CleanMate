@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cleanmate.presentation.statistics.StatisticsController"
+            styleClass="dashboard-root"
+            prefWidth="1180" prefHeight="720">
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="220" spacing="4">
+            <padding><Insets top="24" right="16" bottom="16" left="16"/></padding>
+            <Label text="CleanMate" styleClass="sidebar-brand"/>
+            <Label text="%role.firma" styleClass="sidebar-subtitle"/>
+            <Region prefHeight="20"/>
+            <Button text="%nav.dashboard"   onAction="#navDashboard"   styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.upratovania" onAction="#navCalendar"    styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.zakaznici"   onAction="#navCustomers"   styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.apartmany"   onAction="#navApartments"  styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.zamestnanci" onAction="#navEmployees"   styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="%nav.statistiky"  onAction="#navStatistics"  styleClass="nav-button, nav-active" maxWidth="Infinity"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <HBox spacing="4">
+                <Button text="SK" onAction="#onLangSk" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="EN" onAction="#onLangEn" styleClass="lang-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            </HBox>
+            <Button text="%nav.odhlasit" onAction="#navLogout" styleClass="nav-button, nav-logout" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox styleClass="content" spacing="20">
+            <padding><Insets top="28" right="32" bottom="24" left="32"/></padding>
+
+            <!-- Header -->
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <VBox spacing="4">
+                    <Label text="%stats.title" styleClass="page-title"/>
+                    <Label text="%stats.subtitle" styleClass="page-subtitle"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="%stats.period.label" styleClass="field-label"/>
+                <ComboBox fx:id="periodCombo" styleClass="input" prefWidth="180"/>
+            </HBox>
+
+            <!-- Stat cards -->
+            <GridPane hgap="16" vgap="0">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="25"/>
+                    <ColumnConstraints percentWidth="25"/>
+                    <ColumnConstraints percentWidth="25"/>
+                    <ColumnConstraints percentWidth="25"/>
+                </columnConstraints>
+
+                <VBox spacing="4" styleClass="stat-card" GridPane.columnIndex="0">
+                    <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>
+                    <Label text="%stats.card.total" styleClass="stat-card-label"/>
+                    <Label fx:id="cardTotalValue" text="—" styleClass="stat-card-value"/>
+                </VBox>
+                <VBox spacing="4" styleClass="stat-card" GridPane.columnIndex="1">
+                    <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>
+                    <Label text="%stats.card.done" styleClass="stat-card-label"/>
+                    <Label fx:id="cardDoneValue" text="—" styleClass="stat-card-value, stat-card-value-green"/>
+                </VBox>
+                <VBox spacing="4" styleClass="stat-card" GridPane.columnIndex="2">
+                    <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>
+                    <Label text="%stats.card.hours" styleClass="stat-card-label"/>
+                    <Label fx:id="cardHoursValue" text="—" styleClass="stat-card-value"/>
+                </VBox>
+                <VBox spacing="4" styleClass="stat-card" GridPane.columnIndex="3">
+                    <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>
+                    <Label text="%stats.card.rating" styleClass="stat-card-label"/>
+                    <Label fx:id="cardRatingValue" text="—" styleClass="stat-card-value, stat-card-value-amber"/>
+                </VBox>
+            </GridPane>
+
+            <!-- Monthly bar chart -->
+            <VBox spacing="8" styleClass="form-card" VBox.vgrow="ALWAYS">
+                <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+                <Label text="%stats.chart.monthly.title" styleClass="section-title"/>
+                <BarChart fx:id="monthlyChart" VBox.vgrow="ALWAYS"
+                          styleClass="stats-chart" animated="false" barGap="2" categoryGap="16">
+                    <xAxis><CategoryAxis label="%stats.chart.monthly.x"/></xAxis>
+                    <yAxis><NumberAxis label="%stats.chart.monthly.y" minorTickVisible="false"/></yAxis>
+                </BarChart>
+            </VBox>
+
+            <!-- Bottom row: pie + leaderboard -->
+            <HBox spacing="16">
+                <VBox spacing="8" styleClass="form-card" HBox.hgrow="ALWAYS">
+                    <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+                    <Label text="%stats.section.status" styleClass="section-title"/>
+                    <PieChart fx:id="statusPie" styleClass="stats-chart"
+                              prefHeight="220" labelsVisible="true" animated="false"/>
+                </VBox>
+
+                <VBox spacing="8" styleClass="form-card" HBox.hgrow="ALWAYS">
+                    <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+                    <Label text="%stats.section.employees" styleClass="section-title"/>
+                    <VBox fx:id="employeeLeaderboard" spacing="4" VBox.vgrow="ALWAYS"/>
+                </VBox>
+            </HBox>
+
+        </VBox>
+    </center>
+</BorderPane>

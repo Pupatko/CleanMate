@@ -19,7 +19,8 @@ public enum Route {
     EMPLOYEE_PROFILE("/fxml/EmployeeProfileView.fxml",      "title.employee.profile"),
     PORTAL          ("/fxml/CustomerPortalView.fxml",       "title.portal"),
     MY_PROPERTIES   ("/fxml/MyPropertiesView.fxml",         "title.my.properties"),
-    INVOICES        ("/fxml/InvoicesView.fxml",             "title.invoices");
+    INVOICES        ("/fxml/InvoicesView.fxml",             "title.invoices"),
+    STATISTICS      ("/fxml/StatisticsView.fxml",          "title.statistics");
 
     public final String fxml;
     public final String titleKey;

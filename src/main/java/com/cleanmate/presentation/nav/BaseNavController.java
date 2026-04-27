@@ -24,6 +24,7 @@ public abstract class BaseNavController {
     public void navProfile()       { ViewRouter.get().navigate(Route.EMPLOYEE_PROFILE); }
     public void navProperties()    { ViewRouter.get().navigate(Route.MY_PROPERTIES); }
     public void navInvoices()      { ViewRouter.get().navigate(Route.INVOICES); }
+    public void navStatistics()    { ViewRouter.get().navigate(Route.STATISTICS); }
     public void navLogout() {
         if (ConfirmDialog.show("confirm.logout.header",
                 LanguageManager.getBundle().getString("confirm.logout.content"))) {

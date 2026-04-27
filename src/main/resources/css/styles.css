@@ -1041,6 +1041,50 @@
     -fx-text-alignment: center;
 }
 
+/* ─── Statistics screen ─────────────────────────────────── */
+.stat-card {
+    -fx-background-color: white;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 2);
+}
+.stat-card-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #64748B;
+    -fx-font-weight: bold;
+    -fx-text-transform: uppercase;
+}
+.stat-card-value {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1E293B;
+}
+.stat-card-value-green  { -fx-text-fill: #10B981; }
+.stat-card-value-amber  { -fx-text-fill: #F59E0B; }
+
+.stats-chart {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+.stats-chart .chart-plot-background { -fx-background-color: transparent; }
+.stats-chart .default-color0.chart-bar { -fx-bar-fill: #3B82F6; }
+.stats-chart .default-color1.chart-bar { -fx-bar-fill: #FCA5A5; }
+.stats-chart .default-color0.chart-pie { -fx-pie-color: #3B82F6; }
+.stats-chart .default-color1.chart-pie { -fx-pie-color: #FCA5A5; }
+.stats-chart .default-color2.chart-pie { -fx-pie-color: #34D399; }
+.stats-chart .default-color3.chart-pie { -fx-pie-color: #FBBF24; }
+.stats-chart .default-color4.chart-pie { -fx-pie-color: #A78BFA; }
+
+.stats-leader-name  { -fx-font-size: 13px; -fx-text-fill: #334155; }
+.stats-leader-count { -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2563EB; }
+.stats-leader-bar   {
+    -fx-background-color: #BFDBFE;
+    -fx-background-radius: 4;
+    -fx-min-height: 20;
+    -fx-max-height: 20;
+}
+
 /* ─── Toast / Snackbar ──────────────────────────────────── */
 .toast {
     -fx-background-radius: 10;
