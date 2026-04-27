@@ -1026,6 +1026,21 @@
     -fx-background-color: #E2E8F0;
 }
 
+/* ─── Empty state ───────────────────────────────────────── */
+.empty-state {
+    -fx-padding: 40;
+    -fx-alignment: center;
+}
+.empty-state-icon {
+    -fx-font-size: 40px;
+    -fx-text-fill: #CBD5E1;
+}
+.empty-state-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #94A3B8;
+    -fx-text-alignment: center;
+}
+
 /* ─── Toast / Snackbar ──────────────────────────────────── */
 .toast {
     -fx-background-radius: 10;

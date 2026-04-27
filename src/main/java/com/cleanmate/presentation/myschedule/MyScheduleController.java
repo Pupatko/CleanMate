@@ -1,6 +1,7 @@
 package com.cleanmate.presentation.myschedule;
 
 import com.cleanmate.presentation.nav.LanguageManager;
+import com.cleanmate.presentation.util.EmptyState;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -48,6 +49,7 @@ public class MyScheduleController extends com.cleanmate.presentation.nav.BaseNav
         summaryLabel.setText(MessageFormat.format(LanguageManager.getBundle().getString("schedule.summary"), items.size(), done));
 
         list.setItems(items);
+        list.setPlaceholder(EmptyState.build("📅", "empty.schedule"));
         list.setCellFactory(l -> new TaskCell());
 
         list.setOnMouseClicked(e -> {

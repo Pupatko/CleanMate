@@ -1,6 +1,7 @@
 package com.cleanmate.presentation.customer;
 
 import com.cleanmate.presentation.nav.LanguageManager;
+import com.cleanmate.presentation.util.EmptyState;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -69,6 +70,7 @@ public class CustomerManagementController extends com.cleanmate.presentation.nav
 
         filtered = new FilteredList<>(DATA, r -> true);
         table.setItems(filtered);
+        table.setPlaceholder(EmptyState.build("👥", "empty.customers"));
 
         // Row click → navigate to EditCustomerView
         table.setRowFactory(tv -> {

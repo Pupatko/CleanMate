@@ -1,6 +1,7 @@
 package com.cleanmate.presentation.properties;
 
 import com.cleanmate.presentation.nav.BaseNavController;
+import com.cleanmate.presentation.util.EmptyState;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -39,6 +40,7 @@ public class MyPropertiesController extends BaseNavController {
 
         countLabel.setText(data.size() + " apartmánov");
         list.setItems(data);
+        list.setPlaceholder(EmptyState.build("🏠", "empty.properties"));
         list.setCellFactory(l -> new PropertyCell());
     }
 

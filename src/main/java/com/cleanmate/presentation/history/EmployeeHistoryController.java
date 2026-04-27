@@ -1,6 +1,7 @@
 package com.cleanmate.presentation.history;
 
 import com.cleanmate.presentation.nav.BaseNavController;
+import com.cleanmate.presentation.util.EmptyState;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -105,6 +106,7 @@ public class EmployeeHistoryController extends BaseNavController {
 
         filtered = new FilteredList<>(data, r -> true);
         table.setItems(filtered);
+        table.setPlaceholder(EmptyState.build("📋", "empty.history"));
         applyFilter();
     }
 

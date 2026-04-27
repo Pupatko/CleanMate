@@ -1,6 +1,7 @@
 package com.cleanmate.presentation.invoices;
 
 import com.cleanmate.presentation.nav.BaseNavController;
+import com.cleanmate.presentation.util.EmptyState;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -93,6 +94,7 @@ public class InvoicesController extends BaseNavController {
         });
 
         table.setItems(data);
+        table.setPlaceholder(EmptyState.build("🧾", "empty.invoices"));
         table.getSelectionModel().selectedItemProperty().addListener(
                 (obs, o, n) -> downloadButton.setDisable(n == null));
         downloadButton.setDisable(true);

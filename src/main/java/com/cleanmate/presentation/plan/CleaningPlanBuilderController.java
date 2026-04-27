@@ -62,6 +62,7 @@ public class CleaningPlanBuilderController extends com.cleanmate.presentation.na
                 new PlanStep("Foto finálneho stavu", "PHOTO"));
 
         stepList.setItems(steps);
+        stepList.setPlaceholder(com.cleanmate.presentation.util.EmptyState.build("📝", "empty.plan.steps"));
         stepList.setCellFactory(lv -> new StepCell(steps));
 
         steps.addListener((javafx.collections.ListChangeListener<PlanStep>) c -> updateCount());

@@ -129,6 +129,7 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
                 new ChecklistStep("Finálna kontrola",            false)
         );
         checklistView.setItems(steps);
+        checklistView.setPlaceholder(com.cleanmate.presentation.util.EmptyState.build("✅", "empty.checklist"));
         checklistView.setCellFactory(CheckBoxListCell.forListView(ChecklistStep::doneProperty));
         for (ChecklistStep s : steps) s.doneProperty().addListener((obs, o, n) -> updateProgress());
         updateProgress();

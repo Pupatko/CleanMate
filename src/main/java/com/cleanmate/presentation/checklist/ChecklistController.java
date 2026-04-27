@@ -58,6 +58,7 @@ public class ChecklistController extends com.cleanmate.presentation.nav.BaseNavC
                 new ChecklistStep("Vyhodenie odpadu", false)
         );
         checklist.setItems(steps);
+        checklist.setPlaceholder(com.cleanmate.presentation.util.EmptyState.build("✅", "empty.checklist"));
         checklist.setCellFactory(CheckBoxListCell.forListView(ChecklistStep::doneProperty));
 
         for (ChecklistStep s : steps) {

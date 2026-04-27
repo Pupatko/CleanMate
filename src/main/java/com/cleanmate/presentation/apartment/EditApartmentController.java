@@ -4,6 +4,7 @@ import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.ChangeSummary;
 import com.cleanmate.presentation.util.ConfirmDialog;
+import com.cleanmate.presentation.util.EmptyState;
 import com.cleanmate.presentation.util.ToastManager;
 
 import java.text.MessageFormat;
@@ -75,6 +76,7 @@ public class EditApartmentController extends BaseNavController {
             deleteButton.setManaged(false);
             // In add mode, start directly in edit mode so user can fill in
             tasksView.setItems(FXCollections.observableArrayList());
+            tasksView.setPlaceholder(EmptyState.build("✅", "empty.tasks"));
             setEditMode(true);
             // Replace Upraviť with nothing, Confirm becomes Save
             editButton.setVisible(false);
@@ -101,6 +103,7 @@ public class EditApartmentController extends BaseNavController {
         areaField.setText(String.valueOf(target.getArea()));
         noteArea.setText(target.getNote());
         tasksView.setItems(target.getTasks());
+        tasksView.setPlaceholder(EmptyState.build("✅", "empty.tasks"));
     }
 
     private void snapshotOriginal() {

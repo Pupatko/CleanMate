@@ -2,6 +2,7 @@ package com.cleanmate.presentation.employee;
 
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.ConfirmDialog;
+import com.cleanmate.presentation.util.EmptyState;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -104,6 +105,7 @@ public class EmployeeManagementController extends com.cleanmate.presentation.nav
 
         filtered = new FilteredList<>(DATA, r -> true);
         table.setItems(filtered);
+        table.setPlaceholder(EmptyState.build("👤", "empty.employees"));
 
         // Row click → navigate to AddEmployeeView in view/edit mode
         table.setRowFactory(tv -> {

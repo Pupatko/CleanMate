@@ -18,6 +18,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
 import com.cleanmate.presentation.nav.LanguageManager;
+import com.cleanmate.presentation.util.EmptyState;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -104,6 +105,7 @@ public class CustomerPortalController extends com.cleanmate.presentation.nav.Bas
 
         filtered = new FilteredList<>(data, r -> true);
         table.setItems(filtered);
+        table.setPlaceholder(EmptyState.build("📊", "empty.portal"));
 
         propertyFilter.valueProperty().addListener((obs, o, n) -> applyFilter());
         table.getSelectionModel().selectedItemProperty().addListener((obs, o, n) -> showQC(n));

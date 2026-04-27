@@ -4,6 +4,7 @@ import com.cleanmate.presentation.apartment.ApartmentItem;
 import com.cleanmate.presentation.calendar.CleaningCalendarController;
 import com.cleanmate.presentation.calendar.CleaningCalendarController.CalendarCleaningItem;
 import com.cleanmate.presentation.nav.BaseNavController;
+import com.cleanmate.presentation.util.EmptyState;
 import com.cleanmate.presentation.nav.LanguageManager;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -119,6 +120,7 @@ public class CustomerInvoicesController extends BaseNavController {
             }
         });
         itemsTable.setItems(items);
+        itemsTable.setPlaceholder(EmptyState.build("🧾", "empty.invoice.items"));
 
         apartmentCombo.valueProperty().addListener((obs, o, n) -> refresh());
         periodCombo.valueProperty().addListener((obs, o, n) -> refresh());

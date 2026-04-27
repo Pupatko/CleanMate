@@ -1,6 +1,7 @@
 package com.cleanmate.presentation.dashboard;
 
 import com.cleanmate.presentation.nav.BaseNavController;
+import com.cleanmate.presentation.util.EmptyState;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -58,6 +59,7 @@ public class DashboardController extends BaseNavController {
         });
 
         recentTable.setItems(sampleRows());
+        recentTable.setPlaceholder(EmptyState.build("📋", "empty.dashboard"));
 
         recentTable.getSelectionModel().selectedItemProperty().addListener(
                 (obs, o, n) -> { if (n != null) navCleaningDetail(); });

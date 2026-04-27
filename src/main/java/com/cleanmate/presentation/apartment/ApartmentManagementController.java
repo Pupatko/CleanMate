@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import com.cleanmate.presentation.nav.LanguageManager;
+import com.cleanmate.presentation.util.EmptyState;
 
 import java.util.logging.Logger;
 
@@ -53,6 +54,7 @@ public class ApartmentManagementController extends com.cleanmate.presentation.na
 
         filtered = new FilteredList<>(DATA, r -> true);
         table.setItems(filtered);
+        table.setPlaceholder(EmptyState.build("🏢", "empty.apartments"));
 
         // Click row to open edit screen
         table.setRowFactory(tv -> {
