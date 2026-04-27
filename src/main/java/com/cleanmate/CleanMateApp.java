@@ -12,6 +12,7 @@ public class CleanMateApp extends Application {
         stage.setResizable(true);
         stage.setMaximized(true);
 
+        com.cleanmate.service.ServiceLocator.init();
         ViewRouter.init(stage);
         ViewRouter.get().navigate(Route.LOGIN);
 

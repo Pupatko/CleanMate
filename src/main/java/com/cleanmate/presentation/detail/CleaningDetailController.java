@@ -1,6 +1,6 @@
 package com.cleanmate.presentation.detail;
 
-import com.cleanmate.presentation.calendar.CleaningCalendarController.CalendarCleaningItem;
+import com.cleanmate.model.Cleaning;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.ConfirmDialog;
 import javafx.collections.FXCollections;
@@ -79,7 +79,7 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
     private String savedCheckOut;
     private String savedCheckIn;
 
-    public static CalendarCleaningItem selected = null;
+    public static Cleaning selected = null;
 
     // QC state
     private int currentRating = 0;
@@ -98,8 +98,8 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
                 "NEW", "ASSIGNED", "IN_PROGRESS", "DONE", "CANCELLED"));
 
         if (selected != null) {
-            java.time.format.DateTimeFormatter dateFmt = java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy");
-            java.time.format.DateTimeFormatter timeFmt = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
+            var dateFmt = java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            var timeFmt = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
             propertyField.setText(selected.property());
             customerField.setText(selected.customer());
             dateField.setText(selected.date().format(dateFmt));

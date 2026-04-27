@@ -1,7 +1,7 @@
 package com.cleanmate.presentation.statistics;
 
-import com.cleanmate.presentation.calendar.CleaningCalendarController;
-import com.cleanmate.presentation.calendar.CleaningCalendarController.CalendarCleaningItem;
+import com.cleanmate.model.Cleaning;
+import com.cleanmate.service.ServiceLocator;
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.nav.LanguageManager;
 import javafx.collections.FXCollections;
@@ -64,7 +64,7 @@ public class StatisticsController extends BaseNavController {
 
     private void refresh() {
         LocalDate cutoff = cutoffDate();
-        List<CalendarCleaningItem> all = CleaningCalendarController.data().stream()
+        List<Cleaning> all = ServiceLocator.cleanings().getAll().stream()
                 .filter(e -> !e.date().isAfter(LocalDate.now()))
                 .filter(e -> !e.date().isBefore(cutoff))
                 .toList();
@@ -86,7 +86,7 @@ public class StatisticsController extends BaseNavController {
         return today.withDayOfMonth(1); // this month
     }
 
-    private void updateCards(List<CalendarCleaningItem> items) {
+    private void updateCards(List<Cleaning> items) {
         long total  = items.size();
         long done   = items.stream().filter(e -> "DONE".equals(e.status())).count();
         double hours = items.stream()
@@ -102,7 +102,7 @@ public class StatisticsController extends BaseNavController {
         cardRatingValue.setText(done == 0 ? "—" : String.format("★ %.1f", Math.min(rating, 5.0)));
     }
 
-    private void updateMonthlyChart(List<CalendarCleaningItem> items, LocalDate cutoff) {
+    private void updateMonthlyChart(List<Cleaning> items, LocalDate cutoff) {
         monthlyChart.getData().clear();
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("LLL yy", LanguageManager.getLocale());
@@ -139,9 +139,9 @@ public class StatisticsController extends BaseNavController {
         monthlyChart.getData().addAll(List.of(doneSeries, cancelSeries));
     }
 
-    private void updateStatusPie(List<CalendarCleaningItem> items) {
+    private void updateStatusPie(List<Cleaning> items) {
         Map<String, Long> byStatus = items.stream()
-                .collect(Collectors.groupingBy(CalendarCleaningItem::status, Collectors.counting()));
+                .collect(Collectors.groupingBy(Cleaning::status, Collectors.counting()));
 
         statusPie.getData().clear();
         statusPie.getData().addAll(
@@ -152,12 +152,12 @@ public class StatisticsController extends BaseNavController {
         );
     }
 
-    private void updateLeaderboard(List<CalendarCleaningItem> items) {
+    private void updateLeaderboard(List<Cleaning> items) {
         employeeLeaderboard.getChildren().clear();
 
         Map<String, Long> byEmployee = items.stream()
                 .filter(e -> "DONE".equals(e.status()))
-                .collect(Collectors.groupingBy(CalendarCleaningItem::employee, Collectors.counting()));
+                .collect(Collectors.groupingBy(Cleaning::employee, Collectors.counting()));
 
         if (byEmployee.isEmpty()) {
             Label empty = new Label("—");

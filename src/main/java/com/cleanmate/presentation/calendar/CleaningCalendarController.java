@@ -1,9 +1,11 @@
 package com.cleanmate.presentation.calendar;
 
+import com.cleanmate.model.Cleaning;
 import com.cleanmate.presentation.detail.CleaningDetailController;
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.ToastManager;
+import com.cleanmate.service.ServiceLocator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -40,17 +42,11 @@ import java.util.logging.Logger;
 public class CleaningCalendarController extends BaseNavController {
 
     private static final Logger LOG = Logger.getLogger(CleaningCalendarController.class.getName());
-    private static final String ALL = "— všetci —";
+    private static final String ALL        = "— všetci —";
     private static final String ALL_STATUS = "— všetky —";
-    private static final Locale SK = Locale.of("sk");
+    private static final Locale SK         = Locale.of("sk");
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("d.M.yyyy");
-
-    private static final ObservableList<CalendarCleaningItem> DATA = FXCollections.observableArrayList();
-    static { DATA.addAll(sampleData()); }
-
-    public static void addEvent(CalendarCleaningItem item) { DATA.add(item); }
-    public static ObservableList<CalendarCleaningItem> data() { return DATA; }
 
     @FXML private ComboBox<String> employeeCombo;
     @FXML private ComboBox<String> statusCombo;
@@ -61,14 +57,14 @@ public class CleaningCalendarController extends BaseNavController {
     @FXML private ToggleButton monthToggle;
     @FXML private StackPane calendarHolder;
 
-    // ── Assign panel ─────────────────────────────────────────────────────────
+    // ── Assign panel ──────────────────────────────────────────────────────────
     @FXML private VBox assignPanel;
     @FXML private Label panelProperty;
     @FXML private Label panelDateTime;
     @FXML private Label panelStatus;
     @FXML private ComboBox<String> assignCombo;
 
-    private CalendarCleaningItem selectedEvent = null;
+    private Cleaning selectedEvent = null;
 
     private enum ViewMode { DAY, WEEK, MONTH }
     private ViewMode viewMode = ViewMode.WEEK;
@@ -104,7 +100,8 @@ public class CleaningCalendarController extends BaseNavController {
 
         employeeCombo.valueProperty().addListener((obs, o, n) -> renderCalendar());
         statusCombo.valueProperty().addListener((obs, o, n) -> renderCalendar());
-        DATA.addListener((javafx.collections.ListChangeListener<CalendarCleaningItem>) c -> renderCalendar());
+        ServiceLocator.cleanings().getAll()
+                .addListener((javafx.collections.ListChangeListener<Cleaning>) c -> renderCalendar());
 
         weekToggle.setSelected(true);
         renderCalendar();
@@ -141,7 +138,7 @@ public class CleaningCalendarController extends BaseNavController {
 
     // ── Assign panel handlers ─────────────────────────────────────────────────
 
-    private void selectEvent(CalendarCleaningItem e) {
+    private void selectEvent(Cleaning e) {
         selectedEvent = e;
         panelProperty.setText(e.property());
         panelDateTime.setText(e.date().format(DATE_FMT) + "  " +
@@ -151,7 +148,7 @@ public class CleaningCalendarController extends BaseNavController {
 
         if (assignCombo.getItems().isEmpty()) {
             assignCombo.setItems(FXCollections.observableArrayList(
-                    "Anna Nová", "Peter Malý", "Eva Horváthová", "Ján Kováč"));
+                    ServiceLocator.employees().getAllNames()));
         }
         assignCombo.setValue(e.employee());
 
@@ -172,19 +169,13 @@ public class CleaningCalendarController extends BaseNavController {
         String newEmployee = assignCombo.getValue();
         if (newEmployee == null || newEmployee.isBlank()) return;
 
-        CalendarCleaningItem updated = new CalendarCleaningItem(
-                selectedEvent.date(), selectedEvent.checkOut(), selectedEvent.checkIn(),
-                selectedEvent.property(), selectedEvent.customer(),
-                newEmployee,
-                "ASSIGNED".equals(selectedEvent.status()) || "NEW".equals(selectedEvent.status())
-                        ? "ASSIGNED" : selectedEvent.status());
-
-        DATA.remove(selectedEvent);
-        DATA.add(updated);
+        String newStatus = "NEW".equals(selectedEvent.status()) ? "ASSIGNED" : selectedEvent.status();
+        Cleaning updated = selectedEvent.withEmployee(newEmployee, newStatus);
+        ServiceLocator.cleanings().save(updated);
         selectedEvent = updated;
+
         panelStatus.setText(updated.status().replace('_', ' '));
         panelStatus.getStyleClass().setAll("status-badge", "status-" + updated.status().toLowerCase());
-
         toast(LanguageManager.getBundle().getString("toast.changes.saved"), ToastManager.Type.SUCCESS);
     }
 
@@ -195,13 +186,15 @@ public class CleaningCalendarController extends BaseNavController {
         navCleaningDetail();
     }
 
-    private List<CalendarCleaningItem> filteredEvents() {
+    // ── Filtering ─────────────────────────────────────────────────────────────
+
+    private List<Cleaning> filteredEvents() {
         String emp = employeeCombo.getValue();
         String st  = statusCombo.getValue();
-        List<CalendarCleaningItem> out = new ArrayList<>();
-        for (CalendarCleaningItem it : DATA) {
+        List<Cleaning> out = new ArrayList<>();
+        for (Cleaning it : ServiceLocator.cleanings().getAll()) {
             if (emp != null && !ALL.equals(emp) && !emp.equals(it.employee())) continue;
-            if (st  != null && !ALL_STATUS.equals(st) && !st.equals(it.status())) continue;
+            if (st  != null && !ALL_STATUS.equals(st) && !st.equals(it.status()))  continue;
             out.add(it);
         }
         return out;
@@ -209,7 +202,7 @@ public class CleaningCalendarController extends BaseNavController {
 
     private void renderCalendar() {
         if (calendarHolder == null) return;
-        List<CalendarCleaningItem> events = filteredEvents();
+        List<Cleaning> events = filteredEvents();
         resultsCountLabel.setText(LanguageManager.getBundle().getString("calendar.count.prefix") + " " + events.size());
 
         Node view = switch (viewMode) {
@@ -248,7 +241,7 @@ public class CleaningCalendarController extends BaseNavController {
     }
 
     /* ========================= DAY VIEW ========================= */
-    private Node buildDayView(LocalDate day, List<CalendarCleaningItem> all) {
+    private Node buildDayView(LocalDate day, List<Cleaning> all) {
         VBox root = new VBox(14);
         root.getStyleClass().add("calendar-root");
         root.setPadding(new Insets(18, 20, 18, 20));
@@ -258,9 +251,9 @@ public class CleaningCalendarController extends BaseNavController {
         if (day.equals(LocalDate.now())) header.getStyleClass().add("cal-today-title");
         root.getChildren().add(header);
 
-        List<CalendarCleaningItem> onDay = all.stream()
+        List<Cleaning> onDay = all.stream()
                 .filter(e -> e.date().equals(day))
-                .sorted(Comparator.comparing(CalendarCleaningItem::checkOut))
+                .sorted(Comparator.comparing(Cleaning::checkOut))
                 .toList();
 
         if (onDay.isEmpty()) {
@@ -279,7 +272,7 @@ public class CleaningCalendarController extends BaseNavController {
 
         VBox list = new VBox(10);
         list.setPadding(new Insets(2, 2, 2, 2));
-        for (CalendarCleaningItem e : onDay) list.getChildren().add(buildLargeEventCard(e));
+        for (Cleaning e : onDay) list.getChildren().add(buildLargeEventCard(e));
 
         scroll.setContent(list);
         VBox.setVgrow(scroll, Priority.ALWAYS);
@@ -287,7 +280,7 @@ public class CleaningCalendarController extends BaseNavController {
         return root;
     }
 
-    private Node buildLargeEventCard(CalendarCleaningItem e) {
+    private Node buildLargeEventCard(Cleaning e) {
         HBox card = new HBox(18);
         card.getStyleClass().setAll("cal-event-card", "event-" + e.status().toLowerCase());
         if (e.equals(selectedEvent)) card.getStyleClass().add("cal-event-selected");
@@ -300,30 +293,18 @@ public class CleaningCalendarController extends BaseNavController {
         timeCol.setPrefWidth(120);
         timeCol.getStyleClass().add("event-card-time-col");
 
-        Label coLabel = new Label("CHECK-OUT");
-        coLabel.getStyleClass().add("event-card-label");
-        Label coTime = new Label(e.checkOut().format(TIME_FMT));
-        coTime.getStyleClass().add("event-card-time");
-        Label sep = new Label("↓");
-        sep.getStyleClass().add("event-card-sep");
-        Label ciTime = new Label(e.checkIn().format(TIME_FMT));
-        ciTime.getStyleClass().add("event-card-time");
-        Label ciLabel = new Label("CHECK-IN");
-        ciLabel.getStyleClass().add("event-card-label");
-
+        Label coLabel = new Label("CHECK-OUT"); coLabel.getStyleClass().add("event-card-label");
+        Label coTime  = new Label(e.checkOut().format(TIME_FMT)); coTime.getStyleClass().add("event-card-time");
+        Label sep     = new Label("↓"); sep.getStyleClass().add("event-card-sep");
+        Label ciTime  = new Label(e.checkIn().format(TIME_FMT)); ciTime.getStyleClass().add("event-card-time");
+        Label ciLabel = new Label("CHECK-IN"); ciLabel.getStyleClass().add("event-card-label");
         timeCol.getChildren().addAll(coLabel, coTime, sep, ciTime, ciLabel);
 
         VBox content = new VBox(4);
         HBox.setHgrow(content, Priority.ALWAYS);
         content.setAlignment(Pos.CENTER_LEFT);
-
-        Label prop = new Label(e.property());
-        prop.getStyleClass().add("event-card-property");
-        prop.setWrapText(true);
-
-        Label emp = new Label("👤 " + e.employee());
-        emp.getStyleClass().add("event-card-employee");
-
+        Label prop = new Label(e.property()); prop.getStyleClass().add("event-card-property"); prop.setWrapText(true);
+        Label emp  = new Label("👤 " + e.employee()); emp.getStyleClass().add("event-card-employee");
         content.getChildren().addAll(prop, emp);
 
         Label badge = new Label(e.status().replace('_', ' '));
@@ -338,7 +319,7 @@ public class CleaningCalendarController extends BaseNavController {
     }
 
     /* ========================= WEEK VIEW ========================= */
-    private Node buildWeekView(LocalDate weekStart, List<CalendarCleaningItem> all) {
+    private Node buildWeekView(LocalDate weekStart, List<Cleaning> all) {
         VBox root = new VBox();
         root.getStyleClass().add("calendar-root");
 
@@ -379,10 +360,9 @@ public class CleaningCalendarController extends BaseNavController {
 
         for (int i = 0; i < 7; i++) {
             LocalDate day = weekStart.plusDays(i);
-
-            List<CalendarCleaningItem> onDay = all.stream()
+            List<Cleaning> onDay = all.stream()
                     .filter(e -> e.date().equals(day))
-                    .sorted(Comparator.comparing(CalendarCleaningItem::checkOut))
+                    .sorted(Comparator.comparing(Cleaning::checkOut))
                     .toList();
 
             VBox eventsList = new VBox(6);
@@ -394,7 +374,7 @@ public class CleaningCalendarController extends BaseNavController {
                 empty.setAlignment(Pos.CENTER);
                 eventsList.getChildren().add(empty);
             } else {
-                for (CalendarCleaningItem e : onDay) eventsList.getChildren().add(buildSmallEventCard(e));
+                for (Cleaning e : onDay) eventsList.getChildren().add(buildSmallEventCard(e));
             }
 
             ScrollPane colScroll = new ScrollPane(eventsList);
@@ -409,7 +389,6 @@ public class CleaningCalendarController extends BaseNavController {
             col.setMaxWidth(Double.MAX_VALUE);
             VBox.setVgrow(colScroll, Priority.ALWAYS);
             col.getChildren().add(colScroll);
-
             body.add(col, i, 0);
         }
 
@@ -418,7 +397,7 @@ public class CleaningCalendarController extends BaseNavController {
         return root;
     }
 
-    private Node buildSmallEventCard(CalendarCleaningItem e) {
+    private Node buildSmallEventCard(Cleaning e) {
         VBox card = new VBox(3);
         card.getStyleClass().setAll("cal-small-event", "event-" + e.status().toLowerCase());
         if (e.equals(selectedEvent)) card.getStyleClass().add("cal-event-selected");
@@ -427,14 +406,8 @@ public class CleaningCalendarController extends BaseNavController {
 
         Label time = new Label(e.checkOut().format(TIME_FMT) + " → " + e.checkIn().format(TIME_FMT));
         time.getStyleClass().add("cal-small-time");
-
-        Label prop = new Label(e.property());
-        prop.getStyleClass().add("cal-small-property");
-        prop.setWrapText(true);
-
-        Label emp = new Label(e.employee());
-        emp.getStyleClass().add("cal-small-employee");
-        emp.setWrapText(true);
+        Label prop = new Label(e.property()); prop.getStyleClass().add("cal-small-property"); prop.setWrapText(true);
+        Label emp  = new Label(e.employee()); emp.getStyleClass().add("cal-small-employee");  emp.setWrapText(true);
 
         card.getChildren().addAll(time, prop, emp);
         card.setOnMouseClicked(ev -> {
@@ -445,7 +418,7 @@ public class CleaningCalendarController extends BaseNavController {
     }
 
     /* ========================= MONTH VIEW ========================= */
-    private Node buildMonthView(YearMonth ym, List<CalendarCleaningItem> all) {
+    private Node buildMonthView(YearMonth ym, List<Cleaning> all) {
         VBox root = new VBox();
         root.getStyleClass().add("calendar-root");
 
@@ -459,10 +432,8 @@ public class CleaningCalendarController extends BaseNavController {
         }
         String[] days = {"Pondelok", "Utorok", "Streda", "Štvrtok", "Piatok", "Sobota", "Nedeľa"};
         for (int c = 0; c < 7; c++) {
-            Label l = new Label(days[c]);
-            l.getStyleClass().add("cal-month-weekday");
-            l.setMaxWidth(Double.MAX_VALUE);
-            l.setAlignment(Pos.CENTER);
+            Label l = new Label(days[c]); l.getStyleClass().add("cal-month-weekday");
+            l.setMaxWidth(Double.MAX_VALUE); l.setAlignment(Pos.CENTER);
             weekdayRow.add(l, c, 0);
         }
         root.getChildren().add(weekdayRow);
@@ -475,23 +446,21 @@ public class CleaningCalendarController extends BaseNavController {
             cc.setHgrow(Priority.ALWAYS);
             grid.getColumnConstraints().add(cc);
         }
-        int weeks = 6;
-        for (int w = 0; w < weeks; w++) {
+        for (int w = 0; w < 6; w++) {
             RowConstraints rrc = new RowConstraints();
-            rrc.setPercentHeight(100.0 / weeks);
+            rrc.setPercentHeight(100.0 / 6);
             rrc.setVgrow(Priority.ALWAYS);
             rrc.setValignment(VPos.TOP);
             grid.getRowConstraints().add(rrc);
         }
 
-        LocalDate first = ym.atDay(1);
+        LocalDate first     = ym.atDay(1);
         LocalDate gridStart = first.with(DayOfWeek.MONDAY);
         if (gridStart.isAfter(first)) gridStart = gridStart.minusWeeks(1);
 
-        for (int w = 0; w < weeks; w++) {
+        for (int w = 0; w < 6; w++) {
             for (int d = 0; d < 7; d++) {
-                LocalDate cellDate = gridStart.plusDays(w * 7L + d);
-                grid.add(buildMonthCell(cellDate, ym, all), d, w);
+                grid.add(buildMonthCell(gridStart.plusDays(w * 7L + d), ym, all), d, w);
             }
         }
         VBox.setVgrow(grid, Priority.ALWAYS);
@@ -499,7 +468,7 @@ public class CleaningCalendarController extends BaseNavController {
         return root;
     }
 
-    private Node buildMonthCell(LocalDate day, YearMonth currentMonth, List<CalendarCleaningItem> all) {
+    private Node buildMonthCell(LocalDate day, YearMonth currentMonth, List<Cleaning> all) {
         VBox cell = new VBox(3);
         cell.getStyleClass().add("cal-month-cell");
         cell.setPadding(new Insets(6, 6, 6, 8));
@@ -510,14 +479,14 @@ public class CleaningCalendarController extends BaseNavController {
         if (day.equals(LocalDate.now())) num.getStyleClass().add("cal-month-today-num");
         cell.getChildren().add(num);
 
-        List<CalendarCleaningItem> onDay = all.stream()
+        List<Cleaning> onDay = all.stream()
                 .filter(e -> e.date().equals(day))
-                .sorted(Comparator.comparing(CalendarCleaningItem::checkOut))
+                .sorted(Comparator.comparing(Cleaning::checkOut))
                 .toList();
 
         int shown = Math.min(3, onDay.size());
         for (int i = 0; i < shown; i++) {
-            CalendarCleaningItem e = onDay.get(i);
+            Cleaning e = onDay.get(i);
             Label chip = new Label(e.checkOut().format(TIME_FMT) + " " + e.property());
             chip.getStyleClass().setAll("cal-month-event", "event-" + e.status().toLowerCase());
             if (e.equals(selectedEvent)) chip.getStyleClass().add("cal-event-selected");
@@ -536,96 +505,8 @@ public class CleaningCalendarController extends BaseNavController {
         return cell;
     }
 
-    /* ========================= MODEL ========================= */
-    public record CalendarCleaningItem(
-            LocalDate date,
-            LocalTime checkOut,
-            LocalTime checkIn,
-            String property,
-            String customer,
-            String employee,
-            String status) {
-
-        public boolean occursOn(LocalDate d) { return d.equals(date); }
-    }
-
-    private static List<CalendarCleaningItem> sampleData() {
-        LocalDate t = LocalDate.now();
-        List<CalendarCleaningItem> list = new ArrayList<>();
-        list.add(new CalendarCleaningItem(t,             LocalTime.of(9, 0),  LocalTime.of(11, 30), "Panská 12, BA",         "Acme Rentals s.r.o.",  "Anna Nová",      "DONE"));
-        list.add(new CalendarCleaningItem(t,             LocalTime.of(10, 30),LocalTime.of(13, 0),  "Hviezdoslavovo nám. 4", "BNB Slovakia s.r.o.",  "Peter Malý",     "IN_PROGRESS"));
-        list.add(new CalendarCleaningItem(t,             LocalTime.of(11, 0), LocalTime.of(14, 0),  "Obchodná 27",           "City Stays Ltd.",       "Peter Malý",     "NEW"));
-        list.add(new CalendarCleaningItem(t,             LocalTime.of(13, 0), LocalTime.of(15, 30), "Panenská 8",            "Nomad Homes s.r.o.",   "Eva Horváthová", "ASSIGNED"));
-        list.add(new CalendarCleaningItem(t,             LocalTime.of(15, 0), LocalTime.of(17, 30), "Laurinská 3",           "Acme Rentals s.r.o.",  "Ján Kováč",      "CANCELLED"));
-        list.add(new CalendarCleaningItem(t.plusDays(1), LocalTime.of(9, 0),  LocalTime.of(11, 30), "Grösslingova 45",       "BNB Slovakia s.r.o.",  "Anna Nová",      "ASSIGNED"));
-        list.add(new CalendarCleaningItem(t.plusDays(1), LocalTime.of(12, 0), LocalTime.of(14, 30), "Ventúrska 7",           "City Stays Ltd.",       "Peter Malý",     "NEW"));
-        list.add(new CalendarCleaningItem(t.plusDays(2), LocalTime.of(10, 0), LocalTime.of(12, 30), "Michalská 22",          "Nomad Homes s.r.o.",   "Eva Horváthová", "ASSIGNED"));
-        list.add(new CalendarCleaningItem(t.minusDays(1),LocalTime.of(14, 0), LocalTime.of(16, 30), "Sedlárska 5",           "Acme Rentals s.r.o.",  "Ján Kováč",      "DONE"));
-        list.add(new CalendarCleaningItem(t.plusDays(3), LocalTime.of(9, 0),  LocalTime.of(11, 0),  "Kapitulská 18",         "City Stays Ltd.",       "Anna Nová",      "NEW"));
-
-        // Historical data for statistics/invoicing (last 6 months)
-        addHistoricalData(list, t);
-        return list;
-    }
-
-    /** Generates ~70 past cleanings spread across the last 6 months for invoice/stat testing. */
-    private static void addHistoricalData(List<CalendarCleaningItem> list, LocalDate today) {
-        // (property, customer, employee) pairings — kept stable so month-to-month assignment looks realistic.
-        String[][] assignments = {
-                {"Panská 12, BA",         "Acme Rentals s.r.o.",  "Anna Nová"},
-                {"Hviezdoslavovo nám. 4", "BNB Slovakia s.r.o.",  "Anna Nová"},
-                {"Obchodná 27",           "City Stays Ltd.",       "Peter Malý"},
-                {"Panenská 8",            "Nomad Homes s.r.o.",   "Peter Malý"},
-                {"Laurinská 3",           "Acme Rentals s.r.o.",  "Eva Horváthová"},
-                {"Grösslingova 45",       "BNB Slovakia s.r.o.",  "Eva Horváthová"},
-                {"Ventúrska 7",           "City Stays Ltd.",       "Ján Kováč"},
-                {"Michalská 22",          "Nomad Homes s.r.o.",   "Ján Kováč"},
-                {"Sedlárska 5",           "Acme Rentals s.r.o.",  "Anna Nová"},
-                {"Kapitulská 18",         "City Stays Ltd.",       "Peter Malý"}
-        };
-
-        // Time slot templates (checkOut, checkIn) — varying durations for realistic stats.
-        LocalTime[][] slots = {
-                { LocalTime.of(9, 0),  LocalTime.of(11, 30) },
-                { LocalTime.of(10, 0), LocalTime.of(13, 0)  },
-                { LocalTime.of(11, 30),LocalTime.of(14, 0)  },
-                { LocalTime.of(13, 0), LocalTime.of(16, 0)  },
-                { LocalTime.of(14, 30),LocalTime.of(17, 0)  }
-        };
-
-        // Spread over 6 past months, with varying frequency
-        int[] monthsBack    = {6, 5, 4, 3, 2, 1};
-        int[] perMonthCount = {8, 10, 12, 11, 14, 13}; // rising trend — nice for the bar chart
-
-        for (int m = 0; m < monthsBack.length; m++) {
-            LocalDate monthAnchor = today.minusMonths(monthsBack[m]).withDayOfMonth(1);
-            int days = monthAnchor.lengthOfMonth();
-            for (int i = 0; i < perMonthCount[m]; i++) {
-                int dayOfMonth = 1 + ((i * 7 + m * 3) % days);
-                LocalDate d = monthAnchor.withDayOfMonth(dayOfMonth);
-                String[] pair  = assignments[(i + m) % assignments.length];
-                LocalTime[] s  = slots[(i + m * 2) % slots.length];
-
-                // Most past items are DONE, sprinkle a few CANCELLED for realism
-                String status = (i % 11 == 0) ? "CANCELLED" : "DONE";
-
-                list.add(new CalendarCleaningItem(d, s[0], s[1], pair[0], pair[1], pair[2], status));
-            }
-        }
-
-        // Some future planned items for upcoming months
-        int[] monthsForward = {1, 2};
-        for (int m : monthsForward) {
-            LocalDate monthAnchor = today.plusMonths(m).withDayOfMonth(1);
-            int days = monthAnchor.lengthOfMonth();
-            for (int i = 0; i < 6; i++) {
-                int dayOfMonth = 1 + ((i * 5 + m * 2) % days);
-                LocalDate d = monthAnchor.withDayOfMonth(dayOfMonth);
-                String[] pair = assignments[(i + m) % assignments.length];
-                LocalTime[] s = slots[(i + m) % slots.length];
-                String status = (i % 2 == 0) ? "ASSIGNED" : "NEW";
-                list.add(new CalendarCleaningItem(d, s[0], s[1], pair[0], pair[1], pair[2], status));
-            }
-        }
+    // kept for backward compat — AddCleaningController calls this
+    public static void addEvent(Cleaning item) {
+        ServiceLocator.cleanings().save(item);
     }
 }

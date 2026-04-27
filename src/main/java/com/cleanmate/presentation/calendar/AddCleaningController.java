@@ -75,7 +75,7 @@ public class AddCleaningController extends BaseNavController {
         }
 
         CleaningCalendarController.addEvent(
-                new CleaningCalendarController.CalendarCleaningItem(
+                com.cleanmate.model.Cleaning.of(
                         date, coTime, ciTime,
                         property,
                         "—",

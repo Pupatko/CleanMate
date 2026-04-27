@@ -1,8 +1,8 @@
 package com.cleanmate.presentation.customer;
 
 import com.cleanmate.presentation.apartment.ApartmentItem;
-import com.cleanmate.presentation.calendar.CleaningCalendarController;
-import com.cleanmate.presentation.calendar.CleaningCalendarController.CalendarCleaningItem;
+import com.cleanmate.model.Cleaning;
+import com.cleanmate.service.ServiceLocator;
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.util.EmptyState;
 import com.cleanmate.presentation.nav.LanguageManager;
@@ -138,15 +138,15 @@ public class CustomerInvoicesController extends BaseNavController {
 
     private List<YearMonth> distinctMonths() {
         TreeMap<YearMonth, Integer> months = new TreeMap<>();
-        for (CalendarCleaningItem c : allCleaningsForCustomer()) {
+        for (Cleaning c : allCleaningsForCustomer()) {
             months.merge(YearMonth.from(c.date()), 1, Integer::sum);
         }
         return new ArrayList<>(months.keySet());
     }
 
-    private List<CalendarCleaningItem> allCleaningsForCustomer() {
-        List<CalendarCleaningItem> out = new ArrayList<>();
-        for (CalendarCleaningItem c : CleaningCalendarController.data()) {
+    private List<Cleaning> allCleaningsForCustomer() {
+        List<Cleaning> out = new ArrayList<>();
+        for (Cleaning c : ServiceLocator.cleanings().getAll()) {
             if (customerProperties.contains(c.property())) out.add(c);
         }
         return out;
@@ -162,7 +162,7 @@ public class CustomerInvoicesController extends BaseNavController {
         Map<String, Integer> monthlyCounts = new LinkedHashMap<>();
         for (YearMonth ym : distinctMonths()) monthlyCounts.put(ym.format(MONTH_FMT), 0);
 
-        for (CalendarCleaningItem c : allCleaningsForCustomer()) {
+        for (Cleaning c : allCleaningsForCustomer()) {
             if (selectedApartment != null && !ALL_APARTMENTS.equals(selectedApartment)
                     && !selectedApartment.equals(c.property())) continue;
             String ymLabel = YearMonth.from(c.date()).format(MONTH_FMT);
