@@ -170,5 +170,6 @@ public class EmployeeManagementController extends com.cleanmate.presentation.nav
         r.availabilityProperty().set("INACTIVE");
         table.refresh();
         LOG.info("Deactivated: " + r.getName());
+        toast(LanguageManager.getBundle().getString("toast.employee.deactivated"), com.cleanmate.presentation.util.ToastManager.Type.INFO);
     }
 }

@@ -34,6 +34,8 @@ public final class ViewRouter {
         return INSTANCE;
     }
 
+    public Stage getStage() { return stage; }
+
     public void navigate(Route route) {
         navigate(route, true);
     }

@@ -4,6 +4,7 @@ import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.ChangeSummary;
 import com.cleanmate.presentation.util.ConfirmDialog;
+import com.cleanmate.presentation.util.ToastManager;
 
 import java.text.MessageFormat;
 import javafx.collections.FXCollections;
@@ -186,6 +187,7 @@ public class EditApartmentController extends BaseNavController {
             created.getTasks().setAll(tasksView.getItems());
             ApartmentManagementController.addApartment(created);
             LOG.info("Created apartment: " + address);
+            toast(LanguageManager.getBundle().getString("toast.apartment.saved"), ToastManager.Type.SUCCESS);
             navApartments();
             return;
         }
@@ -210,6 +212,7 @@ public class EditApartmentController extends BaseNavController {
         setEditMode(false);
         pageTitle.setText(target.getAddress());
         pageSubtitle.setText(LanguageManager.getBundle().getString("edit.apartment.view.subtitle.prefix") + " " + target.getCustomer());
+        toast(LanguageManager.getBundle().getString("toast.apartment.saved"), ToastManager.Type.SUCCESS);
         diff.show("Úpravy apartmánu");
     }
 
@@ -244,6 +247,7 @@ public class EditApartmentController extends BaseNavController {
         if (!ConfirmDialog.show("confirm.delete.apartment.header", msg)) return;
         ApartmentManagementController.removeApartment(target);
         LOG.info("Deleted apartment: " + target.getAddress());
+        toast(LanguageManager.getBundle().getString("toast.apartment.deleted"), ToastManager.Type.INFO);
         navApartments();
     }
 

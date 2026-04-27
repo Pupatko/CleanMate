@@ -1,6 +1,7 @@
 package com.cleanmate.presentation.nav;
 
 import com.cleanmate.presentation.util.ConfirmDialog;
+import com.cleanmate.presentation.util.ToastManager;
 import java.util.Locale;
 
 public abstract class BaseNavController {
@@ -30,6 +31,10 @@ public abstract class BaseNavController {
         }
     }
     public void navBack()          { ViewRouter.get().back(); }
+
+    protected void toast(String message, ToastManager.Type type) {
+        ToastManager.show(ViewRouter.get().getStage(), message, type);
+    }
 
     public void onLangSk() {
         LanguageManager.setLocale(Locale.forLanguageTag("sk"));

@@ -1,5 +1,6 @@
 package com.cleanmate.presentation.calendar;
 
+import com.cleanmate.presentation.detail.CleaningDetailController;
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.nav.LanguageManager;
 import javafx.collections.FXCollections;
@@ -261,7 +262,7 @@ public class CleaningCalendarController extends BaseNavController {
         badge.getStyleClass().setAll("status-badge", "status-" + e.status().toLowerCase());
 
         card.getChildren().addAll(timeCol, content, badge);
-        card.setOnMouseClicked(ev -> { if (ev.getClickCount() == 2) navCleaningDetail(); });
+        card.setOnMouseClicked(ev -> { if (ev.getClickCount() == 2) { CleaningDetailController.selected = e; navCleaningDetail(); } });
         return card;
     }
 
@@ -364,7 +365,7 @@ public class CleaningCalendarController extends BaseNavController {
         emp.setWrapText(true);
 
         card.getChildren().addAll(time, prop, emp);
-        card.setOnMouseClicked(ev -> { if (ev.getClickCount() == 2) navCleaningDetail(); });
+        card.setOnMouseClicked(ev -> { if (ev.getClickCount() == 2) { CleaningDetailController.selected = e; navCleaningDetail(); } });
         return card;
     }
 
@@ -445,7 +446,7 @@ public class CleaningCalendarController extends BaseNavController {
             Label chip = new Label(e.checkOut().format(TIME_FMT) + " " + e.property());
             chip.getStyleClass().setAll("cal-month-event", "event-" + e.status().toLowerCase());
             chip.setMaxWidth(Double.MAX_VALUE);
-            chip.setOnMouseClicked(ev -> { if (ev.getClickCount() == 2) navCleaningDetail(); });
+            chip.setOnMouseClicked(ev -> { if (ev.getClickCount() == 2) { CleaningDetailController.selected = e; navCleaningDetail(); } });
             cell.getChildren().add(chip);
         }
         if (onDay.size() > shown) {
@@ -462,6 +463,7 @@ public class CleaningCalendarController extends BaseNavController {
             LocalTime checkOut,
             LocalTime checkIn,
             String property,
+            String customer,
             String employee,
             String status) {
 
@@ -471,16 +473,16 @@ public class CleaningCalendarController extends BaseNavController {
     private static List<CalendarCleaningItem> sampleData() {
         LocalDate t = LocalDate.now();
         List<CalendarCleaningItem> list = new ArrayList<>();
-        list.add(new CalendarCleaningItem(t,             LocalTime.of(9, 0),  LocalTime.of(11, 30), "Panská 12, BA",         "Anna Nová",      "DONE"));
-        list.add(new CalendarCleaningItem(t,             LocalTime.of(10, 30),LocalTime.of(13, 0),  "Hviezdoslavovo nám. 4", "Peter Malý",     "IN_PROGRESS"));
-        list.add(new CalendarCleaningItem(t,             LocalTime.of(11, 0), LocalTime.of(14, 0),  "Obchodná 27",           "Peter Malý",     "NEW"));
-        list.add(new CalendarCleaningItem(t,             LocalTime.of(13, 0), LocalTime.of(15, 30), "Panenská 8",            "Eva Horváthová", "ASSIGNED"));
-        list.add(new CalendarCleaningItem(t,             LocalTime.of(15, 0), LocalTime.of(17, 30), "Laurinská 3",           "Ján Kováč",      "CANCELLED"));
-        list.add(new CalendarCleaningItem(t.plusDays(1), LocalTime.of(9, 0),  LocalTime.of(11, 30), "Grösslingova 45",       "Anna Nová",      "ASSIGNED"));
-        list.add(new CalendarCleaningItem(t.plusDays(1), LocalTime.of(12, 0), LocalTime.of(14, 30), "Ventúrska 7",           "Peter Malý",     "NEW"));
-        list.add(new CalendarCleaningItem(t.plusDays(2), LocalTime.of(10, 0), LocalTime.of(12, 30), "Michalská 22",          "Eva Horváthová", "ASSIGNED"));
-        list.add(new CalendarCleaningItem(t.minusDays(1),LocalTime.of(14, 0), LocalTime.of(16, 30), "Sedlárska 5",           "Ján Kováč",      "DONE"));
-        list.add(new CalendarCleaningItem(t.plusDays(3), LocalTime.of(9, 0),  LocalTime.of(11, 0),  "Kapitulská 18",         "Anna Nová",      "NEW"));
+        list.add(new CalendarCleaningItem(t,             LocalTime.of(9, 0),  LocalTime.of(11, 30), "Panská 12, BA",         "Acme Rentals s.r.o.",  "Anna Nová",      "DONE"));
+        list.add(new CalendarCleaningItem(t,             LocalTime.of(10, 30),LocalTime.of(13, 0),  "Hviezdoslavovo nám. 4", "BNB Slovakia s.r.o.",  "Peter Malý",     "IN_PROGRESS"));
+        list.add(new CalendarCleaningItem(t,             LocalTime.of(11, 0), LocalTime.of(14, 0),  "Obchodná 27",           "City Stays Ltd.",       "Peter Malý",     "NEW"));
+        list.add(new CalendarCleaningItem(t,             LocalTime.of(13, 0), LocalTime.of(15, 30), "Panenská 8",            "Nomad Homes s.r.o.",   "Eva Horváthová", "ASSIGNED"));
+        list.add(new CalendarCleaningItem(t,             LocalTime.of(15, 0), LocalTime.of(17, 30), "Laurinská 3",           "Acme Rentals s.r.o.",  "Ján Kováč",      "CANCELLED"));
+        list.add(new CalendarCleaningItem(t.plusDays(1), LocalTime.of(9, 0),  LocalTime.of(11, 30), "Grösslingova 45",       "BNB Slovakia s.r.o.",  "Anna Nová",      "ASSIGNED"));
+        list.add(new CalendarCleaningItem(t.plusDays(1), LocalTime.of(12, 0), LocalTime.of(14, 30), "Ventúrska 7",           "City Stays Ltd.",       "Peter Malý",     "NEW"));
+        list.add(new CalendarCleaningItem(t.plusDays(2), LocalTime.of(10, 0), LocalTime.of(12, 30), "Michalská 22",          "Nomad Homes s.r.o.",   "Eva Horváthová", "ASSIGNED"));
+        list.add(new CalendarCleaningItem(t.minusDays(1),LocalTime.of(14, 0), LocalTime.of(16, 30), "Sedlárska 5",           "Acme Rentals s.r.o.",  "Ján Kováč",      "DONE"));
+        list.add(new CalendarCleaningItem(t.plusDays(3), LocalTime.of(9, 0),  LocalTime.of(11, 0),  "Kapitulská 18",         "City Stays Ltd.",       "Anna Nová",      "NEW"));
 
         // Historical data for statistics/invoicing (last 6 months)
         addHistoricalData(list, t);
@@ -489,18 +491,18 @@ public class CleaningCalendarController extends BaseNavController {
 
     /** Generates ~70 past cleanings spread across the last 6 months for invoice/stat testing. */
     private static void addHistoricalData(List<CalendarCleaningItem> list, LocalDate today) {
-        // (property, employee) pairings — kept stable so month-to-month assignment looks realistic.
+        // (property, customer, employee) pairings — kept stable so month-to-month assignment looks realistic.
         String[][] assignments = {
-                {"Panská 12, BA",         "Anna Nová"},
-                {"Hviezdoslavovo nám. 4", "Anna Nová"},
-                {"Obchodná 27",           "Peter Malý"},
-                {"Panenská 8",            "Peter Malý"},
-                {"Laurinská 3",           "Eva Horváthová"},
-                {"Grösslingova 45",       "Eva Horváthová"},
-                {"Ventúrska 7",           "Ján Kováč"},
-                {"Michalská 22",          "Ján Kováč"},
-                {"Sedlárska 5",           "Anna Nová"},
-                {"Kapitulská 18",         "Peter Malý"}
+                {"Panská 12, BA",         "Acme Rentals s.r.o.",  "Anna Nová"},
+                {"Hviezdoslavovo nám. 4", "BNB Slovakia s.r.o.",  "Anna Nová"},
+                {"Obchodná 27",           "City Stays Ltd.",       "Peter Malý"},
+                {"Panenská 8",            "Nomad Homes s.r.o.",   "Peter Malý"},
+                {"Laurinská 3",           "Acme Rentals s.r.o.",  "Eva Horváthová"},
+                {"Grösslingova 45",       "BNB Slovakia s.r.o.",  "Eva Horváthová"},
+                {"Ventúrska 7",           "City Stays Ltd.",       "Ján Kováč"},
+                {"Michalská 22",          "Nomad Homes s.r.o.",   "Ján Kováč"},
+                {"Sedlárska 5",           "Acme Rentals s.r.o.",  "Anna Nová"},
+                {"Kapitulská 18",         "City Stays Ltd.",       "Peter Malý"}
         };
 
         // Time slot templates (checkOut, checkIn) — varying durations for realistic stats.
@@ -528,7 +530,7 @@ public class CleaningCalendarController extends BaseNavController {
                 // Most past items are DONE, sprinkle a few CANCELLED for realism
                 String status = (i % 11 == 0) ? "CANCELLED" : "DONE";
 
-                list.add(new CalendarCleaningItem(d, s[0], s[1], pair[0], pair[1], status));
+                list.add(new CalendarCleaningItem(d, s[0], s[1], pair[0], pair[1], pair[2], status));
             }
         }
 
@@ -543,7 +545,7 @@ public class CleaningCalendarController extends BaseNavController {
                 String[] pair = assignments[(i + m) % assignments.length];
                 LocalTime[] s = slots[(i + m) % slots.length];
                 String status = (i % 2 == 0) ? "ASSIGNED" : "NEW";
-                list.add(new CalendarCleaningItem(d, s[0], s[1], pair[0], pair[1], status));
+                list.add(new CalendarCleaningItem(d, s[0], s[1], pair[0], pair[1], pair[2], status));
             }
         }
     }

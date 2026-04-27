@@ -1,5 +1,6 @@
 package com.cleanmate.presentation.detail;
 
+import com.cleanmate.presentation.calendar.CleaningCalendarController.CalendarCleaningItem;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.ConfirmDialog;
 import javafx.collections.FXCollections;
@@ -72,6 +73,8 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
     private String savedCheckOut;
     private String savedCheckIn;
 
+    public static CalendarCleaningItem selected = null;
+
     // QC state
     private int currentRating = 0;
     private final List<Label> starLabels = new ArrayList<>();
@@ -82,19 +85,34 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
     public void initialize() {
         LOG.info("Cleaning detail initialized");
 
-        propertyField.setText("Panská 12, Bratislava");
-        customerField.setText("Acme Rentals s.r.o.");
-        dateField.setText("22.04.2026");
-        checkOutTimeField.setText("10:30");
-        checkInTimeField.setText("12:00");
-
         employeeCombo.setItems(FXCollections.observableArrayList(
                 "— nepriradený —", "Anna Nová", "Peter Malý", "Eva Horváthová", "Ján Kováč"));
-        employeeCombo.getSelectionModel().select("Peter Malý");
 
         statusCombo.setItems(FXCollections.observableArrayList(
                 "NEW", "ASSIGNED", "IN_PROGRESS", "DONE", "CANCELLED"));
-        statusCombo.getSelectionModel().select("IN_PROGRESS");
+
+        if (selected != null) {
+            java.time.format.DateTimeFormatter dateFmt = java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            java.time.format.DateTimeFormatter timeFmt = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
+            propertyField.setText(selected.property());
+            customerField.setText(selected.customer());
+            dateField.setText(selected.date().format(dateFmt));
+            checkOutTimeField.setText(selected.checkOut().format(timeFmt));
+            checkInTimeField.setText(selected.checkIn().format(timeFmt));
+            String emp = selected.employee();
+            if (!employeeCombo.getItems().contains(emp)) employeeCombo.getItems().add(emp);
+            employeeCombo.getSelectionModel().select(emp);
+            statusCombo.getSelectionModel().select(selected.status());
+            selected = null;
+        } else {
+            propertyField.setText("Panská 12, Bratislava");
+            customerField.setText("Acme Rentals s.r.o.");
+            dateField.setText("22.04.2026");
+            checkOutTimeField.setText("10:30");
+            checkInTimeField.setText("12:00");
+            employeeCombo.getSelectionModel().select("Peter Malý");
+            statusCombo.getSelectionModel().select("IN_PROGRESS");
+        }
         statusCombo.valueProperty().addListener((obs, o, n) -> {
             updateStatusBadge(n);
             updateQcVisibility(n);
@@ -175,6 +193,7 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
                 .add("CHECK-IN",    savedCheckIn,  checkInTimeField.getText());
         LOG.info("Changes confirmed");
         setEditMode(false);
+        toast(LanguageManager.getBundle().getString("toast.changes.saved"), com.cleanmate.presentation.util.ToastManager.Type.SUCCESS);
         diff.show("Úpravy upratovania");
     }
 
@@ -183,6 +202,7 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
                 LanguageManager.getBundle().getString("confirm.cancel.cleaning.content"))) return;
         statusCombo.setValue("CANCELLED");
         LOG.info("Cleaning cancelled");
+        toast(LanguageManager.getBundle().getString("toast.cleaning.cancelled"), com.cleanmate.presentation.util.ToastManager.Type.INFO);
     }
 
     // ── Checklist ────────────────────────────────────────────────────────────
@@ -300,11 +320,13 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
         if (currentRating == 0) {
             qcSavedLabel.setStyle("-fx-text-fill: #EF4444; -fx-font-size: 12px;");
             qcSavedLabel.setText(LanguageManager.getBundle().getString("detail.qc.no.rating"));
+            toast(LanguageManager.getBundle().getString("toast.qc.no.rating"), com.cleanmate.presentation.util.ToastManager.Type.ERROR);
             return;
         }
         String note = qcNoteArea.getText() == null ? "" : qcNoteArea.getText().trim();
         LOG.info("QC saved: rating=" + currentRating + "/5, note='" + note + "'");
         qcSavedLabel.setStyle("-fx-text-fill: #10B981; -fx-font-size: 12px; -fx-font-weight: bold;");
         qcSavedLabel.setText(LanguageManager.getBundle().getString("detail.qc.saved"));
+        toast(LanguageManager.getBundle().getString("toast.qc.saved"), com.cleanmate.presentation.util.ToastManager.Type.SUCCESS);
     }
 }

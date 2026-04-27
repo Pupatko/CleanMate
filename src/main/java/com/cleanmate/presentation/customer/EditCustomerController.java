@@ -3,6 +3,7 @@ package com.cleanmate.presentation.customer;
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.ChangeSummary;
+import com.cleanmate.presentation.util.ToastManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -129,6 +130,7 @@ public class EditCustomerController extends BaseNavController {
         if (addMode) {
             CustomerManagementController.addCustomer(new CustomerRow(name, email, phone, 0, note));
             LOG.info("Created customer: " + name);
+            toast(LanguageManager.getBundle().getString("toast.customer.saved"), ToastManager.Type.SUCCESS);
             navCustomers();
             return;
         }
@@ -146,6 +148,7 @@ public class EditCustomerController extends BaseNavController {
 
         setEditMode(false);
         pageTitle.setText(target.getName());
+        toast(LanguageManager.getBundle().getString("toast.customer.saved"), ToastManager.Type.SUCCESS);
         diff.show("Úpravy zákazníka");
     }
 

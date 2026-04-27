@@ -1025,3 +1025,24 @@
 .confirm-dialog .button-bar .button:cancel:hover {
     -fx-background-color: #E2E8F0;
 }
+
+/* ─── Toast / Snackbar ──────────────────────────────────── */
+.toast {
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.28), 14, 0, 0, 4);
+    -fx-min-width: 240;
+    -fx-max-width: 420;
+}
+.toast-success { -fx-background-color: #10B981; }
+.toast-error   { -fx-background-color: #EF4444; }
+.toast-info    { -fx-background-color: #3B82F6; }
+.toast-warning { -fx-background-color: #F59E0B; }
+.toast-icon {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+.toast-text {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+}

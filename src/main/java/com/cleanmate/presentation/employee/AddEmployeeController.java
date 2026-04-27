@@ -3,6 +3,7 @@ package com.cleanmate.presentation.employee;
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.ChangeSummary;
+import com.cleanmate.presentation.util.ToastManager;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -152,6 +153,7 @@ public class AddEmployeeController extends BaseNavController {
             EmployeeManagementController.addEmployee(
                     new EmployeeRow(fullName, role == null ? "CLEANER" : role, 0.0, true, "AVAILABLE"));
             LOG.info("Created employee: " + fullName);
+            toast(LanguageManager.getBundle().getString("toast.employee.saved"), ToastManager.Type.SUCCESS);
             navEmployees();
             return;
         }
@@ -170,6 +172,7 @@ public class AddEmployeeController extends BaseNavController {
 
         setEditMode(false);
         pageTitle.setText(target.getName());
+        toast(LanguageManager.getBundle().getString("toast.employee.saved"), ToastManager.Type.SUCCESS);
         diff.show("Úpravy zamestnanca");
     }
 

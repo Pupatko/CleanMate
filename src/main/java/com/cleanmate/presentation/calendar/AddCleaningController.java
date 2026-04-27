@@ -78,12 +78,15 @@ public class AddCleaningController extends BaseNavController {
                 new CleaningCalendarController.CalendarCleaningItem(
                         date, coTime, ciTime,
                         property,
+                        "—",
                         employee == null ? "—" : employee,
                         status == null ? "NEW" : status));
 
         LOG.info(String.format("Saved new cleaning: %s | %s %s–%s | %s | %s",
                 property, date, coTime, ciTime, employee, status));
 
+        toast(com.cleanmate.presentation.nav.LanguageManager.getBundle().getString("toast.cleaning.saved"),
+              com.cleanmate.presentation.util.ToastManager.Type.SUCCESS);
         navCalendar();
     }
 

@@ -174,8 +174,12 @@ public class CustomerPortalController extends com.cleanmate.presentation.nav.Bas
         try {
             Files.writeString(out.toPath(), xml, StandardCharsets.UTF_8);
             LOG.info("Report exported to " + out.getAbsolutePath() + " (" + filtered.size() + " rows)");
+            String msg = java.text.MessageFormat.format(
+                    LanguageManager.getBundle().getString("toast.export.ok"), filtered.size());
+            toast(msg, com.cleanmate.presentation.util.ToastManager.Type.SUCCESS);
         } catch (IOException ex) {
             LOG.warning("Export failed: " + ex.getMessage());
+            toast(LanguageManager.getBundle().getString("toast.export.fail"), com.cleanmate.presentation.util.ToastManager.Type.ERROR);
         }
     }
 
