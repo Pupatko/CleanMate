@@ -1,6 +1,7 @@
 package com.cleanmate.presentation.calendar;
 
 import com.cleanmate.presentation.nav.BaseNavController;
+import com.cleanmate.service.ServiceLocator;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -28,13 +29,10 @@ public class AddCleaningController extends BaseNavController {
     @FXML
     public void initialize() {
         propertyCombo.setItems(FXCollections.observableArrayList(
-                "Panská 12, BA", "Hviezdoslavovo nám. 4", "Obchodná 27",
-                "Panenská 8", "Laurinská 3", "Grösslingova 45",
-                "Ventúrska 7", "Michalská 22", "Sedlárska 5", "Kapitulská 18"));
+                ServiceLocator.apartments().getAllAddresses()));
 
         employeeCombo.setItems(FXCollections.observableArrayList(
-                "Anna Nová", "Peter Malý", "Eva Horváthová", "Ján Kováč",
-                "Tomáš Urban", "Katarína Veselá", "Milan Dvořák"));
+                ServiceLocator.employees().getAllNames()));
 
         statusCombo.setItems(FXCollections.observableArrayList("NEW", "ASSIGNED"));
         statusCombo.getSelectionModel().selectFirst();
