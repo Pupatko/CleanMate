@@ -1,5 +1,6 @@
 package com.cleanmate.presentation.plan;
 
+import com.cleanmate.service.ServiceLocator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -43,11 +44,7 @@ public class CleaningPlanBuilderController extends com.cleanmate.presentation.na
         LOG.info("Plan builder initialized");
 
         propertyCombo.setItems(FXCollections.observableArrayList(
-                "Panská 12, Bratislava",
-                "Hviezdoslavovo nám. 4",
-                "Obchodná 27",
-                "Panenská 8",
-                "Laurinská 3"));
+                ServiceLocator.apartments().getAllAddresses()));
         propertyCombo.getSelectionModel().selectFirst();
 
         stepTypeCombo.setItems(FXCollections.observableArrayList(

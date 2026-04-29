@@ -2,6 +2,7 @@ package com.cleanmate.presentation.myschedule;
 
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.EmptyState;
+import com.cleanmate.service.ServiceLocator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,7 +18,6 @@ import javafx.scene.layout.VBox;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Logger;
 
@@ -30,20 +30,33 @@ public class MyScheduleController extends com.cleanmate.presentation.nav.BaseNav
     @FXML private Label summaryLabel;
     @FXML private ListView<MyTaskItem> list;
 
+    /** Set before navigating here to show schedule for a specific employee. */
+    public static String employeeName = null;
+
     @FXML
     public void initialize() {
         LOG.info("My schedule initialized");
 
-        greetingLabel.setText(LanguageManager.getBundle().getString("schedule.greeting") + ", Peter");
+        String emp = employeeName;
+        employeeName = null;
+
+        String firstName = emp != null ? emp.split(" ")[0] : "";
+        greetingLabel.setText(LanguageManager.getBundle().getString("schedule.greeting")
+                + (firstName.isEmpty() ? "" : ", " + firstName));
         dateLabel.setText(LocalDate.now().format(
                 DateTimeFormatter.ofPattern("EEEE d. MMMM yyyy", LanguageManager.getLocale())));
 
-        ObservableList<MyTaskItem> items = FXCollections.observableArrayList(
-                new MyTaskItem(LocalTime.of(9, 0),  "Panská 12, Bratislava",       "Acme Rentals",          "DONE",        7, 7),
-                new MyTaskItem(LocalTime.of(10, 30),"Hviezdoslavovo nám. 4",       "City Nest Bratislava",  "IN_PROGRESS", 7, 4),
-                new MyTaskItem(LocalTime.of(13, 0), "Panenská 8",                  "Jana Kováčová",         "ASSIGNED",    6, 0),
-                new MyTaskItem(LocalTime.of(15, 45),"Ventúrska 7, Bratislava",     "Riverside Apartments",  "ASSIGNED",    8, 0)
-        );
+        ObservableList<MyTaskItem> items = FXCollections.observableArrayList();
+        ServiceLocator.cleanings().getByDate(LocalDate.now()).stream()
+                .filter(c -> emp == null || emp.equals(c.employee()))
+                .sorted((a, b) -> a.checkOut().compareTo(b.checkOut()))
+                .forEach(c -> {
+                    int total = ServiceLocator.apartments().getAll().stream()
+                            .filter(a -> a.getAddress().equals(c.property()))
+                            .mapToInt(a -> a.getTaskCount()).findFirst().orElse(0);
+                    items.add(new MyTaskItem(c.checkOut(), c.property(), c.customer(),
+                            c.status(), total, 0));
+                });
 
         long done = items.stream().filter(i -> "DONE".equals(i.status())).count();
         summaryLabel.setText(MessageFormat.format(LanguageManager.getBundle().getString("schedule.summary"), items.size(), done));

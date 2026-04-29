@@ -1,7 +1,10 @@
 package com.cleanmate.presentation.dashboard;
 
+import com.cleanmate.model.Cleaning;
+import com.cleanmate.presentation.detail.CleaningDetailController;
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.util.EmptyState;
+import com.cleanmate.service.ServiceLocator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,6 +14,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class DashboardController extends BaseNavController {
@@ -32,10 +38,15 @@ public class DashboardController extends BaseNavController {
     public void initialize() {
         LOG.info("Dashboard initialized");
 
-        todayCountLabel.setText("12");
-        unassignedCountLabel.setText("3");
-        onDutyCountLabel.setText("5");
-        doneCountLabel.setText("7");
+        List<Cleaning> todayList = ServiceLocator.cleanings().getByDate(LocalDate.now());
+        long unassigned = todayList.stream().filter(c -> "NEW".equals(c.status())).count();
+        long onDuty     = todayList.stream().filter(c -> "IN_PROGRESS".equals(c.status())).count();
+        long done       = todayList.stream().filter(c -> "DONE".equals(c.status())).count();
+
+        todayCountLabel.setText(String.valueOf(todayList.size()));
+        unassignedCountLabel.setText(String.valueOf(unassigned));
+        onDutyCountLabel.setText(String.valueOf(onDuty));
+        doneCountLabel.setText(String.valueOf(done));
 
         colTime.setCellValueFactory(new PropertyValueFactory<>("time"));
         colProperty.setCellValueFactory(new PropertyValueFactory<>("property"));
@@ -58,21 +69,25 @@ public class DashboardController extends BaseNavController {
             }
         });
 
-        recentTable.setItems(sampleRows());
+        recentTable.setItems(buildRows(todayList));
         recentTable.setPlaceholder(EmptyState.build("📋", "empty.dashboard"));
 
-        recentTable.getSelectionModel().selectedItemProperty().addListener(
-                (obs, o, n) -> { if (n != null) navCleaningDetail(); });
+        recentTable.getSelectionModel().selectedItemProperty().addListener((obs, o, n) -> {
+            if (n != null && n.getSource() != null) {
+                CleaningDetailController.selected = n.getSource();
+                navCleaningDetail();
+            }
+        });
     }
 
-    private ObservableList<CleaningRow> sampleRows() {
-        return FXCollections.observableArrayList(
-                new CleaningRow("09:00", "Panská 12, BA", "Anna Nová", "DONE"),
-                new CleaningRow("10:30", "Hviezdoslavovo nám. 4", "Peter Malý", "IN_PROGRESS"),
-                new CleaningRow("11:15", "Obchodná 27", "—", "NEW"),
-                new CleaningRow("13:00", "Panenská 8", "Eva Horváthová", "ASSIGNED"),
-                new CleaningRow("15:45", "Laurinská 3", "Ján Kováč", "CANCELLED")
-        );
+    private ObservableList<CleaningRow> buildRows(List<Cleaning> list) {
+        var fmt = DateTimeFormatter.ofPattern("HH:mm");
+        ObservableList<CleaningRow> rows = FXCollections.observableArrayList();
+        list.stream()
+            .sorted((a, b) -> a.checkOut().compareTo(b.checkOut()))
+            .forEach(c -> rows.add(new CleaningRow(
+                    c.checkOut().format(fmt), c.property(), c.employee(), c.status(), c)));
+        return rows;
     }
 
 }

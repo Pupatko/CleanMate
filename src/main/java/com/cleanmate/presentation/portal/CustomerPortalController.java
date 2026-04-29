@@ -19,6 +19,7 @@ import javafx.util.Callback;
 
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.EmptyState;
+import com.cleanmate.service.ServiceLocator;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -51,6 +52,9 @@ public class CustomerPortalController extends com.cleanmate.presentation.nav.Bas
     @FXML private Label qcNote;
     @FXML private FlowPane qcPhotos;
 
+    /** Set before navigating here to filter history by customer name. */
+    public static String customerName = null;
+
     private final ObservableList<HistoryRow> data = FXCollections.observableArrayList();
     private FilteredList<HistoryRow> filtered;
 
@@ -58,16 +62,16 @@ public class CustomerPortalController extends com.cleanmate.presentation.nav.Bas
     public void initialize() {
         LOG.info("Customer portal initialized");
 
-        LocalDate today = LocalDate.now();
-        data.setAll(
-                new HistoryRow(today.minusDays(0), "Panská 12, Bratislava",     "Anna Nová",        "DONE", 8, 5, "Perfektné, žiadne poznámky."),
-                new HistoryRow(today.minusDays(1), "Panská 12, Bratislava",     "Peter Malý",       "DONE", 6, 4, "Drobné odtlačky na zrkadle v kúpeľni."),
-                new HistoryRow(today.minusDays(3), "Hviezdoslavovo nám. 4",     "Eva Horváthová",   "DONE", 10, 5, "Skvelá práca, host spokojný."),
-                new HistoryRow(today.minusDays(5), "Panská 12, Bratislava",     "Ján Kováč",        "DONE", 5, 4, ""),
-                new HistoryRow(today.minusDays(7), "Hviezdoslavovo nám. 4",     "Anna Nová",        "DONE", 7, 5, "Doplnené všetky kozmetické prostriedky."),
-                new HistoryRow(today.minusDays(10),"Obchodná 27",               "Peter Malý",       "DONE", 4, 3, "Odpad z kuchyne ostal pod drezom."),
-                new HistoryRow(today.minusDays(14),"Panská 12, Bratislava",     "Katarína Veselá",  "DONE", 9, 5, "")
-        );
+        String cust = customerName;
+        customerName = null;
+
+        ServiceLocator.cleanings().getAll().stream()
+                .filter(c -> "DONE".equals(c.status()))
+                .filter(c -> cust == null || cust.equals(c.customer()))
+                .sorted((a, b) -> b.date().compareTo(a.date()))
+                .forEach(c -> data.add(new HistoryRow(
+                        c.date(), c.property(), c.employee(), c.status(),
+                        0, c.qcRating(), c.qcNote())));
 
         ObservableList<String> props = FXCollections.observableArrayList(ALL);
         data.stream().map(HistoryRow::getProperty).distinct().sorted().forEach(props::add);

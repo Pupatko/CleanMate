@@ -1,7 +1,9 @@
 package com.cleanmate.presentation.history;
 
+import com.cleanmate.model.Cleaning;
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.util.EmptyState;
+import com.cleanmate.service.ServiceLocator;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -38,6 +40,9 @@ public class EmployeeHistoryController extends BaseNavController {
     @FXML private TableColumn<Row, Number> colHours;
     @FXML private TableColumn<Row, Number> colRating;
 
+    /** Set before navigating here to filter history by employee. */
+    public static String employeeName = null;
+
     private final ObservableList<Row> data = FXCollections.observableArrayList();
     private FilteredList<Row> filtered;
 
@@ -45,17 +50,19 @@ public class EmployeeHistoryController extends BaseNavController {
     public void initialize() {
         LOG.info("Employee history initialized");
 
-        LocalDate today = LocalDate.now();
-        data.setAll(
-                new Row(today.minusDays(1),  "Panská 12, BA",           "09:00", "DONE", 2.5, 5),
-                new Row(today.minusDays(2),  "Hviezdoslavovo nám. 4",   "11:30", "DONE", 3.0, 5),
-                new Row(today.minusDays(3),  "Panská 12, BA",           "10:00", "DONE", 2.0, 4),
-                new Row(today.minusDays(5),  "Obchodná 27",             "14:00", "DONE", 2.5, 4),
-                new Row(today.minusDays(8),  "Laurinská 3",             "09:30", "DONE", 3.5, 5),
-                new Row(today.minusDays(12), "Ventúrska 7",             "13:00", "DONE", 2.0, 3),
-                new Row(today.minusDays(20), "Michalská 22",            "10:00", "DONE", 3.0, 5),
-                new Row(today.minusDays(35), "Grösslingova 45",         "11:00", "DONE", 2.5, 4)
-        );
+        String emp = employeeName;
+        employeeName = null;
+
+        var timeFmt = DateTimeFormatter.ofPattern("HH:mm");
+        java.util.stream.Stream<Cleaning> stream = ServiceLocator.cleanings().getAll().stream()
+                .filter(c -> "DONE".equals(c.status()));
+        if (emp != null) stream = stream.filter(c -> emp.equals(c.employee()));
+        stream.sorted((a, b) -> b.date().compareTo(a.date()))
+              .forEach(c -> {
+                  double hours = java.time.Duration.between(c.checkOut(), c.checkIn()).toMinutes() / 60.0;
+                  data.add(new Row(c.date(), c.property(), c.checkOut().format(timeFmt),
+                          c.status(), hours, c.qcRating()));
+              });
 
         colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         colDate.setCellFactory(c -> new TableCell<>() {

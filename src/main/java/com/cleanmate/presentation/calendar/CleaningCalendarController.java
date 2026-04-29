@@ -74,8 +74,10 @@ public class CleaningCalendarController extends BaseNavController {
     public void initialize() {
         LOG.info("Calendar initialized");
 
-        employeeCombo.setItems(FXCollections.observableArrayList(
-                ALL, "Anna Nová", "Peter Malý", "Eva Horváthová", "Ján Kováč"));
+        java.util.List<String> empNames = new java.util.ArrayList<>();
+        empNames.add(ALL);
+        empNames.addAll(ServiceLocator.employees().getAllNames());
+        employeeCombo.setItems(FXCollections.observableArrayList(empNames));
         employeeCombo.getSelectionModel().selectFirst();
 
         statusCombo.setItems(FXCollections.observableArrayList(
@@ -146,10 +148,8 @@ public class CleaningCalendarController extends BaseNavController {
         panelStatus.setText(e.status().replace('_', ' '));
         panelStatus.getStyleClass().setAll("status-badge", "status-" + e.status().toLowerCase());
 
-        if (assignCombo.getItems().isEmpty()) {
-            assignCombo.setItems(FXCollections.observableArrayList(
-                    ServiceLocator.employees().getAllNames()));
-        }
+        assignCombo.setItems(FXCollections.observableArrayList(
+                ServiceLocator.employees().getAllNames()));
         assignCombo.setValue(e.employee());
 
         assignPanel.setVisible(true);

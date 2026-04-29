@@ -1,6 +1,8 @@
 package com.cleanmate.presentation.profile;
 
+import com.cleanmate.model.Employee;
 import com.cleanmate.presentation.nav.BaseNavController;
+import com.cleanmate.service.ServiceLocator;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -29,22 +31,54 @@ public class EmployeeProfileController extends BaseNavController {
     @FXML private Label saveStatusLabel;
     @FXML private Button saveButton;
 
+    /** Set before navigating here to show a specific employee's profile. */
+    public static String employeeName = null;
+
     @FXML
     public void initialize() {
         LOG.info("Employee profile initialized");
 
-        firstNameField.setText("Peter");
-        lastNameField.setText("Malý");
-        emailField.setText("peter.maly@cleanmate.sk");
-        phoneField.setText("+421 905 123 456");
+        String emp = employeeName;
+        employeeName = null;
 
-        refreshHeader();
-        roleLabel.setText("CLEANER");
+        Employee found = emp == null ? null : ServiceLocator.employees().getAll().stream()
+                .filter(e -> e.getFullName().equals(emp)).findFirst().orElse(null);
 
-        totalHoursLabel.setText("142.0 h");
-        totalTasksLabel.setText("58");
-        avgRatingLabel.setText("4.7 / 5");
-        sinceLabel.setText("Člen od 2024-09-01");
+        if (found != null) {
+            firstNameField.setText(found.getFirstName());
+            lastNameField.setText(found.getLastName());
+            emailField.setText(found.getEmail() != null ? found.getEmail() : "");
+            phoneField.setText(found.getPhone() != null ? found.getPhone() : "");
+            roleLabel.setText(found.getRole());
+            sinceLabel.setText(found.getStartDate() != null
+                    ? "Člen od " + found.getStartDate() : "");
+
+            java.time.LocalDate now = java.time.LocalDate.now();
+            long tasks = ServiceLocator.cleanings().getAll().stream()
+                    .filter(c -> "DONE".equals(c.status()) && found.getFullName().equals(c.employee()))
+                    .count();
+            double hours = ServiceLocator.cleanings().getAll().stream()
+                    .filter(c -> "DONE".equals(c.status()) && found.getFullName().equals(c.employee()))
+                    .mapToDouble(c -> java.time.Duration.between(c.checkOut(), c.checkIn()).toMinutes() / 60.0)
+                    .sum();
+            double avg = ServiceLocator.cleanings().getAll().stream()
+                    .filter(c -> "DONE".equals(c.status()) && found.getFullName().equals(c.employee()) && c.qcRating() > 0)
+                    .mapToInt(c -> c.qcRating()).average().orElse(0);
+
+            totalHoursLabel.setText(String.format("%.1f h", hours));
+            totalTasksLabel.setText(String.valueOf(tasks));
+            avgRatingLabel.setText(avg == 0 ? "—" : String.format("%.1f / 5", avg));
+        } else {
+            firstNameField.setText("");
+            lastNameField.setText("");
+            emailField.setText("");
+            phoneField.setText("");
+            roleLabel.setText("—");
+            totalHoursLabel.setText("0.0 h");
+            totalTasksLabel.setText("0");
+            avgRatingLabel.setText("—");
+            sinceLabel.setText("");
+        }
 
         saveStatusLabel.setVisible(false);
 
