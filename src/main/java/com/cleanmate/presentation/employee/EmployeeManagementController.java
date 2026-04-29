@@ -38,7 +38,9 @@ public class EmployeeManagementController extends com.cleanmate.presentation.nav
                               && c.date().getYear()  == java.time.LocalDate.now().getYear())
                     .mapToDouble(c -> java.time.Duration.between(c.checkOut(), c.checkIn()).toMinutes() / 60.0)
                     .sum();
-            DATA.add(new EmployeeRow(e.getFullName(), e.getRole(), hours, e.isActive(), e.getAvailability()));
+            EmployeeRow row = new EmployeeRow(e.getFullName(), e.getRole(), hours, e.isActive(), e.getAvailability());
+            row.setId(e.getId());
+            DATA.add(row);
         }
     }
 
@@ -170,6 +172,7 @@ public class EmployeeManagementController extends com.cleanmate.presentation.nav
                 LanguageManager.getBundle().getString("confirm.deactivate.employee.content"),
                 r.getName());
         if (!ConfirmDialog.show("confirm.deactivate.employee.header", msg)) return;
+        ServiceLocator.employees().deactivate(r.getId());
         r.activeProperty().set(false);
         r.availabilityProperty().set("INACTIVE");
         table.refresh();

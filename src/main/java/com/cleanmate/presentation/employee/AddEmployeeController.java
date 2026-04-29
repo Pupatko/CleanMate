@@ -1,9 +1,11 @@
 package com.cleanmate.presentation.employee;
 
+import com.cleanmate.model.Employee;
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.ChangeSummary;
 import com.cleanmate.presentation.util.ToastManager;
+import com.cleanmate.service.ServiceLocator;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -149,9 +151,18 @@ public class AddEmployeeController extends BaseNavController {
 
         String fullName = firstName + " " + lastName;
 
+        String address   = addressField.getText()   == null ? "" : addressField.getText().trim();
+        String startText = startDateField.getText() == null ? "" : startDateField.getText().trim();
+        String notes     = notesArea.getText()      == null ? "" : notesArea.getText().trim();
+
         if (addMode) {
-            EmployeeManagementController.addEmployee(
-                    new EmployeeRow(fullName, role == null ? "CLEANER" : role, 0.0, true, "AVAILABLE"));
+            java.time.LocalDate startDate = null;
+            if (!startText.isEmpty()) {
+                try { startDate = java.time.LocalDate.parse(startText); } catch (Exception ignored) {}
+            }
+            Employee e = Employee.create(firstName, lastName, email, phone,
+                    role == null ? "CLEANER" : role, address, startDate, notes);
+            ServiceLocator.employees().save(e);
             LOG.info("Created employee: " + fullName);
             toast(LanguageManager.getBundle().getString("toast.employee.saved"), ToastManager.Type.SUCCESS);
             navEmployees();
@@ -163,9 +174,24 @@ public class AddEmployeeController extends BaseNavController {
                 .add("Rola",      origRole,    role)
                 .add("Email",     origEmail,   email)
                 .add("Telefón",   origPhone,   phone)
-                .add("Nástup",    origStart,   startDateField.getText())
-                .add("Adresa",    origAddress, addressField.getText())
-                .add("Poznámky",  origNotes,   notesArea.getText());
+                .add("Nástup",    origStart,   startText)
+                .add("Adresa",    origAddress, address)
+                .add("Poznámky",  origNotes,   notes);
+
+        ServiceLocator.employees().findById(target.getId()).ifPresent(e -> {
+            String[] parts = fullName.split(" ", 2);
+            e.setFirstName(parts[0]);
+            e.setLastName(parts.length > 1 ? parts[1] : "");
+            e.setEmail(email);
+            e.setPhone(phone);
+            e.setRole(role == null ? "CLEANER" : role);
+            e.setAddress(address);
+            e.setNotes(notes);
+            if (!startText.isEmpty()) {
+                try { e.setStartDate(java.time.LocalDate.parse(startText)); } catch (Exception ignored) {}
+            }
+            ServiceLocator.employees().save(e);
+        });
 
         target.setName(fullName);
         target.setRole(role);

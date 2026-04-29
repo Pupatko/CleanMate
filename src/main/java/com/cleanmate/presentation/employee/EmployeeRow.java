@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class EmployeeRow {
+    private String id;
     private final SimpleStringProperty name = new SimpleStringProperty();
     private final SimpleStringProperty role = new SimpleStringProperty();
     private final SimpleDoubleProperty monthHours = new SimpleDoubleProperty();
@@ -30,6 +31,9 @@ public class EmployeeRow {
     public SimpleDoubleProperty monthHoursProperty() { return monthHours; }
     public SimpleBooleanProperty activeProperty() { return active; }
     public SimpleStringProperty availabilityProperty() { return availability; }
+
+    public String getId()      { return id; }
+    public void   setId(String v) { id = v; }
 
     public void setName(String v)         { name.set(v); }
     public void setRole(String v)         { role.set(v); }
