@@ -1,7 +1,9 @@
 package com.cleanmate.presentation.customer;
 
+import com.cleanmate.model.Customer;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.EmptyState;
+import com.cleanmate.service.ServiceLocator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -22,21 +24,16 @@ public class CustomerManagementController extends com.cleanmate.presentation.nav
 
     private static final Logger LOG = Logger.getLogger(CustomerManagementController.class.getName());
 
-    private static final ObservableList<CustomerRow> DATA = FXCollections.observableArrayList();
-    static {
-        DATA.addAll(
-                new CustomerRow("Acme Rentals s.r.o.",     "info@acme-rentals.sk", "+421 902 111 222", 12, "Platinum klient, zmluva do 2027"),
-                new CustomerRow("Jana Kováčová",           "jana.kovacova@gmail.com", "+421 905 333 444", 2, "Dva apartmány v Starom Meste"),
-                new CustomerRow("Bratislava Stays s.r.o.", "kontakt@bastays.sk", "+421 903 555 666", 28, "Najväčší zákazník, vyžaduje týždenné reporty"),
-                new CustomerRow("Martin Novák",            "m.novak@seznam.cz", "+421 907 777 888", 1, "Apartmán Panská 12"),
-                new CustomerRow("Riverside Apartments",    "hello@riverside.sk", "+421 904 999 000", 6, "Nábrežie Dunaja"),
-                new CustomerRow("Eva Horáková",            "eva.horakova@outlook.com", "+421 910 123 456", 3, "Individuálna klientka"),
-                new CustomerRow("City Nest Bratislava",    "booking@citynest.sk", "+421 908 234 567", 9, "Boutique apartmány"),
-                new CustomerRow("Peter Svoboda",           "p.svoboda@gmail.com", "+421 911 345 678", 1, "Nový zákazník od 2026-03")
-        );
-    }
+    private final ObservableList<CustomerRow> DATA = FXCollections.observableArrayList();
 
-    public static void addCustomer(CustomerRow c) { DATA.add(c); }
+    private void loadFromService() {
+        DATA.clear();
+        for (Customer c : ServiceLocator.customers().getAll()) {
+            int aptCount = (int) ServiceLocator.apartments().getAll().stream()
+                    .filter(a -> a.getCustomerId().equals(c.getId())).count();
+            DATA.add(new CustomerRow(c.getName(), c.getEmail(), c.getPhone(), aptCount, c.getNotes()));
+        }
+    }
 
     @FXML private TextField searchField;
     @FXML private Label searchHintLabel;
@@ -68,6 +65,7 @@ public class CustomerManagementController extends com.cleanmate.presentation.nav
         colPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
         colProperties.setCellValueFactory(new PropertyValueFactory<>("propertyCount"));
 
+        loadFromService();
         filtered = new FilteredList<>(DATA, r -> true);
         table.setItems(filtered);
         table.setPlaceholder(EmptyState.build("👥", "empty.customers"));

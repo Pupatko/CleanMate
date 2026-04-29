@@ -1,8 +1,10 @@
 package com.cleanmate.presentation.employee;
 
+import com.cleanmate.model.Employee;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.ConfirmDialog;
 import com.cleanmate.presentation.util.EmptyState;
+import com.cleanmate.service.ServiceLocator;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,21 +27,20 @@ public class EmployeeManagementController extends com.cleanmate.presentation.nav
     private static final Logger LOG = Logger.getLogger(EmployeeManagementController.class.getName());
     private static final String ALL = "— všetci —";
 
-    private static final ObservableList<EmployeeRow> DATA = FXCollections.observableArrayList();
-    static {
-        DATA.addAll(
-                new EmployeeRow("Anna Nová",       "CLEANER",    128.5, true,  "AVAILABLE"),
-                new EmployeeRow("Peter Malý",      "CLEANER",    142.0, true,  "ON_DUTY"),
-                new EmployeeRow("Eva Horváthová",  "SUPERVISOR", 160.0, true,  "ON_DUTY"),
-                new EmployeeRow("Ján Kováč",       "CLEANER",     94.5, true,  "AVAILABLE"),
-                new EmployeeRow("Mária Tóthová",   "CLEANER",      0.0, false, "INACTIVE"),
-                new EmployeeRow("Tomáš Urban",     "CLEANER",     72.0, true,  "OFF_DUTY"),
-                new EmployeeRow("Katarína Veselá", "SUPERVISOR", 148.0, true,  "AVAILABLE"),
-                new EmployeeRow("Milan Dvořák",    "CLEANER",     38.0, true,  "OFF_DUTY")
-        );
-    }
+    private final ObservableList<EmployeeRow> DATA = FXCollections.observableArrayList();
 
-    public static void addEmployee(EmployeeRow e) { DATA.add(e); }
+    private void loadFromService() {
+        DATA.clear();
+        for (Employee e : ServiceLocator.employees().getAll()) {
+            double hours = ServiceLocator.cleanings().getAll().stream()
+                    .filter(c -> "DONE".equals(c.status()) && e.getFullName().equals(c.employee()))
+                    .filter(c -> c.date().getMonth() == java.time.LocalDate.now().getMonth()
+                              && c.date().getYear()  == java.time.LocalDate.now().getYear())
+                    .mapToDouble(c -> java.time.Duration.between(c.checkOut(), c.checkIn()).toMinutes() / 60.0)
+                    .sum();
+            DATA.add(new EmployeeRow(e.getFullName(), e.getRole(), hours, e.isActive(), e.getAvailability()));
+        }
+    }
 
     @FXML private TextField searchField;
     @FXML private ComboBox<String> availabilityFilter;
@@ -103,6 +104,7 @@ public class EmployeeManagementController extends com.cleanmate.presentation.nav
                 ALL, "AVAILABLE", "ON_DUTY", "OFF_DUTY", "INACTIVE"));
         availabilityFilter.getSelectionModel().selectFirst();
 
+        loadFromService();
         filtered = new FilteredList<>(DATA, r -> true);
         table.setItems(filtered);
         table.setPlaceholder(EmptyState.build("👤", "empty.employees"));

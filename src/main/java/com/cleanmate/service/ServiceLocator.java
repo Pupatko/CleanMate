@@ -1,9 +1,9 @@
 package com.cleanmate.service;
 
-import com.cleanmate.repository.inmemory.InMemoryApartmentRepository;
-import com.cleanmate.repository.inmemory.InMemoryCleaningRepository;
-import com.cleanmate.repository.inmemory.InMemoryCustomerRepository;
-import com.cleanmate.repository.inmemory.InMemoryEmployeeRepository;
+import com.cleanmate.repository.jdbc.JdbcApartmentRepository;
+import com.cleanmate.repository.jdbc.JdbcCleaningRepository;
+import com.cleanmate.repository.jdbc.JdbcCustomerRepository;
+import com.cleanmate.repository.jdbc.JdbcEmployeeRepository;
 
 public final class ServiceLocator {
 
@@ -15,10 +15,10 @@ public final class ServiceLocator {
     private ServiceLocator() {}
 
     public static void init() {
-        cleaningService  = new CleaningService(new InMemoryCleaningRepository());
-        employeeService  = new EmployeeService(new InMemoryEmployeeRepository());
-        customerService  = new CustomerService(new InMemoryCustomerRepository());
-        apartmentService = new ApartmentService(new InMemoryApartmentRepository());
+        cleaningService  = new CleaningService(new JdbcCleaningRepository());
+        employeeService  = new EmployeeService(new JdbcEmployeeRepository());
+        customerService  = new CustomerService(new JdbcCustomerRepository());
+        apartmentService = new ApartmentService(new JdbcApartmentRepository());
     }
 
     public static CleaningService  cleanings()  { return cleaningService; }

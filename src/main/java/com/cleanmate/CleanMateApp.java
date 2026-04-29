@@ -14,6 +14,7 @@ public class CleanMateApp extends Application {
 
         com.cleanmate.db.DatabaseManager.init();
         com.cleanmate.service.ServiceLocator.init();
+        com.cleanmate.db.DataSeeder.seedIfEmpty();
         ViewRouter.init(stage);
         ViewRouter.get().navigate(Route.LOGIN);
 
