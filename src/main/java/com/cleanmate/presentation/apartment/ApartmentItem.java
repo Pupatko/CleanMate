@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class ApartmentItem {
+    private String id;
     private String address;
     private String customer;
     private int rooms;
@@ -33,4 +34,7 @@ public class ApartmentItem {
     public void setRooms(int v)       { rooms    = v; }
     public void setArea(double v)     { area     = v; }
     public void setNote(String v)     { note     = v; }
+
+    public String getId()      { return id; }
+    public void   setId(String v) { id = v; }
 }

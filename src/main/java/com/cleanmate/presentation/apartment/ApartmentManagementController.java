@@ -32,6 +32,7 @@ public class ApartmentManagementController extends com.cleanmate.presentation.na
         for (Apartment a : ServiceLocator.apartments().getAll()) {
             ApartmentItem item = new ApartmentItem(a.getAddress(), a.getCustomerName(),
                     a.getRooms(), a.getArea(), a.getNote());
+            item.setId(a.getId());
             for (String name : a.getTaskNames())
                 item.getTasks().add(new ApartmentTask(name));
             DATA.add(item);

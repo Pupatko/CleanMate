@@ -1,11 +1,13 @@
 package com.cleanmate.presentation.apartment;
 
+import com.cleanmate.model.Apartment;
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.ChangeSummary;
 import com.cleanmate.presentation.util.ConfirmDialog;
 import com.cleanmate.presentation.util.EmptyState;
 import com.cleanmate.presentation.util.ToastManager;
+import com.cleanmate.service.ServiceLocator;
 
 import java.text.MessageFormat;
 import javafx.collections.FXCollections;
@@ -186,9 +188,13 @@ public class EditApartmentController extends BaseNavController {
         catch (NumberFormatException ex) { errorLabel.setText(LanguageManager.getBundle().getString("error.apartment.area")); return; }
 
         if (addMode) {
-            ApartmentItem created = new ApartmentItem(address, customer, rooms, area, note);
-            created.getTasks().setAll(tasksView.getItems());
-            ApartmentManagementController.addApartment(created);
+            String customerId = ServiceLocator.customers().getAll().stream()
+                    .filter(c -> c.getName().equalsIgnoreCase(customer))
+                    .map(c -> c.getId())
+                    .findFirst().orElse("");
+            Apartment apt = Apartment.create(address, customerId, customer, rooms, area, note);
+            tasksView.getItems().forEach(t -> apt.getTaskNames().add(t.getName()));
+            ServiceLocator.apartments().save(apt);
             LOG.info("Created apartment: " + address);
             toast(LanguageManager.getBundle().getString("toast.apartment.saved"), ToastManager.Type.SUCCESS);
             navApartments();
@@ -205,6 +211,22 @@ public class EditApartmentController extends BaseNavController {
         int before = origTasks.size();
         int after  = tasksView.getItems().size();
         if (before != after) diff.add("Počet úloh v pláne", before, after);
+
+        ServiceLocator.apartments().findById(target.getId()).ifPresent(apt -> {
+            String customerId = ServiceLocator.customers().getAll().stream()
+                    .filter(c -> c.getName().equalsIgnoreCase(customer))
+                    .map(c -> c.getId())
+                    .findFirst().orElse(apt.getCustomerId());
+            apt.setAddress(address);
+            apt.setCustomerId(customerId);
+            apt.setCustomerName(customer);
+            apt.setRooms(rooms);
+            apt.setArea(area);
+            apt.setNote(note);
+            apt.getTaskNames().clear();
+            tasksView.getItems().forEach(t -> apt.getTaskNames().add(t.getName()));
+            ServiceLocator.apartments().save(apt);
+        });
 
         target.setAddress(address);
         target.setCustomer(customer);
@@ -248,7 +270,7 @@ public class EditApartmentController extends BaseNavController {
                 LanguageManager.getBundle().getString("confirm.delete.apartment.content"),
                 target.getAddress());
         if (!ConfirmDialog.show("confirm.delete.apartment.header", msg)) return;
-        ApartmentManagementController.removeApartment(target);
+        ServiceLocator.apartments().delete(target.getId());
         LOG.info("Deleted apartment: " + target.getAddress());
         toast(LanguageManager.getBundle().getString("toast.apartment.deleted"), ToastManager.Type.INFO);
         navApartments();
