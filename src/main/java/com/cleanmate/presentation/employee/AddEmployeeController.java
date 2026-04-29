@@ -4,6 +4,7 @@ import com.cleanmate.model.Employee;
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.ChangeSummary;
+import com.cleanmate.presentation.util.ConfirmDialog;
 import com.cleanmate.presentation.util.ToastManager;
 import com.cleanmate.service.ServiceLocator;
 import javafx.collections.FXCollections;
@@ -38,6 +39,7 @@ public class AddEmployeeController extends BaseNavController {
     @FXML private Button editButton;
     @FXML private Button cancelEditButton;
     @FXML private Button confirmButton;
+    @FXML private Button deleteButton;
 
     private EmployeeRow target;
     private boolean addMode;
@@ -56,6 +58,8 @@ public class AddEmployeeController extends BaseNavController {
         if (addMode) {
             pageTitle.setText(LanguageManager.getBundle().getString("add.employee.page.title"));
             pageSubtitle.setText(LanguageManager.getBundle().getString("add.employee.page.subtitle"));
+            deleteButton.setVisible(false);
+            deleteButton.setManaged(false);
             setEditMode(true);
             editButton.setVisible(false);
             editButton.setManaged(false);
@@ -204,6 +208,19 @@ public class AddEmployeeController extends BaseNavController {
         pageTitle.setText(target.getName());
         toast(LanguageManager.getBundle().getString("toast.employee.saved"), ToastManager.Type.SUCCESS);
         diff.show("Úpravy zamestnanca");
+    }
+
+    @FXML
+    private void onDelete() {
+        if (target == null) return;
+        String msg = java.text.MessageFormat.format(
+                LanguageManager.getBundle().getString("confirm.delete.employee.content"),
+                target.getName());
+        if (!ConfirmDialog.show("confirm.delete.employee.header", msg)) return;
+        ServiceLocator.employees().delete(target.getId());
+        LOG.info("Deleted employee: " + target.getName());
+        toast(LanguageManager.getBundle().getString("toast.employee.deleted"), ToastManager.Type.INFO);
+        navEmployees();
     }
 
     @FXML

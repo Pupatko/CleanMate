@@ -4,6 +4,7 @@ import com.cleanmate.model.Customer;
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.ChangeSummary;
+import com.cleanmate.presentation.util.ConfirmDialog;
 import com.cleanmate.presentation.util.ToastManager;
 import com.cleanmate.service.ServiceLocator;
 import javafx.fxml.FXML;
@@ -33,6 +34,7 @@ public class EditCustomerController extends BaseNavController {
     @FXML private Button editButton;
     @FXML private Button cancelEditButton;
     @FXML private Button confirmButton;
+    @FXML private Button deleteButton;
     @FXML private Button invoicesButton;
 
     private CustomerRow target;
@@ -49,6 +51,8 @@ public class EditCustomerController extends BaseNavController {
         if (addMode) {
             pageTitle.setText(LanguageManager.getBundle().getString("edit.customer.new.title"));
             pageSubtitle.setText(LanguageManager.getBundle().getString("edit.customer.new.subtitle"));
+            deleteButton.setVisible(false);
+            deleteButton.setManaged(false);
             setEditMode(true);
             editButton.setVisible(false);
             editButton.setManaged(false);
@@ -165,6 +169,19 @@ public class EditCustomerController extends BaseNavController {
         pageTitle.setText(target.getName());
         toast(LanguageManager.getBundle().getString("toast.customer.saved"), ToastManager.Type.SUCCESS);
         diff.show("Úpravy zákazníka");
+    }
+
+    @FXML
+    private void onDelete() {
+        if (target == null) return;
+        String msg = java.text.MessageFormat.format(
+                LanguageManager.getBundle().getString("confirm.delete.customer.content"),
+                target.getName());
+        if (!ConfirmDialog.show("confirm.delete.customer.header", msg)) return;
+        ServiceLocator.customers().delete(target.getId());
+        LOG.info("Deleted customer: " + target.getName());
+        toast(LanguageManager.getBundle().getString("toast.customer.deleted"), ToastManager.Type.INFO);
+        navCustomers();
     }
 
     @FXML
