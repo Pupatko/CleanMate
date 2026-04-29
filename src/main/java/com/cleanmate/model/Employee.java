@@ -35,7 +35,7 @@ public class Employee {
     public static Employee create(String firstName, String lastName, String email, String phone,
                                    String role, String address, LocalDate startDate, String notes) {
         return new Employee(UUID.randomUUID().toString(), firstName, lastName, email, phone,
-                role, address, startDate, notes, true, "Dostupný");
+                role, address, startDate, notes, true, "AVAILABLE");
     }
 
     public String getId()           { return id; }

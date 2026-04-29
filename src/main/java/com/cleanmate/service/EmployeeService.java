@@ -30,7 +30,7 @@ public class EmployeeService {
     public void deactivate(String id) {
         repo.findById(id).ifPresent(e -> {
             e.setActive(false);
-            e.setAvailability("Neaktívny");
+            e.setAvailability("INACTIVE");
             repo.save(e);
         });
     }
