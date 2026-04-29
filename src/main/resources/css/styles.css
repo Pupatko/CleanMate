@@ -1,17 +1,38 @@
-.login-root {
-    -fx-background-color: #F8FAFC;
+.login-brand-panel {
+    -fx-background-color: #1E40AF;
 }
 
-.app-title {
-    -fx-font-size: 28px;
+.login-logo-icon {
+    -fx-font-size: 48px;
+    -fx-text-fill: rgba(255,255,255,0.9);
+}
+
+.login-brand-title {
+    -fx-font-size: 32px;
     -fx-font-weight: bold;
-    -fx-text-fill: #2563EB;
+    -fx-text-fill: white;
 }
 
-.app-subtitle {
+.login-brand-sub {
+    -fx-font-size: 14px;
+    -fx-text-fill: rgba(255,255,255,0.6);
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+}
+
+.login-form-panel {
+    -fx-background-color: white;
+}
+
+.login-form-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0F172A;
+}
+
+.login-form-sub {
     -fx-font-size: 13px;
-    -fx-text-fill: #64748B;
-    -fx-padding: 0 0 10 0;
+    -fx-text-fill: #94A3B8;
 }
 
 .form-group {

@@ -7,42 +7,59 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx"
+<HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.cleanmate.presentation.LoginController"
-      styleClass="login-root"
-      alignment="CENTER"
-      spacing="14">
-    <padding>
-        <Insets top="40" right="48" bottom="40" left="48"/>
-    </padding>
+      prefWidth="1100" prefHeight="680">
 
-    <Label text="CleanMate" styleClass="app-title"/>
-    <Label text="%login.subtitle" styleClass="app-subtitle"/>
+    <!-- Left panel — branding -->
+    <StackPane styleClass="login-brand-panel" HBox.hgrow="ALWAYS">
+        <VBox alignment="CENTER" spacing="16" StackPane.alignment="CENTER">
+            <Label text="◆" styleClass="login-logo-icon"/>
+            <Label text="CleanMate" styleClass="login-brand-title"/>
+            <Label text="Správa upratovania na jednom mieste." styleClass="login-brand-sub" wrapText="true"/>
+        </VBox>
+    </StackPane>
 
-    <VBox spacing="6" styleClass="form-group">
-        <Label text="%login.username" styleClass="field-label"/>
-        <TextField fx:id="usernameField" promptText="%login.username.prompt" styleClass="input"/>
-    </VBox>
+    <!-- Right panel — form -->
+    <StackPane styleClass="login-form-panel" HBox.hgrow="ALWAYS">
+        <VBox spacing="20" maxWidth="320" StackPane.alignment="CENTER">
+            <padding><Insets top="80" right="0" bottom="0" left="0"/></padding>
 
-    <VBox spacing="6" styleClass="form-group">
-        <Label text="%login.password" styleClass="field-label"/>
-        <PasswordField fx:id="passwordField" promptText="••••••••" styleClass="input"/>
-    </VBox>
+            <VBox spacing="4">
+                <Label text="Vitajte späť" styleClass="login-form-title"/>
+                <Label text="%login.subtitle" styleClass="login-form-sub"/>
+            </VBox>
 
-    <VBox spacing="6" styleClass="form-group">
-        <Label text="%login.role" styleClass="field-label"/>
-        <ComboBox fx:id="roleCombo" styleClass="input" maxWidth="Infinity"/>
-    </VBox>
+            <VBox spacing="6">
+                <Label text="%login.username" styleClass="field-label"/>
+                <TextField fx:id="usernameField" promptText="%login.username.prompt" styleClass="input"/>
+            </VBox>
 
-    <Label fx:id="errorLabel" styleClass="error-label" managed="true" visible="false"/>
+            <VBox spacing="6">
+                <Label text="%login.password" styleClass="field-label"/>
+                <PasswordField fx:id="passwordField" promptText="••••••••" styleClass="input"/>
+            </VBox>
 
-    <Button text="%login.submit" onAction="#onLogin" styleClass="primary-button" maxWidth="Infinity"/>
+            <VBox spacing="6">
+                <Label text="%login.role" styleClass="field-label"/>
+                <ComboBox fx:id="roleCombo" styleClass="input" maxWidth="Infinity"/>
+            </VBox>
 
-    <HBox spacing="8" alignment="CENTER">
-        <Button text="SK" onAction="#onLangSk" styleClass="lang-button"/>
-        <Button text="EN" onAction="#onLangEn" styleClass="lang-button"/>
-    </HBox>
-</VBox>
+            <Label fx:id="errorLabel" styleClass="error-label" managed="true" visible="false"/>
+
+            <Button text="%login.submit" onAction="#onLogin"
+                    styleClass="primary-button" maxWidth="Infinity"/>
+
+            <HBox spacing="8" alignment="CENTER">
+                <Button text="SK" onAction="#onLangSk" styleClass="lang-button"/>
+                <Button text="EN" onAction="#onLangEn" styleClass="lang-button"/>
+            </HBox>
+        </VBox>
+    </StackPane>
+
+</HBox>
