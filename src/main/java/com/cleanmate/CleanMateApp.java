@@ -12,9 +12,12 @@ public class CleanMateApp extends Application {
         stage.setResizable(true);
         stage.setMaximized(true);
 
+        com.cleanmate.db.DatabaseManager.init();
         com.cleanmate.service.ServiceLocator.init();
         ViewRouter.init(stage);
         ViewRouter.get().navigate(Route.LOGIN);
+
+        stage.setOnCloseRequest(e -> com.cleanmate.db.DatabaseManager.close());
 
         stage.show();
     }
