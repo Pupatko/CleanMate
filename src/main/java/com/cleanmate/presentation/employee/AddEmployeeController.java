@@ -59,6 +59,10 @@ public class AddEmployeeController extends BaseNavController {
             setEditMode(true);
             editButton.setVisible(false);
             editButton.setManaged(false);
+            confirmButton.setVisible(true);
+            confirmButton.setManaged(true);
+            cancelEditButton.setVisible(true);
+            cancelEditButton.setManaged(true);
             confirmButton.setText(LanguageManager.getBundle().getString("add.employee.save"));
             cancelEditButton.setText(LanguageManager.getBundle().getString("btn.cancel"));
         } else {

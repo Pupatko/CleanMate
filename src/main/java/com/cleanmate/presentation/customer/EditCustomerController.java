@@ -52,6 +52,10 @@ public class EditCustomerController extends BaseNavController {
             setEditMode(true);
             editButton.setVisible(false);
             editButton.setManaged(false);
+            confirmButton.setVisible(true);
+            confirmButton.setManaged(true);
+            cancelEditButton.setVisible(true);
+            cancelEditButton.setManaged(true);
             confirmButton.setText(LanguageManager.getBundle().getString("edit.customer.save"));
             cancelEditButton.setText(LanguageManager.getBundle().getString("btn.cancel"));
             invoicesButton.setVisible(false);

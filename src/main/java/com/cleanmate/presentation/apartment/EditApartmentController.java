@@ -80,9 +80,12 @@ public class EditApartmentController extends BaseNavController {
             tasksView.setItems(FXCollections.observableArrayList());
             tasksView.setPlaceholder(EmptyState.build("✅", "empty.tasks"));
             setEditMode(true);
-            // Replace Upraviť with nothing, Confirm becomes Save
             editButton.setVisible(false);
             editButton.setManaged(false);
+            confirmButton.setVisible(true);
+            confirmButton.setManaged(true);
+            cancelEditButton.setVisible(true);
+            cancelEditButton.setManaged(true);
             confirmButton.setText(LanguageManager.getBundle().getString("edit.apartment.save"));
             cancelEditButton.setText(LanguageManager.getBundle().getString("btn.cancel"));
         } else {
