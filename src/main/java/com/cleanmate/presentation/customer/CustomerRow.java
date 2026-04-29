@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class CustomerRow {
+    private String id;
     private final SimpleStringProperty name = new SimpleStringProperty();
     private final SimpleStringProperty email = new SimpleStringProperty();
     private final SimpleStringProperty phone = new SimpleStringProperty();
@@ -24,6 +25,8 @@ public class CustomerRow {
     public SimpleIntegerProperty propertyCountProperty() { return propertyCount; }
     public SimpleStringProperty noteProperty() { return note; }
 
+    public String getId()    { return id; }
+    public void   setId(String v) { id = v; }
     public String getName() { return name.get(); }
     public String getEmail() { return email.get(); }
     public String getPhone() { return phone.get(); }

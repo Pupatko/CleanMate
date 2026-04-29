@@ -1,9 +1,11 @@
 package com.cleanmate.presentation.customer;
 
+import com.cleanmate.model.Customer;
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.ChangeSummary;
 import com.cleanmate.presentation.util.ToastManager;
+import com.cleanmate.service.ServiceLocator;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -128,7 +130,8 @@ public class EditCustomerController extends BaseNavController {
         if (phone.isEmpty()) { errorLabel.setText(LanguageManager.getBundle().getString("error.customer.phone")); return; }
 
         if (addMode) {
-            CustomerManagementController.addCustomer(new CustomerRow(name, email, phone, 0, note));
+            Customer c = Customer.create(name, email, phone, note);
+            ServiceLocator.customers().save(c);
             LOG.info("Created customer: " + name);
             toast(LanguageManager.getBundle().getString("toast.customer.saved"), ToastManager.Type.SUCCESS);
             navCustomers();
@@ -140,6 +143,14 @@ public class EditCustomerController extends BaseNavController {
                 .add("Email",    origEmail, email)
                 .add("Telefón",  origPhone, phone)
                 .add("Poznámka", origNote,  note);
+
+        ServiceLocator.customers().findById(target.getId()).ifPresent(c -> {
+            c.setName(name);
+            c.setEmail(email);
+            c.setPhone(phone);
+            c.setNotes(note);
+            ServiceLocator.customers().save(c);
+        });
 
         target.setName(name);
         target.setEmail(email);

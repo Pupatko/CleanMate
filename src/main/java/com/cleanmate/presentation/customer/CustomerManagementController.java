@@ -31,7 +31,9 @@ public class CustomerManagementController extends com.cleanmate.presentation.nav
         for (Customer c : ServiceLocator.customers().getAll()) {
             int aptCount = (int) ServiceLocator.apartments().getAll().stream()
                     .filter(a -> a.getCustomerId().equals(c.getId())).count();
-            DATA.add(new CustomerRow(c.getName(), c.getEmail(), c.getPhone(), aptCount, c.getNotes()));
+            CustomerRow row = new CustomerRow(c.getName(), c.getEmail(), c.getPhone(), aptCount, c.getNotes());
+            row.setId(c.getId());
+            DATA.add(row);
         }
     }
 
