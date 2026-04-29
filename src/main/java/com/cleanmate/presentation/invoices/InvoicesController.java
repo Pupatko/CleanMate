@@ -1,5 +1,6 @@
 package com.cleanmate.presentation.invoices;
 
+import com.cleanmate.service.ServiceLocator;
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.util.EmptyState;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -50,14 +51,27 @@ public class InvoicesController extends BaseNavController {
     public void initialize() {
         LOG.info("Invoices initialized");
 
-        data.setAll(
-                new Invoice("2026-04-001", "Apríl 2026",  LocalDate.of(2026, 5, 15), 28, 1120.00, "UNPAID"),
-                new Invoice("2026-03-001", "Marec 2026",  LocalDate.of(2026, 4, 15), 31, 1240.00, "PAID"),
-                new Invoice("2026-02-001", "Február 2026",LocalDate.of(2026, 3, 15), 26,  980.00, "PAID"),
-                new Invoice("2026-01-001", "Január 2026", LocalDate.of(2026, 2, 15), 22,  850.00, "PAID"),
-                new Invoice("2025-12-001", "December 2025",LocalDate.of(2026, 1, 15),19,  720.00, "PAID"),
-                new Invoice("2025-11-001", "November 2025",LocalDate.of(2025,12, 15),24,  960.00, "PAID")
-        );
+        final double RATE = 40.0;
+        var locale = java.util.Locale.of("sk");
+        var monthFmt = java.time.format.DateTimeFormatter.ofPattern("LLLL yyyy", locale);
+        LocalDate current = LocalDate.now().withDayOfMonth(1);
+
+        ServiceLocator.cleanings().getAll().stream()
+                .filter(c -> "DONE".equals(c.status()))
+                .collect(java.util.stream.Collectors.groupingBy(
+                        c -> c.date().withDayOfMonth(1)))
+                .entrySet().stream()
+                .sorted((a, b) -> b.getKey().compareTo(a.getKey()))
+                .forEach(entry -> {
+                    LocalDate month = entry.getKey();
+                    int count = entry.getValue().size();
+                    String number = String.format("%d-%02d-001", month.getYear(), month.getMonthValue());
+                    String period = month.format(monthFmt);
+                    period = period.substring(0, 1).toUpperCase() + period.substring(1);
+                    LocalDate due = month.plusMonths(1).withDayOfMonth(15);
+                    String status = month.isBefore(current) ? "PAID" : "UNPAID";
+                    data.add(new Invoice(number, period, due, count, count * RATE, status));
+                });
 
         colNumber.setCellValueFactory(new PropertyValueFactory<>("number"));
         colPeriod.setCellValueFactory(new PropertyValueFactory<>("period"));

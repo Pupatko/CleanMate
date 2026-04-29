@@ -2,6 +2,7 @@ package com.cleanmate.presentation.properties;
 
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.util.EmptyState;
+import com.cleanmate.service.ServiceLocator;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -22,6 +23,9 @@ public class MyPropertiesController extends BaseNavController {
 
     private static final Logger LOG = Logger.getLogger(MyPropertiesController.class.getName());
 
+    /** Set before navigating here to filter by customer name. */
+    public static String customerName = null;
+
     @FXML private Label countLabel;
     @FXML private ListView<Property> list;
 
@@ -29,14 +33,23 @@ public class MyPropertiesController extends BaseNavController {
     public void initialize() {
         LOG.info("My properties initialized");
 
-        ObservableList<Property> data = FXCollections.observableArrayList(
-                new Property("Panská 12", "Bratislava – Staré Mesto", "2-izbový", 12, "ACTIVE"),
-                new Property("Hviezdoslavovo nám. 4", "Bratislava – Staré Mesto", "1-izbový", 18, "ACTIVE"),
-                new Property("Obchodná 27", "Bratislava – Staré Mesto", "Štúdio", 8, "ACTIVE"),
-                new Property("Ventúrska 7", "Bratislava – Staré Mesto", "3-izbový", 4, "PAUSED"),
-                new Property("Laurinská 3", "Bratislava – Staré Mesto", "2-izbový", 9, "ACTIVE"),
-                new Property("Panenská 8", "Bratislava – Staré Mesto", "2-izbový", 6, "ACTIVE")
-        );
+        String cust = customerName;
+        customerName = null;
+
+        java.time.LocalDate now = java.time.LocalDate.now();
+        ObservableList<Property> data = FXCollections.observableArrayList();
+        ServiceLocator.apartments().getAll().stream()
+                .filter(a -> cust == null || cust.equals(a.getCustomerName()))
+                .forEach(a -> {
+                    long monthly = ServiceLocator.cleanings().getAll().stream()
+                            .filter(c -> c.property().equals(a.getAddress())
+                                    && c.date().getMonth() == now.getMonth()
+                                    && c.date().getYear()  == now.getYear())
+                            .count();
+                    String type = a.getRooms() <= 1 ? "Štúdio"
+                                : a.getRooms() + "-izbový";
+                    data.add(new Property(a.getAddress(), a.getCustomerName(), type, (int) monthly, "ACTIVE"));
+                });
 
         countLabel.setText(data.size() + " apartmánov");
         list.setItems(data);

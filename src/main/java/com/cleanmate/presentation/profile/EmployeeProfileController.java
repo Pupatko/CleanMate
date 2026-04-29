@@ -34,6 +34,8 @@ public class EmployeeProfileController extends BaseNavController {
     /** Set before navigating here to show a specific employee's profile. */
     public static String employeeName = null;
 
+    private Employee currentEmployee = null;
+
     @FXML
     public void initialize() {
         LOG.info("Employee profile initialized");
@@ -43,6 +45,7 @@ public class EmployeeProfileController extends BaseNavController {
 
         Employee found = emp == null ? null : ServiceLocator.employees().getAll().stream()
                 .filter(e -> e.getFullName().equals(emp)).findFirst().orElse(null);
+        currentEmployee = found;
 
         if (found != null) {
             firstNameField.setText(found.getFirstName());
@@ -99,12 +102,29 @@ public class EmployeeProfileController extends BaseNavController {
 
     @FXML
     private void onSave() {
-        String email = emailField.getText() == null ? "" : emailField.getText().trim();
+        String firstName = firstNameField.getText() == null ? "" : firstNameField.getText().trim();
+        String lastName  = lastNameField.getText()  == null ? "" : lastNameField.getText().trim();
+        String email     = emailField.getText()     == null ? "" : emailField.getText().trim();
+        String phone     = phoneField.getText()     == null ? "" : phoneField.getText().trim();
+
+        if (firstName.isEmpty() || lastName.isEmpty()) {
+            showStatus("Meno a priezvisko sú povinné.", true);
+            return;
+        }
         if (!email.matches("^[\\w.+-]+@[\\w-]+\\.[A-Za-z]{2,}$")) {
             showStatus("Neplatný email.", true);
             return;
         }
-        LOG.info("Profile saved: " + nameLabel.getText() + " / " + email);
+
+        if (currentEmployee != null) {
+            currentEmployee.setFirstName(firstName);
+            currentEmployee.setLastName(lastName);
+            currentEmployee.setEmail(email);
+            currentEmployee.setPhone(phone);
+            ServiceLocator.employees().save(currentEmployee);
+        }
+
+        LOG.info("Profile saved: " + firstName + " " + lastName + " / " + email);
         showStatus("Profil uložený.", false);
     }
 
