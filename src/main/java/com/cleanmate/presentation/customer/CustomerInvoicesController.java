@@ -1,6 +1,5 @@
 package com.cleanmate.presentation.customer;
 
-import com.cleanmate.presentation.apartment.ApartmentItem;
 import com.cleanmate.model.Cleaning;
 import com.cleanmate.service.ServiceLocator;
 import com.cleanmate.presentation.nav.BaseNavController;
@@ -130,8 +129,8 @@ public class CustomerInvoicesController extends BaseNavController {
 
     private Set<String> apartmentsForCustomer(String customerName) {
         Set<String> addresses = new HashSet<>();
-        for (ApartmentItem a : com.cleanmate.presentation.apartment.ApartmentManagementController.data()) {
-            if (customerName.equalsIgnoreCase(a.getCustomer())) addresses.add(a.getAddress());
+        for (com.cleanmate.model.Apartment a : com.cleanmate.service.ServiceLocator.apartments().getAll()) {
+            if (customerName.equalsIgnoreCase(a.getCustomerName())) addresses.add(a.getAddress());
         }
         return addresses;
     }

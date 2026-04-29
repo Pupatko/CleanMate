@@ -94,7 +94,7 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
     public void initialize() {
         LOG.info("Cleaning detail initialized");
 
-        java.util.List<String> empNames = ServiceLocator.employees().getAllNames();
+        java.util.List<String> empNames = new java.util.ArrayList<>(ServiceLocator.employees().getAllNames());
         if (!empNames.contains("— nepriradený —")) empNames.add(0, "— nepriradený —");
         employeeCombo.setItems(FXCollections.observableArrayList(empNames));
 

@@ -3,6 +3,7 @@ package com.cleanmate.presentation;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.nav.Route;
 import com.cleanmate.presentation.nav.ViewRouter;
+import com.cleanmate.service.Session;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,10 +19,10 @@ public class LoginController {
 
     private static final Logger LOG = Logger.getLogger(LoginController.class.getName());
 
-    @FXML private TextField usernameField;
+    @FXML private TextField     usernameField;
     @FXML private PasswordField passwordField;
     @FXML private ComboBox<String> roleCombo;
-    @FXML private Label errorLabel;
+    @FXML private Label         errorLabel;
 
     @FXML
     public void initialize() {
@@ -32,41 +33,75 @@ public class LoginController {
 
     @FXML
     private void onLogin(ActionEvent event) {
-        String username = usernameField.getText() == null ? "" : usernameField.getText().trim();
-        String password = passwordField.getText() == null ? "" : passwordField.getText();
-        String role = roleCombo.getValue();
+        String username = usernameField.getText()  == null ? "" : usernameField.getText().trim();
+        String password = passwordField.getText()  == null ? "" : passwordField.getText().trim();
+        String role     = roleCombo.getValue();
 
         if (username.isEmpty() || password.isEmpty() || role == null) {
             showError(LanguageManager.getBundle().getString("login.error.fields"));
-            LOG.warning("Login attempt failed: missing fields (user='" + username + "', role=" + role + ")");
             return;
         }
 
-        LOG.info("Login OK: user='" + username + "', role=" + role);
+        switch (role) {
+            case "FIRMA" -> loginFirma(username, password);
+            case "ZAMESTNANEC" -> loginEmployee(username, password);
+            case "ZAKAZNIK"    -> loginCustomer(username, password);
+            default -> showError(LanguageManager.getBundle().getString("login.error.credentials"));
+        }
+    }
+
+    // ── FIRMA ─────────────────────────────────────────────────────────────────
+
+    private void loginFirma(String username, String password) {
+        if (!username.equals("test1") || !password.equals("test1")) {
+            showError(LanguageManager.getBundle().getString("login.error.credentials"));
+            return;
+        }
+        Session.login(Session.Role.FIRMA, "Administrator", "admin");
+        navigateTo(Route.DASHBOARD);
+    }
+
+    // ── ZAMESTNANEC ───────────────────────────────────────────────────────────
+
+    private void loginEmployee(String username, String password) {
+        if (!username.equals("test2") || !password.equals("test2")) {
+            showError(LanguageManager.getBundle().getString("login.error.credentials"));
+            return;
+        }
+        Session.login(Session.Role.ZAMESTNANEC, "", "");
+        navigateTo(Route.MY_SCHEDULE);
+    }
+
+    // ── ZAKAZNIK ──────────────────────────────────────────────────────────────
+
+    private void loginCustomer(String username, String password) {
+        if (!username.equals("test3") || !password.equals("test3")) {
+            showError(LanguageManager.getBundle().getString("login.error.credentials"));
+            return;
+        }
+        Session.login(Session.Role.ZAKAZNIK, "", "");
+        navigateTo(Route.PORTAL);
+    }
+
+    // ── helpers ───────────────────────────────────────────────────────────────
+
+    private void navigateTo(Route route) {
         errorLabel.setVisible(false);
-
-        Route target = switch (role) {
-            case "ZAMESTNANEC" -> Route.MY_SCHEDULE;
-            case "ZAKAZNIK"    -> Route.PORTAL;
-            default            -> Route.DASHBOARD;
-        };
-        ViewRouter.get().navigate(target);
-    }
-
-    @FXML
-    public void onLangSk() {
-        LanguageManager.setLocale(Locale.forLanguageTag("sk"));
-        ViewRouter.get().navigate(Route.LOGIN);
-    }
-
-    @FXML
-    public void onLangEn() {
-        LanguageManager.setLocale(Locale.ENGLISH);
-        ViewRouter.get().navigate(Route.LOGIN);
+        ViewRouter.get().navigate(route);
     }
 
     private void showError(String message) {
         errorLabel.setText(message);
         errorLabel.setVisible(true);
+    }
+
+    @FXML public void onLangSk() {
+        LanguageManager.setLocale(Locale.forLanguageTag("sk"));
+        ViewRouter.get().navigate(Route.LOGIN);
+    }
+
+    @FXML public void onLangEn() {
+        LanguageManager.setLocale(Locale.ENGLISH);
+        ViewRouter.get().navigate(Route.LOGIN);
     }
 }
