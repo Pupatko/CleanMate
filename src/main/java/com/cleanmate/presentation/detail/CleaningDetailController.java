@@ -3,6 +3,7 @@ package com.cleanmate.presentation.detail;
 import com.cleanmate.model.Cleaning;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.ConfirmDialog;
+import com.cleanmate.service.ServiceLocator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -81,6 +82,8 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
 
     public static Cleaning selected = null;
 
+    private String cleaningId = null;
+
     // QC state
     private int currentRating = 0;
     private final List<Label> starLabels = new ArrayList<>();
@@ -91,8 +94,9 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
     public void initialize() {
         LOG.info("Cleaning detail initialized");
 
-        employeeCombo.setItems(FXCollections.observableArrayList(
-                "— nepriradený —", "Anna Nová", "Peter Malý", "Eva Horváthová", "Ján Kováč"));
+        java.util.List<String> empNames = ServiceLocator.employees().getAllNames();
+        if (!empNames.contains("— nepriradený —")) empNames.add(0, "— nepriradený —");
+        employeeCombo.setItems(FXCollections.observableArrayList(empNames));
 
         statusCombo.setItems(FXCollections.observableArrayList(
                 "NEW", "ASSIGNED", "IN_PROGRESS", "DONE", "CANCELLED"));
@@ -100,6 +104,7 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
         if (selected != null) {
             var dateFmt = java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy");
             var timeFmt = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
+            cleaningId = selected.id();
             propertyField.setText(selected.property());
             customerField.setText(selected.customer());
             dateField.setText(selected.date().format(dateFmt));
@@ -109,6 +114,8 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
             if (!employeeCombo.getItems().contains(emp)) employeeCombo.getItems().add(emp);
             employeeCombo.getSelectionModel().select(emp);
             statusCombo.getSelectionModel().select(selected.status());
+            currentRating = selected.qcRating();
+            qcNoteArea.setText(selected.qcNote());
             selected = null;
         } else {
             propertyField.setText("Panská 12, Bratislava");
@@ -116,7 +123,7 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
             dateField.setText("22.04.2026");
             checkOutTimeField.setText("10:30");
             checkInTimeField.setText("12:00");
-            employeeCombo.getSelectionModel().select("Peter Malý");
+            employeeCombo.getSelectionModel().selectFirst();
             statusCombo.getSelectionModel().select("IN_PROGRESS");
         }
         statusCombo.valueProperty().addListener((obs, o, n) -> {
@@ -200,6 +207,25 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
                 .add("Dátum",       savedDate,     dateField.getText())
                 .add("CHECK-OUT",   savedCheckOut, checkOutTimeField.getText())
                 .add("CHECK-IN",    savedCheckIn,  checkInTimeField.getText());
+
+        if (cleaningId != null) {
+            ServiceLocator.cleanings().findById(cleaningId).ifPresent(c -> {
+                var dateFmt = java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy");
+                var timeFmt = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
+                java.time.LocalDate date = c.date();
+                java.time.LocalTime checkOut = c.checkOut();
+                java.time.LocalTime checkIn  = c.checkIn();
+                try { date     = java.time.LocalDate.parse(dateField.getText().trim(), dateFmt); } catch (Exception ignored) {}
+                try { checkOut = java.time.LocalTime.parse(checkOutTimeField.getText().trim(), timeFmt); } catch (Exception ignored) {}
+                try { checkIn  = java.time.LocalTime.parse(checkInTimeField.getText().trim(), timeFmt); } catch (Exception ignored) {}
+                Cleaning updated = new Cleaning(c.id(), date, checkOut, checkIn,
+                        propertyField.getText().trim(), customerField.getText().trim(),
+                        employeeCombo.getValue(), statusCombo.getValue(),
+                        c.qcRating(), c.qcNote());
+                ServiceLocator.cleanings().save(updated);
+            });
+        }
+
         LOG.info("Changes confirmed");
         setEditMode(false);
         toast(LanguageManager.getBundle().getString("toast.changes.saved"), com.cleanmate.presentation.util.ToastManager.Type.SUCCESS);
@@ -209,6 +235,7 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
     @FXML private void onCancel() {
         if (!ConfirmDialog.show("confirm.cancel.cleaning.header",
                 LanguageManager.getBundle().getString("confirm.cancel.cleaning.content"))) return;
+        if (cleaningId != null) ServiceLocator.cleanings().cancel(cleaningId);
         statusCombo.setValue("CANCELLED");
         LOG.info("Cleaning cancelled");
         toast(LanguageManager.getBundle().getString("toast.cleaning.cancelled"), com.cleanmate.presentation.util.ToastManager.Type.INFO);
@@ -398,6 +425,7 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
             return;
         }
         String note = qcNoteArea.getText() == null ? "" : qcNoteArea.getText().trim();
+        if (cleaningId != null) ServiceLocator.cleanings().saveQc(cleaningId, currentRating, note);
         LOG.info("QC saved: rating=" + currentRating + "/5, note='" + note + "'");
         qcSavedLabel.setStyle("-fx-text-fill: #10B981; -fx-font-size: 12px; -fx-font-weight: bold;");
         qcSavedLabel.setText(LanguageManager.getBundle().getString("detail.qc.saved"));
