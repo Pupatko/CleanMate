@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cleanings generated="2026-05-04" count="3">
+  <cleaning>
+    <date>2026-05-04</date>
+    <checkOut>09:00</checkOut>
+    <checkIn>11:30</checkIn>
+    <property>Panská 12, BA</property>
+    <customer>Acme Rentals s.r.o.</customer>
+    <employee>Anna Nová</employee>
+    <status>NEW</status>
+    <rating>0</rating>
+    <note></note>
+  </cleaning>
+  <cleaning>
+    <date>2026-05-04</date>
+    <checkOut>12:00</checkOut>
+    <checkIn>14:30</checkIn>
+    <property>Obchodná 27</property>
+    <customer>City Stays Ltd.</customer>
+    <employee>Peter Malý</employee>
+    <status>ASSIGNED</status>
+    <rating>0</rating>
+    <note></note>
+  </cleaning>
+  <cleaning>
+    <date>2026-05-05</date>
+    <checkOut>10:00</checkOut>
+    <checkIn>13:00</checkIn>
+    <property>Hviezdoslavovo nám. 4</property>
+    <customer>BNB Slovakia s.r.o.</customer>
+    <employee>Ján Kováč</employee>
+    <status>DONE</status>
+    <rating>5</rating>
+    <note>Výborne upratané</note>
+  </cleaning>
+</cleanings>

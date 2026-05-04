@@ -65,7 +65,12 @@
                 </VBox>
             </HBox>
 
-            <Label text="%dashboard.section.recent" styleClass="section-title"/>
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="%dashboard.section.recent" styleClass="section-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Import XML" onAction="#onImportXml" styleClass="secondary-button"/>
+                <Button text="Export XML" onAction="#onExportXml" styleClass="secondary-button"/>
+            </HBox>
 
             <TableView fx:id="recentTable" VBox.vgrow="ALWAYS" styleClass="data-table">
                 <columns>

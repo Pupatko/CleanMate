@@ -4,6 +4,7 @@ import com.cleanmate.model.Cleaning;
 import com.cleanmate.presentation.detail.CleaningDetailController;
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.util.EmptyState;
+import com.cleanmate.presentation.util.ToastManager;
 import com.cleanmate.service.ServiceLocator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,10 +14,21 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class DashboardController extends BaseNavController {
@@ -88,6 +100,114 @@ public class DashboardController extends BaseNavController {
             .forEach(c -> rows.add(new CleaningRow(
                     c.checkOut().format(fmt), c.property(), c.employee(), c.status(), c)));
         return rows;
+    }
+
+    // ── XML Import ────────────────────────────────────────────────────────────
+
+    @FXML
+    private void onImportXml() {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Vybrať XML súbor na import");
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML súbory", "*.xml"));
+        File file = fc.showOpenDialog(recentTable.getScene().getWindow());
+        if (file == null) return;
+
+        int imported = 0;
+        int skipped  = 0;
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(file);
+            doc.getDocumentElement().normalize();
+
+            NodeList nodes = doc.getElementsByTagName("cleaning");
+            DateTimeFormatter dateFmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm");
+
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Element el = (Element) nodes.item(i);
+                try {
+                    LocalDate date     = LocalDate.parse(text(el, "date"), dateFmt);
+                    LocalTime checkOut = LocalTime.parse(text(el, "checkOut"), timeFmt);
+                    LocalTime checkIn  = LocalTime.parse(text(el, "checkIn"),  timeFmt);
+                    String property    = text(el, "property");
+                    String customer    = text(el, "customer");
+                    String employee    = text(el, "employee");
+                    String status      = text(el, "status");
+
+                    if (property.isBlank()) { skipped++; continue; }
+
+                    Cleaning c = new Cleaning(UUID.randomUUID().toString(),
+                            date, checkOut, checkIn, property, customer, employee, status, 0, "");
+                    ServiceLocator.cleanings().save(c);
+                    imported++;
+                } catch (Exception ex) {
+                    LOG.warning("Skipping malformed <cleaning> #" + i + ": " + ex.getMessage());
+                    skipped++;
+                }
+            }
+
+            toast("Import hotový: " + imported + " importované, " + skipped + " preskočené.", ToastManager.Type.SUCCESS);
+            LOG.info("XML import done: imported=" + imported + " skipped=" + skipped);
+
+            List<Cleaning> todayList = ServiceLocator.cleanings().getByDate(LocalDate.now());
+            recentTable.setItems(buildRows(todayList));
+
+        } catch (Exception ex) {
+            LOG.severe("XML import failed: " + ex.getMessage());
+            toast("Import zlyhal: " + ex.getMessage(), ToastManager.Type.ERROR);
+        }
+    }
+
+    private static String text(Element el, String tag) {
+        NodeList nl = el.getElementsByTagName(tag);
+        if (nl.getLength() == 0) return "";
+        return nl.item(0).getTextContent().trim();
+    }
+
+    // ── XML Export ────────────────────────────────────────────────────────────
+
+    @FXML
+    private void onExportXml() {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Uložiť XML export");
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML súbory", "*.xml"));
+        fc.setInitialFileName("cleanmate-cleanings-" + LocalDate.now() + ".xml");
+        File file = fc.showSaveDialog(recentTable.getScene().getWindow());
+        if (file == null) return;
+
+        List<Cleaning> all = ServiceLocator.cleanings().getAll();
+        try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
+            pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            pw.println("<cleanings generated=\"" + LocalDate.now() + "\" count=\"" + all.size() + "\">");
+            for (Cleaning c : all) {
+                pw.println("  <cleaning>");
+                pw.println("    <date>"     + c.date()         + "</date>");
+                pw.println("    <checkOut>" + c.checkOut()     + "</checkOut>");
+                pw.println("    <checkIn>"  + c.checkIn()      + "</checkIn>");
+                pw.println("    <property>" + esc(c.property()) + "</property>");
+                pw.println("    <customer>" + esc(c.customer()) + "</customer>");
+                pw.println("    <employee>" + esc(c.employee()) + "</employee>");
+                pw.println("    <status>"   + c.status()       + "</status>");
+                pw.println("    <rating>"   + c.qcRating()     + "</rating>");
+                pw.println("    <note>"     + esc(c.qcNote())  + "</note>");
+                pw.println("  </cleaning>");
+            }
+            pw.println("</cleanings>");
+
+            toast("Export hotový: " + all.size() + " upratovaní uložených.", ToastManager.Type.SUCCESS);
+            LOG.info("XML export done: " + all.size() + " cleanings → " + file.getName());
+
+        } catch (Exception ex) {
+            LOG.severe("XML export failed: " + ex.getMessage());
+            toast("Export zlyhal: " + ex.getMessage(), ToastManager.Type.ERROR);
+        }
+    }
+
+    private static String esc(String s) {
+        if (s == null) return "";
+        return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
     }
 
 }
