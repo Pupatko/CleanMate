@@ -3,6 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
@@ -101,9 +103,38 @@
                 <Label fx:id="saveStatusLabel" text=""/>
 
                 <HBox spacing="10" alignment="CENTER_RIGHT">
-                    <Button text="%profile.btn.password" onAction="#onChangePassword" styleClass="secondary-button"/>
                     <Region HBox.hgrow="ALWAYS"/>
                     <Button fx:id="saveButton" text="%profile.btn.save" onAction="#onSave" styleClass="primary-button"/>
+                </HBox>
+
+                <Separator/>
+
+                <Label text="%profile.section.password" styleClass="section-title"/>
+
+                <GridPane hgap="16" vgap="10">
+                    <columnConstraints>
+                        <javafx.scene.layout.ColumnConstraints percentWidth="50"/>
+                        <javafx.scene.layout.ColumnConstraints percentWidth="50"/>
+                    </columnConstraints>
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="%profile.field.password.current" styleClass="field-label"/>
+                        <PasswordField fx:id="currentPasswordField" styleClass="input"/>
+                    </VBox>
+                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label text="%profile.field.password.new" styleClass="field-label"/>
+                        <PasswordField fx:id="newPasswordField" styleClass="input"/>
+                    </VBox>
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <Label text="%profile.field.password.confirm" styleClass="field-label"/>
+                        <PasswordField fx:id="confirmPasswordField" styleClass="input"/>
+                    </VBox>
+                </GridPane>
+
+                <Label fx:id="passwordStatusLabel" text=""/>
+
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="%profile.btn.password.save" onAction="#onSavePassword" styleClass="primary-button"/>
                 </HBox>
             </VBox>
         </VBox>

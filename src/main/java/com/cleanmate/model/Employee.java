@@ -15,10 +15,18 @@ public class Employee {
     private String notes;
     private boolean active;
     private String availability;
+    private String password;
 
     public Employee(String id, String firstName, String lastName, String email, String phone,
                     String role, String address, LocalDate startDate, String notes,
                     boolean active, String availability) {
+        this(id, firstName, lastName, email, phone, role, address, startDate, notes,
+                active, availability, "cleanmate");
+    }
+
+    public Employee(String id, String firstName, String lastName, String email, String phone,
+                    String role, String address, LocalDate startDate, String notes,
+                    boolean active, String availability, String password) {
         this.id           = id;
         this.firstName    = firstName;
         this.lastName     = lastName;
@@ -30,12 +38,13 @@ public class Employee {
         this.notes        = notes;
         this.active       = active;
         this.availability = availability;
+        this.password     = password != null ? password : "cleanmate";
     }
 
     public static Employee create(String firstName, String lastName, String email, String phone,
                                    String role, String address, LocalDate startDate, String notes) {
         return new Employee(UUID.randomUUID().toString(), firstName, lastName, email, phone,
-                role, address, startDate, notes, true, "AVAILABLE");
+                role, address, startDate, notes, true, "AVAILABLE", "cleanmate");
     }
 
     public String getId()           { return id; }
@@ -50,6 +59,7 @@ public class Employee {
     public String getNotes()        { return notes; }
     public boolean isActive()       { return active; }
     public String getAvailability() { return availability; }
+    public String getPassword()     { return password; }
 
     public void setFirstName(String v)    { firstName    = v; }
     public void setLastName(String v)     { lastName     = v; }
@@ -61,4 +71,5 @@ public class Employee {
     public void setNotes(String v)        { notes        = v; }
     public void setActive(boolean v)      { active       = v; }
     public void setAvailability(String v) { availability = v; }
+    public void setPassword(String v)     { password     = v; }
 }

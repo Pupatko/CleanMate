@@ -28,6 +28,13 @@ public class InMemoryEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
+    public Optional<Employee> findByEmail(String email) {
+        return data.stream()
+                .filter(e -> e.getEmail() != null && e.getEmail().equalsIgnoreCase(email))
+                .findFirst();
+    }
+
+    @Override
     public Employee save(Employee employee) {
         data.removeIf(e -> e.getId().equals(employee.getId()));
         data.add(employee);

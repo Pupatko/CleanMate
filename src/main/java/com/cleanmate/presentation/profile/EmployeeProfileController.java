@@ -6,6 +6,7 @@ import com.cleanmate.service.ServiceLocator;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 import java.util.logging.Logger;
@@ -30,6 +31,11 @@ public class EmployeeProfileController extends BaseNavController {
 
     @FXML private Label saveStatusLabel;
     @FXML private Button saveButton;
+
+    @FXML private PasswordField currentPasswordField;
+    @FXML private PasswordField newPasswordField;
+    @FXML private PasswordField confirmPasswordField;
+    @FXML private Label passwordStatusLabel;
 
     /** Set before navigating here to show a specific employee's profile. */
     public static String employeeName = null;
@@ -56,8 +62,7 @@ public class EmployeeProfileController extends BaseNavController {
             sinceLabel.setText(found.getStartDate() != null
                     ? "Člen od " + found.getStartDate() : "");
 
-            java.time.LocalDate now = java.time.LocalDate.now();
-            long tasks = ServiceLocator.cleanings().getAll().stream()
+            long tasks =ServiceLocator.cleanings().getAll().stream()
                     .filter(c -> "DONE".equals(c.status()) && found.getFullName().equals(c.employee()))
                     .count();
             double hours = ServiceLocator.cleanings().getAll().stream()
@@ -129,9 +134,42 @@ public class EmployeeProfileController extends BaseNavController {
     }
 
     @FXML
-    private void onChangePassword() {
-        LOG.info("Change password clicked");
-        showStatus("Otvorí sa dialóg pre zmenu hesla (TODO).", false);
+    private void onSavePassword() {
+        String current = currentPasswordField.getText() == null ? "" : currentPasswordField.getText();
+        String newPwd  = newPasswordField.getText()     == null ? "" : newPasswordField.getText();
+        String confirm = confirmPasswordField.getText() == null ? "" : confirmPasswordField.getText();
+
+        if (current.isEmpty() || newPwd.isEmpty() || confirm.isEmpty()) {
+            showPasswordStatus("Vyplňte všetky polia.", true); return;
+        }
+        if (newPwd.length() < 4) {
+            showPasswordStatus("Nové heslo musí mať aspoň 4 znaky.", true); return;
+        }
+        if (!newPwd.equals(confirm)) {
+            showPasswordStatus("Nové heslá sa nezhodujú.", true); return;
+        }
+        if (currentEmployee == null) {
+            showPasswordStatus("Profil nenájdený.", true); return;
+        }
+
+        boolean ok = ServiceLocator.employees().changePassword(currentEmployee.getId(), current, newPwd);
+        if (!ok) {
+            showPasswordStatus("Aktuálne heslo je nesprávne.", true); return;
+        }
+
+        currentPasswordField.clear();
+        newPasswordField.clear();
+        confirmPasswordField.clear();
+        LOG.info("Password changed for: " + currentEmployee.getFullName());
+        showPasswordStatus("Heslo úspešne zmenené.", false);
+    }
+
+    private void showPasswordStatus(String msg, boolean error) {
+        passwordStatusLabel.setText(msg);
+        passwordStatusLabel.getStyleClass().removeAll("error-label", "success-label");
+        passwordStatusLabel.getStyleClass().add(error ? "error-label" : "success-label");
+        passwordStatusLabel.setVisible(true);
+        passwordStatusLabel.setManaged(true);
     }
 
     private void showStatus(String msg, boolean error) {

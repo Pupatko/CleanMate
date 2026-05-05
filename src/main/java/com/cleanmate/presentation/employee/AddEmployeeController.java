@@ -12,8 +12,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 import java.util.logging.Logger;
 
@@ -40,6 +42,10 @@ public class AddEmployeeController extends BaseNavController {
     @FXML private Button cancelEditButton;
     @FXML private Button confirmButton;
     @FXML private Button deleteButton;
+
+    @FXML private VBox passwordSection;
+    @FXML private PasswordField passwordField;
+    @FXML private PasswordField confirmPasswordField;
 
     private EmployeeRow target;
     private boolean addMode;
@@ -69,6 +75,8 @@ public class AddEmployeeController extends BaseNavController {
             cancelEditButton.setManaged(true);
             confirmButton.setText(LanguageManager.getBundle().getString("add.employee.save"));
             cancelEditButton.setText(LanguageManager.getBundle().getString("btn.cancel"));
+            passwordSection.setVisible(true);
+            passwordSection.setManaged(true);
         } else {
             pageTitle.setText(target.getName());
             pageSubtitle.setText(LanguageManager.getBundle().getString("add.employee.view.subtitle"));
@@ -77,6 +85,8 @@ public class AddEmployeeController extends BaseNavController {
             lastNameField.setText(parts.length > 1 ? parts[1] : "");
             roleCombo.setValue(target.getRole());
             setEditMode(false);
+            passwordSection.setVisible(false);
+            passwordSection.setManaged(false);
         }
 
         errorLabel.setText("");
@@ -164,12 +174,18 @@ public class AddEmployeeController extends BaseNavController {
         String notes     = notesArea.getText()      == null ? "" : notesArea.getText().trim();
 
         if (addMode) {
+            String pwd     = passwordField.getText() == null ? "" : passwordField.getText();
+            String confirm = confirmPasswordField.getText() == null ? "" : confirmPasswordField.getText();
+            if (pwd.length() < 4) { errorLabel.setText("Heslo musí mať aspoň 4 znaky."); return; }
+            if (!pwd.equals(confirm)) { errorLabel.setText("Heslá sa nezhodujú."); return; }
+
             java.time.LocalDate startDate = null;
             if (!startText.isEmpty()) {
                 try { startDate = java.time.LocalDate.parse(startText); } catch (Exception ignored) {}
             }
             Employee e = Employee.create(firstName, lastName, email, phone,
                     role == null ? "CLEANER" : role, address, startDate, notes);
+            e.setPassword(pwd);
             ServiceLocator.employees().save(e);
             LOG.info("Created employee: " + fullName);
             toast(LanguageManager.getBundle().getString("toast.employee.saved"), ToastManager.Type.SUCCESS);

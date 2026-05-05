@@ -1,8 +1,13 @@
 package com.cleanmate.presentation;
 
+import com.cleanmate.model.Employee;
+import com.cleanmate.presentation.history.EmployeeHistoryController;
+import com.cleanmate.presentation.myschedule.MyScheduleController;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.nav.Route;
 import com.cleanmate.presentation.nav.ViewRouter;
+import com.cleanmate.presentation.profile.EmployeeProfileController;
+import com.cleanmate.service.ServiceLocator;
 import com.cleanmate.service.Session;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -43,7 +48,7 @@ public class LoginController {
         }
 
         switch (role) {
-            case "FIRMA" -> loginFirma(username, password);
+            case "FIRMA"       -> loginFirma(username, password);
             case "ZAMESTNANEC" -> loginEmployee(username, password);
             case "ZAKAZNIK"    -> loginCustomer(username, password);
             default -> showError(LanguageManager.getBundle().getString("login.error.credentials"));
@@ -53,22 +58,38 @@ public class LoginController {
     // ── FIRMA ─────────────────────────────────────────────────────────────────
 
     private void loginFirma(String username, String password) {
-        if (!username.equals("test1") || !password.equals("test1")) {
+        if (!username.equals("admin") || !password.equals("admin")) {
             showError(LanguageManager.getBundle().getString("login.error.credentials"));
+            LOG.warning("FIRMA login failed for user='" + username + "'");
             return;
         }
         Session.login(Session.Role.FIRMA, "Administrator", "admin");
+        LOG.info("FIRMA login OK");
         navigateTo(Route.DASHBOARD);
     }
 
-    // ── ZAMESTNANEC ───────────────────────────────────────────────────────────
+    // ── ZAMESTNANEC — reálny login cez email + heslo z DB ────────────────────
 
     private void loginEmployee(String username, String password) {
-        if (!username.equals("test2") || !password.equals("test2")) {
+        Employee emp = ServiceLocator.employees().findByEmail(username).orElse(null);
+
+        if (emp == null || !emp.getPassword().equals(password)) {
             showError(LanguageManager.getBundle().getString("login.error.credentials"));
+            LOG.warning("ZAMESTNANEC login failed for email='" + username + "'");
             return;
         }
-        Session.login(Session.Role.ZAMESTNANEC, "", "");
+        if (!emp.isActive()) {
+            showError(LanguageManager.getBundle().getString("login.error.credentials"));
+            LOG.warning("ZAMESTNANEC login refused — inactive: " + username);
+            return;
+        }
+
+        Session.login(Session.Role.ZAMESTNANEC, emp.getFullName(), emp.getId());
+        String name = emp.getFullName();
+        MyScheduleController.employeeName      = name;
+        EmployeeHistoryController.employeeName = name;
+        EmployeeProfileController.employeeName = name;
+        LOG.info("ZAMESTNANEC login OK: " + name);
         navigateTo(Route.MY_SCHEDULE);
     }
 

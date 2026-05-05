@@ -23,9 +23,21 @@ public class EmployeeService {
 
     public List<String> getAllNames() { return repo.findAllNames(); }
 
+    public Optional<Employee> findByEmail(String email) { return repo.findByEmail(email); }
+
     public Employee save(Employee employee) { return repo.save(employee); }
 
     public void delete(String id) { repo.delete(id); }
+
+    public boolean changePassword(String id, String currentPwd, String newPwd) {
+        Optional<Employee> opt = repo.findById(id);
+        if (opt.isEmpty()) return false;
+        Employee e = opt.get();
+        if (!e.getPassword().equals(currentPwd)) return false;
+        e.setPassword(newPwd);
+        repo.save(e);
+        return true;
+    }
 
     public void deactivate(String id) {
         repo.findById(id).ifPresent(e -> {

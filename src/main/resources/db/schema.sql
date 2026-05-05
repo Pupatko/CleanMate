@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS employees (
     start_date   DATE,
     notes        TEXT         NOT NULL DEFAULT '',
     active       BOOLEAN      NOT NULL DEFAULT TRUE,
-    availability VARCHAR(100) NOT NULL DEFAULT 'AVAILABLE'
+    availability VARCHAR(100) NOT NULL DEFAULT 'AVAILABLE',
+    password     VARCHAR(200) NOT NULL DEFAULT 'cleanmate'
 );
 
 -- ── Apartments ───────────────────────────────────────────────

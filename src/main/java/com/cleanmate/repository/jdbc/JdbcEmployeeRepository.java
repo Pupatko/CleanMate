@@ -17,9 +17,7 @@ public class JdbcEmployeeRepository implements EmployeeRepository {
     private static final Logger LOG = Logger.getLogger(JdbcEmployeeRepository.class.getName());
     private final ObservableList<Employee> cache = FXCollections.observableArrayList();
 
-    public JdbcEmployeeRepository() {
-        reload();
-    }
+    public JdbcEmployeeRepository() { reload(); }
 
     @Override public ObservableList<Employee> findAll() { return cache; }
 
@@ -29,10 +27,18 @@ public class JdbcEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
+    public Optional<Employee> findByEmail(String email) {
+        return cache.stream()
+                .filter(e -> e.getEmail() != null && e.getEmail().equalsIgnoreCase(email))
+                .findFirst();
+    }
+
+    @Override
     public Employee save(Employee e) {
         String sql = """
-                INSERT INTO employees (id, first_name, last_name, email, phone, role, address, start_date, notes, active, availability)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO employees
+                    (id, first_name, last_name, email, phone, role, address, start_date, notes, active, availability, password)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT (id) DO UPDATE SET
                     first_name   = EXCLUDED.first_name,
                     last_name    = EXCLUDED.last_name,
@@ -43,7 +49,8 @@ public class JdbcEmployeeRepository implements EmployeeRepository {
                     start_date   = EXCLUDED.start_date,
                     notes        = EXCLUDED.notes,
                     active       = EXCLUDED.active,
-                    availability = EXCLUDED.availability
+                    availability = EXCLUDED.availability,
+                    password     = EXCLUDED.password
                 """;
         try (Connection con = DatabaseManager.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -58,6 +65,7 @@ public class JdbcEmployeeRepository implements EmployeeRepository {
             ps.setString(9, e.getNotes());
             ps.setBoolean(10, e.isActive());
             ps.setString(11, e.getAvailability());
+            ps.setString(12, e.getPassword() != null ? e.getPassword() : "cleanmate");
             ps.executeUpdate();
         } catch (SQLException ex) {
             LOG.severe("save employee failed: " + ex.getMessage());
@@ -79,20 +87,19 @@ public class JdbcEmployeeRepository implements EmployeeRepository {
         cache.removeIf(e -> e.getId().equals(id));
     }
 
-    @Override
-    public List<Employee> findActive() {
+    @Override public List<Employee> findActive() {
         return cache.stream().filter(Employee::isActive).toList();
     }
 
-    @Override
-    public List<String> findAllNames() {
+    @Override public List<String> findAllNames() {
         return cache.stream().filter(Employee::isActive).map(Employee::getFullName).toList();
     }
 
     private void reload() {
         List<Employee> loaded = new ArrayList<>();
         try (Connection con = DatabaseManager.getConnection();
-             PreparedStatement ps = con.prepareStatement("SELECT * FROM employees ORDER BY last_name, first_name");
+             PreparedStatement ps = con.prepareStatement(
+                     "SELECT * FROM employees ORDER BY last_name, first_name");
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) loaded.add(map(rs));
         } catch (SQLException e) {
@@ -103,6 +110,8 @@ public class JdbcEmployeeRepository implements EmployeeRepository {
 
     private Employee map(ResultSet rs) throws SQLException {
         Date sd = rs.getDate("start_date");
+        String pwd = "cleanmate";
+        try { pwd = rs.getString("password"); } catch (SQLException ignored) {}
         return new Employee(
                 rs.getString("id"),
                 rs.getString("first_name"),
@@ -114,7 +123,8 @@ public class JdbcEmployeeRepository implements EmployeeRepository {
                 sd != null ? sd.toLocalDate() : null,
                 rs.getString("notes"),
                 rs.getBoolean("active"),
-                rs.getString("availability")
+                rs.getString("availability"),
+                pwd
         );
     }
 }

@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface EmployeeRepository {
     ObservableList<Employee> findAll();
     Optional<Employee> findById(String id);
+    Optional<Employee> findByEmail(String email);
     Employee save(Employee employee);
     void delete(String id);
     List<Employee> findActive();
