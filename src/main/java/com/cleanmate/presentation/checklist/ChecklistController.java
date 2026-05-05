@@ -1,6 +1,10 @@
 package com.cleanmate.presentation.checklist;
 
+import com.cleanmate.model.Cleaning;
 import com.cleanmate.presentation.detail.ChecklistStep;
+import com.cleanmate.presentation.nav.LanguageManager;
+import com.cleanmate.presentation.util.EmptyState;
+import com.cleanmate.service.ServiceLocator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,47 +22,68 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 
-import com.cleanmate.presentation.nav.LanguageManager;
 import java.io.File;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class ChecklistController extends com.cleanmate.presentation.nav.BaseNavController {
 
     private static final Logger LOG = Logger.getLogger(ChecklistController.class.getName());
     private static final int THUMB = 120;
-    private static final int COLS = 5;
+    private static final int COLS  = 5;
 
-    @FXML private Label propertyLabel;
-    @FXML private Label metaLabel;
-    @FXML private Label progressLabel;
+    /** Set before navigating here. */
+    public static Cleaning currentCleaning = null;
+
+    @FXML private Label       propertyLabel;
+    @FXML private Label       metaLabel;
+    @FXML private Label       progressLabel;
     @FXML private ProgressBar progressBar;
     @FXML private ListView<ChecklistStep> checklist;
-    @FXML private GridPane photoGrid;
-    @FXML private ScrollPane photoScroll;
-    @FXML private Button addPhotoButton;
-    @FXML private Button completeButton;
+    @FXML private GridPane    photoGrid;
+    @FXML private ScrollPane  photoScroll;
+    @FXML private Button      addPhotoButton;
+    @FXML private Button      completeButton;
 
-    private final ObservableList<ChecklistStep> steps = FXCollections.observableArrayList();
-    private final ObservableList<File> photos = FXCollections.observableArrayList();
+    private final ObservableList<ChecklistStep> steps  = FXCollections.observableArrayList();
+    private final ObservableList<File>          photos = FXCollections.observableArrayList();
+
+    private Cleaning cleaning;
 
     @FXML
     public void initialize() {
         LOG.info("Checklist view initialized");
 
-        propertyLabel.setText("Hviezdoslavovo nám. 4, Bratislava");
-        metaLabel.setText("Zákazník: City Nest Bratislava  •  Čas: 10:30  •  Stav: IN_PROGRESS");
+        cleaning = currentCleaning;
+        currentCleaning = null;
 
-        steps.setAll(
-                new ChecklistStep("Vysávanie obývačky", true),
-                new ChecklistStep("Vysávanie spálne", true),
-                new ChecklistStep("Výmena posteľnej bielizne", true),
-                new ChecklistStep("Čistenie kúpeľne", false),
-                new ChecklistStep("Doplnenie toaletných potrieb", false),
-                new ChecklistStep("Kontrola chladničky", false),
-                new ChecklistStep("Vyhodenie odpadu", false)
-        );
+        if (cleaning != null) {
+            propertyLabel.setText(cleaning.property());
+
+            String time = cleaning.checkOut().format(DateTimeFormatter.ofPattern("HH:mm"));
+            metaLabel.setText("Zákazník: " + cleaning.customer()
+                    + "  •  Čas: " + time
+                    + "  •  Stav: " + cleaning.status());
+
+            List<String> taskNames = ServiceLocator.apartments().getAll().stream()
+                    .filter(a -> a.getAddress().equals(cleaning.property()))
+                    .findFirst()
+                    .map(a -> a.getTaskNames())
+                    .orElse(List.of());
+
+            if (taskNames.isEmpty()) {
+                steps.add(new ChecklistStep("Upratanie priestoru", false));
+            } else {
+                taskNames.forEach(name -> steps.add(new ChecklistStep(name, false)));
+            }
+        } else {
+            propertyLabel.setText("—");
+            metaLabel.setText("—");
+        }
+
         checklist.setItems(steps);
-        checklist.setPlaceholder(com.cleanmate.presentation.util.EmptyState.build("✅", "empty.checklist"));
+        checklist.setPlaceholder(EmptyState.build("✅", "empty.checklist"));
         checklist.setCellFactory(CheckBoxListCell.forListView(ChecklistStep::doneProperty));
 
         for (ChecklistStep s : steps) {
@@ -71,11 +96,11 @@ public class ChecklistController extends com.cleanmate.presentation.nav.BaseNavC
     }
 
     private void updateProgress() {
-        int total = steps.size();
-        long done = steps.stream().filter(s -> s.doneProperty().get()).count();
+        int  total = steps.size();
+        long done  = steps.stream().filter(s -> s.doneProperty().get()).count();
         double ratio = total == 0 ? 0.0 : (double) done / total;
         progressBar.setProgress(ratio);
-        progressLabel.setText(done + " / " + total + "  (" + (int) (ratio * 100) + " %)");
+        progressLabel.setText(done + " / " + total + "  (" + (int)(ratio * 100) + " %)");
         completeButton.setDisable(ratio < 1.0);
     }
 
@@ -84,12 +109,29 @@ public class ChecklistController extends com.cleanmate.presentation.nav.BaseNavC
         FileChooser fc = new FileChooser();
         fc.setTitle(LanguageManager.getBundle().getString("checklist.photo.dialog"));
         fc.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter(LanguageManager.getBundle().getString("checklist.photo.filter"), "*.png", "*.jpg", "*.jpeg", "*.gif"));
+                new FileChooser.ExtensionFilter(
+                        LanguageManager.getBundle().getString("checklist.photo.filter"),
+                        "*.png", "*.jpg", "*.jpeg", "*.gif"));
         File f = fc.showOpenDialog(addPhotoButton.getScene().getWindow());
         if (f != null) {
             photos.add(f);
-            LOG.info("Photo added: " + f.getName() + " (total=" + photos.size() + ")");
+            LOG.info("Photo added: " + f.getName());
         }
+    }
+
+    @FXML
+    private void onComplete() {
+        if (cleaning != null) {
+            ServiceLocator.cleanings().save(cleaning.withStatus("DONE"));
+            LOG.info("Cleaning marked DONE: " + cleaning.id());
+        }
+        completeButton.setDisable(true);
+        completeButton.setText(LanguageManager.getBundle().getString("checklist.complete.done"));
+    }
+
+    @FXML
+    private void onBack() {
+        navMySchedule();
     }
 
     private void renderPhotos() {
@@ -122,18 +164,5 @@ public class ChecklistController extends com.cleanmate.presentation.nav.BaseNavC
             tile.getChildren().addAll(r, new Label(f.getName()));
         }
         return tile;
-    }
-
-    @FXML
-    private void onComplete() {
-        LOG.info("Cleaning completed — photos=" + photos.size() + ", steps=" + steps.size() + "/100%");
-        completeButton.setDisable(true);
-        completeButton.setText(LanguageManager.getBundle().getString("checklist.complete.done"));
-    }
-
-    @FXML
-    private void onBack() {
-        LOG.info("Back to schedule");
-        navMySchedule();
     }
 }

@@ -3,6 +3,7 @@ package com.cleanmate.presentation.profile;
 import com.cleanmate.model.Employee;
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.service.ServiceLocator;
+import com.cleanmate.service.Session;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -37,20 +38,14 @@ public class EmployeeProfileController extends BaseNavController {
     @FXML private PasswordField confirmPasswordField;
     @FXML private Label passwordStatusLabel;
 
-    /** Set before navigating here to show a specific employee's profile. */
-    public static String employeeName = null;
-
     private Employee currentEmployee = null;
 
     @FXML
     public void initialize() {
         LOG.info("Employee profile initialized");
 
-        String emp = employeeName;
-        employeeName = null;
-
-        Employee found = emp == null ? null : ServiceLocator.employees().getAll().stream()
-                .filter(e -> e.getFullName().equals(emp)).findFirst().orElse(null);
+        String userId = Session.getUserId();
+        Employee found = userId == null ? null : ServiceLocator.employees().findById(userId).orElse(null);
         currentEmployee = found;
 
         if (found != null) {

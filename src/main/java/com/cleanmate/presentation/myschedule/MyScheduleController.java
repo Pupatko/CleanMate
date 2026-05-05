@@ -1,8 +1,10 @@
 package com.cleanmate.presentation.myschedule;
 
+import com.cleanmate.presentation.checklist.ChecklistController;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.EmptyState;
 import com.cleanmate.service.ServiceLocator;
+import com.cleanmate.service.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -30,15 +32,12 @@ public class MyScheduleController extends com.cleanmate.presentation.nav.BaseNav
     @FXML private Label summaryLabel;
     @FXML private ListView<MyTaskItem> list;
 
-    /** Set before navigating here to show schedule for a specific employee. */
-    public static String employeeName = null;
-
     @FXML
     public void initialize() {
         LOG.info("My schedule initialized");
 
-        String emp = employeeName;
-        employeeName = null;
+        String emp = Session.getRole() == com.cleanmate.service.Session.Role.ZAMESTNANEC
+                ? Session.getDisplayName() : null;
 
         String firstName = emp != null ? emp.split(" ")[0] : "";
         greetingLabel.setText(LanguageManager.getBundle().getString("schedule.greeting")
@@ -54,7 +53,7 @@ public class MyScheduleController extends com.cleanmate.presentation.nav.BaseNav
                     int total = ServiceLocator.apartments().getAll().stream()
                             .filter(a -> a.getAddress().equals(c.property()))
                             .mapToInt(a -> a.getTaskCount()).findFirst().orElse(0);
-                    items.add(new MyTaskItem(c.checkOut(), c.property(), c.customer(),
+                    items.add(new MyTaskItem(c.id(), c.checkOut(), c.property(), c.customer(),
                             c.status(), total, 0));
                 });
 
@@ -69,6 +68,8 @@ public class MyScheduleController extends com.cleanmate.presentation.nav.BaseNav
             MyTaskItem sel = list.getSelectionModel().getSelectedItem();
             if (sel != null) {
                 LOG.info("Open checklist for: " + sel.property() + " @ " + sel.time());
+                ServiceLocator.cleanings().findById(sel.id()).ifPresent(c ->
+                        ChecklistController.currentCleaning = c);
                 navChecklist();
             }
         });

@@ -1,12 +1,9 @@
 package com.cleanmate.presentation;
 
 import com.cleanmate.model.Employee;
-import com.cleanmate.presentation.history.EmployeeHistoryController;
-import com.cleanmate.presentation.myschedule.MyScheduleController;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.nav.Route;
 import com.cleanmate.presentation.nav.ViewRouter;
-import com.cleanmate.presentation.profile.EmployeeProfileController;
 import com.cleanmate.service.ServiceLocator;
 import com.cleanmate.service.Session;
 import javafx.collections.FXCollections;
@@ -85,11 +82,7 @@ public class LoginController {
         }
 
         Session.login(Session.Role.ZAMESTNANEC, emp.getFullName(), emp.getId());
-        String name = emp.getFullName();
-        MyScheduleController.employeeName      = name;
-        EmployeeHistoryController.employeeName = name;
-        EmployeeProfileController.employeeName = name;
-        LOG.info("ZAMESTNANEC login OK: " + name);
+        LOG.info("ZAMESTNANEC login OK: " + emp.getFullName());
         navigateTo(Route.MY_SCHEDULE);
     }
 

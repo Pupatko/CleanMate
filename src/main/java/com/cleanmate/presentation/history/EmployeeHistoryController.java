@@ -4,6 +4,7 @@ import com.cleanmate.model.Cleaning;
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.util.EmptyState;
 import com.cleanmate.service.ServiceLocator;
+import com.cleanmate.service.Session;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -40,9 +41,6 @@ public class EmployeeHistoryController extends BaseNavController {
     @FXML private TableColumn<Row, Number> colHours;
     @FXML private TableColumn<Row, Number> colRating;
 
-    /** Set before navigating here to filter history by employee. */
-    public static String employeeName = null;
-
     private final ObservableList<Row> data = FXCollections.observableArrayList();
     private FilteredList<Row> filtered;
 
@@ -50,8 +48,7 @@ public class EmployeeHistoryController extends BaseNavController {
     public void initialize() {
         LOG.info("Employee history initialized");
 
-        String emp = employeeName;
-        employeeName = null;
+        String emp = Session.getRole() == Session.Role.ZAMESTNANEC ? Session.getDisplayName() : null;
 
         var timeFmt = DateTimeFormatter.ofPattern("HH:mm");
         java.util.stream.Stream<Cleaning> stream = ServiceLocator.cleanings().getAll().stream()
