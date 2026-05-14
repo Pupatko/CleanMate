@@ -30,6 +30,24 @@ public class ApartmentItem {
         for (ApartmentTask t : initialTasks) tasks.add(t);
     }
 
-    /** Computed — not a plain field, so Lombok can't generate this. */
+    public String getId()       { return id; }
+    public String getAddress()  { return address; }
+    public String getCustomer() { return customer; }
+    public int    getRooms()    { return rooms; }
+    public double getArea()     { return area; }
+    public String getNote()     { return note; }
+    public ObservableList<ApartmentTask> getTasks() { return tasks; }
+
+    public void setId(String v)       { id       = v; }
+    public void setAddress(String v)  { address  = v; }
+    public void setCustomer(String v) { customer = v; }
+    public void setRooms(int v)       { rooms    = v; }
+    public void setArea(double v)     { area     = v; }
+    public void setNote(String v)     { note     = v; }
+
     public int getStepCount() { return tasks.size(); }
+
+    @Override public String toString() {
+        return "ApartmentItem(id=" + id + ", address=" + address + ", customer=" + customer + ")";
+    }
 }
