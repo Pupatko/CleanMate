@@ -1226,3 +1226,35 @@
     -fx-border-color: #CBD5E1;
     -fx-text-fill: #475569;
 }
+
+/* QC needed indicators */
+.qc-needed-button {
+    -fx-background-color: #FEF3C7;
+    -fx-border-color: #F59E0B;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-text-fill: #92400E;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 10 4 10;
+    -fx-cursor: hand;
+}
+.qc-needed-button:hover {
+    -fx-background-color: #FDE68A;
+}
+.qc-needed-chip {
+    -fx-background-color: #FEF3C7;
+    -fx-border-color: #F59E0B;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-text-fill: #92400E;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-padding: 2 6 2 6;
+}
+.qc-needed-month {
+    -fx-border-color: #F59E0B;
+    -fx-border-width: 1px;
+}

@@ -13,6 +13,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -388,6 +389,17 @@ public class CleaningCalendarController extends BaseNavController {
         badge.getStyleClass().setAll("status-badge", "status-" + e.status().toLowerCase());
 
         card.getChildren().addAll(timeCol, content, badge);
+
+        if ("DONE".equals(e.status()) && e.qcRating() == 0) {
+            Button qcBtn = new Button("⭐ QC");
+            qcBtn.getStyleClass().add("qc-needed-button");
+            qcBtn.setOnAction(ev -> {
+                CleaningDetailController.selected = e;
+                navCleaningDetail();
+            });
+            card.getChildren().add(qcBtn);
+        }
+
         card.setOnMouseClicked(ev -> {
             if (ev.getClickCount() == 1) selectEvent(e);
             else { CleaningDetailController.selected = e; navCleaningDetail(); }
@@ -487,6 +499,14 @@ public class CleaningCalendarController extends BaseNavController {
         Label emp  = new Label(e.employee()); emp.getStyleClass().add("cal-small-employee");  emp.setWrapText(true);
 
         card.getChildren().addAll(time, prop, emp);
+
+        if ("DONE".equals(e.status()) && e.qcRating() == 0) {
+            Label qcChip = new Label("⭐ QC needed");
+            qcChip.getStyleClass().add("qc-needed-chip");
+            qcChip.setMaxWidth(Double.MAX_VALUE);
+            card.getChildren().add(qcChip);
+        }
+
         card.setOnMouseClicked(ev -> {
             if (ev.getClickCount() == 1) selectEvent(e);
             else { CleaningDetailController.selected = e; navCleaningDetail(); }
@@ -564,8 +584,11 @@ public class CleaningCalendarController extends BaseNavController {
         int shown = Math.min(3, onDay.size());
         for (int i = 0; i < shown; i++) {
             Cleaning e = onDay.get(i);
-            Label chip = new Label(e.checkOut().format(TIME_FMT) + " " + e.property());
+            boolean needsQc = "DONE".equals(e.status()) && e.qcRating() == 0;
+            String chipText = (needsQc ? "⭐ " : "") + e.checkOut().format(TIME_FMT) + " " + e.property();
+            Label chip = new Label(chipText);
             chip.getStyleClass().setAll("cal-month-event", "event-" + e.status().toLowerCase());
+            if (needsQc) chip.getStyleClass().add("qc-needed-month");
             if (e.equals(selectedEvent)) chip.getStyleClass().add("cal-event-selected");
             chip.setMaxWidth(Double.MAX_VALUE);
             chip.setOnMouseClicked(ev -> {
