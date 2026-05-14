@@ -80,10 +80,16 @@ public class AddEmployeeController extends BaseNavController {
         } else {
             pageTitle.setText(target.getName());
             pageSubtitle.setText(LanguageManager.getBundle().getString("add.employee.view.subtitle"));
-            String[] parts = target.getName().split(" ", 2);
-            firstNameField.setText(parts.length > 0 ? parts[0] : "");
-            lastNameField.setText(parts.length > 1 ? parts[1] : "");
-            roleCombo.setValue(target.getRole());
+            ServiceLocator.employees().findById(target.getId()).ifPresent(e -> {
+                firstNameField.setText(e.getFirstName());
+                lastNameField.setText(e.getLastName());
+                emailField.setText(e.getEmail());
+                phoneField.setText(e.getPhone());
+                roleCombo.setValue(e.getRole());
+                addressField.setText(e.getAddress());
+                startDateField.setText(e.getStartDate() != null ? e.getStartDate().toString() : "");
+                notesArea.setText(e.getNotes());
+            });
             setEditMode(false);
             passwordSection.setVisible(false);
             passwordSection.setManaged(false);
