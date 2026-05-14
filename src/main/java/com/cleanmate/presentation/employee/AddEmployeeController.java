@@ -54,7 +54,7 @@ public class AddEmployeeController extends BaseNavController {
 
     @FXML
     public void initialize() {
-        roleCombo.setItems(FXCollections.observableArrayList("CLEANER", "SUPERVISOR"));
+        roleCombo.setItems(FXCollections.observableArrayList("CLEANER"));
         roleCombo.getSelectionModel().selectFirst();
 
         target  = editTarget;
