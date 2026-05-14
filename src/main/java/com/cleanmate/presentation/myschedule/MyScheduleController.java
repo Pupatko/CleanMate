@@ -53,8 +53,9 @@ public class MyScheduleController extends com.cleanmate.presentation.nav.BaseNav
                     int total = ServiceLocator.apartments().getAll().stream()
                             .filter(a -> a.getAddress().equals(c.property()))
                             .mapToInt(a -> a.getTaskCount()).findFirst().orElse(0);
+                    int done  = "DONE".equals(c.status()) ? total : 0;
                     items.add(new MyTaskItem(c.id(), c.checkOut(), c.property(), c.customer(),
-                            c.status(), total, 0));
+                            c.status(), total, done));
                 });
 
         long done = items.stream().filter(i -> "DONE".equals(i.status())).count();

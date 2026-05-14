@@ -134,15 +134,13 @@ public class CleaningDetailController extends com.cleanmate.presentation.nav.Bas
         updateStatusBadge(statusCombo.getValue());
         buildStepper(statusCombo.getValue());
 
-        steps.setAll(
-                new ChecklistStep("Vysávanie obývačky",          true),
-                new ChecklistStep("Výmena posteľnej bielizne",   true),
-                new ChecklistStep("Čistenie kúpeľne",            false),
-                new ChecklistStep("Doplnenie toaletných potrieb", false),
-                new ChecklistStep("Kontrola chladničky",         false),
-                new ChecklistStep("Vyhodenie odpadu",            false),
-                new ChecklistStep("Finálna kontrola",            false)
-        );
+        String property = propertyField.getText();
+        List<String> taskNames = ServiceLocator.apartments().getAll().stream()
+                .filter(a -> a.getAddress().equals(property))
+                .findFirst()
+                .map(a -> a.getTaskNames())
+                .orElse(List.of());
+        taskNames.forEach(name -> steps.add(new ChecklistStep(name, false)));
         checklistView.setItems(steps);
         checklistView.setPlaceholder(com.cleanmate.presentation.util.EmptyState.build("✅", "empty.checklist"));
         checklistView.setCellFactory(CheckBoxListCell.forListView(ChecklistStep::doneProperty));

@@ -74,11 +74,7 @@ public class ChecklistController extends com.cleanmate.presentation.nav.BaseNavC
                     .map(a -> a.getTaskNames())
                     .orElse(List.of());
 
-            if (taskNames.isEmpty()) {
-                steps.add(new ChecklistStep("Upratanie priestoru", false));
-            } else {
-                taskNames.forEach(name -> steps.add(new ChecklistStep(name, false)));
-            }
+            taskNames.forEach(name -> steps.add(new ChecklistStep(name, false)));
         } else {
             propertyLabel.setText("—");
             metaLabel.setText("—");

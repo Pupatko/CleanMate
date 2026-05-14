@@ -51,13 +51,6 @@ public class CleaningPlanBuilderController extends com.cleanmate.presentation.na
                 "CLEANING", "LAUNDRY", "CHECK", "RESTOCK", "PHOTO"));
         stepTypeCombo.getSelectionModel().selectFirst();
 
-        steps.addAll(
-                new PlanStep("Vysávanie obývačky", "CLEANING"),
-                new PlanStep("Výmena posteľnej bielizne", "LAUNDRY"),
-                new PlanStep("Čistenie kúpeľne", "CLEANING"),
-                new PlanStep("Doplnenie toaletných potrieb", "RESTOCK"),
-                new PlanStep("Foto finálneho stavu", "PHOTO"));
-
         stepList.setItems(steps);
         stepList.setPlaceholder(com.cleanmate.presentation.util.EmptyState.build("📝", "empty.plan.steps"));
         stepList.setCellFactory(lv -> new StepCell(steps));
