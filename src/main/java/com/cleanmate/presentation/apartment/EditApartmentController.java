@@ -1,6 +1,7 @@
 package com.cleanmate.presentation.apartment;
 
 import com.cleanmate.model.Apartment;
+import com.cleanmate.model.Customer;
 import com.cleanmate.presentation.nav.BaseNavController;
 import com.cleanmate.presentation.nav.LanguageManager;
 import com.cleanmate.presentation.util.ChangeSummary;
@@ -20,6 +21,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +39,9 @@ public class EditApartmentController extends BaseNavController {
     @FXML private Label planHint;
     @FXML private Label errorLabel;
 
-    @FXML private TextField addressField;
-    @FXML private TextField customerField;
-    @FXML private TextField roomsField;
+    @FXML private TextField          addressField;
+    @FXML private ComboBox<Customer> customerCombo;
+    @FXML private TextField          roomsField;
     @FXML private TextField areaField;
     @FXML private TextArea noteArea;
 
@@ -58,7 +60,8 @@ public class EditApartmentController extends BaseNavController {
     private boolean addMode;
 
     // Snapshot of original state (for change diff and cancel)
-    private String origAddress, origCustomer, origNote;
+    private String   origAddress, origNote;
+    private Customer origCustomer;
     private String origRooms, origArea;
     private List<ApartmentTask> origTasks;
 
@@ -66,6 +69,12 @@ public class EditApartmentController extends BaseNavController {
     public void initialize() {
         taskTypeCombo.setItems(FXCollections.observableArrayList(ApartmentTask.Type.values()));
         taskTypeCombo.getSelectionModel().selectFirst();
+
+        customerCombo.setItems(ServiceLocator.customers().getAll());
+        customerCombo.setConverter(new StringConverter<>() {
+            @Override public String toString(Customer c)   { return c == null ? "" : c.getName(); }
+            @Override public Customer fromString(String s) { return null; }
+        });
 
         target  = editTarget;
         addMode = (target == null);
@@ -103,7 +112,10 @@ public class EditApartmentController extends BaseNavController {
         pageSubtitle.setText(LanguageManager.getBundle().getString("edit.apartment.view.subtitle.prefix") + " " + target.getCustomer());
 
         addressField.setText(target.getAddress());
-        customerField.setText(target.getCustomer());
+        ServiceLocator.customers().getAll().stream()
+                .filter(c -> c.getName().equals(target.getCustomer()))
+                .findFirst()
+                .ifPresent(c -> customerCombo.getSelectionModel().select(c));
         roomsField.setText(String.valueOf(target.getRooms()));
         areaField.setText(String.valueOf(target.getArea()));
         noteArea.setText(target.getNote());
@@ -113,7 +125,7 @@ public class EditApartmentController extends BaseNavController {
 
     private void snapshotOriginal() {
         origAddress  = addressField.getText();
-        origCustomer = customerField.getText();
+        origCustomer = customerCombo.getValue();
         origRooms    = roomsField.getText();
         origArea     = areaField.getText();
         origNote     = noteArea.getText();
@@ -122,7 +134,7 @@ public class EditApartmentController extends BaseNavController {
 
     private void setEditMode(boolean editing) {
         addressField.setEditable(editing);
-        customerField.setEditable(editing);
+        customerCombo.setDisable(!editing);
         roomsField.setEditable(editing);
         areaField.setEditable(editing);
         noteArea.setEditable(editing);
@@ -143,7 +155,7 @@ public class EditApartmentController extends BaseNavController {
 
         String styleOn  = "input-edit";
         String styleOff = "input-readonly";
-        for (TextField f : new TextField[]{addressField, customerField, roomsField, areaField}) {
+        for (TextField f : new TextField[]{addressField, roomsField, areaField}) {
             f.getStyleClass().removeAll(styleOn, styleOff);
             f.getStyleClass().add(editing ? styleOn : styleOff);
         }
@@ -164,7 +176,7 @@ public class EditApartmentController extends BaseNavController {
             return;
         }
         addressField.setText(origAddress);
-        customerField.setText(origCustomer);
+        customerCombo.getSelectionModel().select(origCustomer);
         roomsField.setText(origRooms);
         areaField.setText(origArea);
         noteArea.setText(origNote);
@@ -177,11 +189,11 @@ public class EditApartmentController extends BaseNavController {
         errorLabel.setText("");
 
         String address  = addressField.getText() == null ? "" : addressField.getText().trim();
-        String customer = customerField.getText() == null ? "" : customerField.getText().trim();
         String note     = noteArea.getText() == null ? "" : noteArea.getText().trim();
+        Customer selectedCustomer = customerCombo.getValue();
 
-        if (address.isEmpty())  { errorLabel.setText(LanguageManager.getBundle().getString("error.apartment.address")); return; }
-        if (customer.isEmpty()) { errorLabel.setText(LanguageManager.getBundle().getString("error.apartment.customer")); return; }
+        if (address.isEmpty())       { errorLabel.setText(LanguageManager.getBundle().getString("error.apartment.address")); return; }
+        if (selectedCustomer == null) { errorLabel.setText(LanguageManager.getBundle().getString("error.apartment.customer")); return; }
 
         int rooms;
         double area;
@@ -191,11 +203,7 @@ public class EditApartmentController extends BaseNavController {
         catch (NumberFormatException ex) { errorLabel.setText(LanguageManager.getBundle().getString("error.apartment.area")); return; }
 
         if (addMode) {
-            String customerId = ServiceLocator.customers().getAll().stream()
-                    .filter(c -> c.getName().equalsIgnoreCase(customer))
-                    .map(c -> c.getId())
-                    .findFirst().orElse("");
-            Apartment apt = Apartment.create(address, customerId, customer, rooms, area, note);
+            Apartment apt = Apartment.create(address, selectedCustomer.getId(), selectedCustomer.getName(), rooms, area, note);
             tasksView.getItems().forEach(t -> apt.getTaskNames().add(t.getName()));
             ServiceLocator.apartments().save(apt);
             LOG.info("Created apartment: " + address);
@@ -204,25 +212,22 @@ public class EditApartmentController extends BaseNavController {
             return;
         }
 
+        String origCustomerName = origCustomer == null ? "" : origCustomer.getName();
         ChangeSummary diff = new ChangeSummary()
-                .add("Adresa",   origAddress,  address)
-                .add("Zákazník", origCustomer, customer)
-                .add("Izby",     origRooms,    String.valueOf(rooms))
-                .add("Plocha",   origArea,     String.valueOf(area))
-                .add("Poznámka", origNote,     note);
+                .add("Adresa",   origAddress,       address)
+                .add("Zákazník", origCustomerName,  selectedCustomer.getName())
+                .add("Izby",     origRooms,         String.valueOf(rooms))
+                .add("Plocha",   origArea,          String.valueOf(area))
+                .add("Poznámka", origNote,          note);
 
         int before = origTasks.size();
         int after  = tasksView.getItems().size();
         if (before != after) diff.add("Počet úloh v pláne", before, after);
 
         ServiceLocator.apartments().findById(target.getId()).ifPresent(apt -> {
-            String customerId = ServiceLocator.customers().getAll().stream()
-                    .filter(c -> c.getName().equalsIgnoreCase(customer))
-                    .map(c -> c.getId())
-                    .findFirst().orElse(apt.getCustomerId());
             apt.setAddress(address);
-            apt.setCustomerId(customerId);
-            apt.setCustomerName(customer);
+            apt.setCustomerId(selectedCustomer.getId());
+            apt.setCustomerName(selectedCustomer.getName());
             apt.setRooms(rooms);
             apt.setArea(area);
             apt.setNote(note);
@@ -232,7 +237,7 @@ public class EditApartmentController extends BaseNavController {
         });
 
         target.setAddress(address);
-        target.setCustomer(customer);
+        target.setCustomer(selectedCustomer.getName());
         target.setRooms(rooms);
         target.setArea(area);
         target.setNote(note);

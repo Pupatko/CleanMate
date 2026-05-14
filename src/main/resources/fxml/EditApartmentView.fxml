@@ -71,7 +71,7 @@
                     </VBox>
                     <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
                         <Label text="%edit.apartment.field.customer" styleClass="field-label"/>
-                        <TextField fx:id="customerField" styleClass="input"/>
+                        <ComboBox fx:id="customerCombo" maxWidth="Infinity" styleClass="input"/>
                     </VBox>
 
                     <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1">
