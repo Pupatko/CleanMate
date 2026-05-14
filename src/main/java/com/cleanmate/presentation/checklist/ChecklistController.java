@@ -23,6 +23,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.logging.Logger;
@@ -45,6 +46,7 @@ public class ChecklistController extends com.cleanmate.presentation.nav.BaseNavC
     @FXML private ScrollPane  photoScroll;
     @FXML private Button      addPhotoButton;
     @FXML private Button      completeButton;
+    @FXML private Label       statusBanner;
 
     private final ObservableList<ChecklistStep> steps  = FXCollections.observableArrayList();
     private final ObservableList<File>          photos = FXCollections.observableArrayList();
@@ -93,6 +95,20 @@ public class ChecklistController extends com.cleanmate.presentation.nav.BaseNavC
         photos.addListener((javafx.collections.ListChangeListener<File>) c -> renderPhotos());
         renderPhotos();
         updateProgress();
+
+        statusBanner.setVisible(false);
+        statusBanner.setManaged(false);
+
+        if (cleaning != null) {
+            boolean pastDay = cleaning.date().isBefore(LocalDate.now());
+            boolean done    = "DONE".equals(cleaning.status());
+
+            if (pastDay) {
+                applyLock();
+            } else if (done) {
+                showSuccess();
+            }
+        }
     }
 
     private void updateProgress() {
@@ -122,11 +138,34 @@ public class ChecklistController extends com.cleanmate.presentation.nav.BaseNavC
     @FXML
     private void onComplete() {
         if (cleaning != null) {
-            ServiceLocator.cleanings().save(cleaning.withStatus("DONE"));
+            cleaning = cleaning.withStatus("DONE");
+            ServiceLocator.cleanings().save(cleaning);
             LOG.info("Cleaning marked DONE: " + cleaning.id());
         }
+        showSuccess();
+    }
+
+    private void showSuccess() {
         completeButton.setDisable(true);
         completeButton.setText(LanguageManager.getBundle().getString("checklist.complete.done"));
+        statusBanner.setText("✓  Upratovanie bolo úspešne dokončené. Dnes ho môžeš ešte upraviť.");
+        statusBanner.getStyleClass().removeAll("banner-lock");
+        statusBanner.getStyleClass().add("banner-done");
+        statusBanner.setVisible(true);
+        statusBanner.setManaged(true);
+    }
+
+    private void applyLock() {
+        completeButton.setDisable(true);
+        completeButton.setVisible(false);
+        completeButton.setManaged(false);
+        addPhotoButton.setDisable(true);
+        checklist.setDisable(true);
+        statusBanner.setText("🔒  Tento záznam je uzamknutý. Zmeny môže vykonať iba administrátor.");
+        statusBanner.getStyleClass().removeAll("banner-done");
+        statusBanner.getStyleClass().add("banner-lock");
+        statusBanner.setVisible(true);
+        statusBanner.setManaged(true);
     }
 
     @FXML

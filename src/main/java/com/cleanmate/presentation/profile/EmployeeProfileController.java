@@ -71,6 +71,7 @@ public class EmployeeProfileController extends BaseNavController {
             totalHoursLabel.setText(String.format("%.1f h", hours));
             totalTasksLabel.setText(String.valueOf(tasks));
             avgRatingLabel.setText(avg == 0 ? "—" : String.format("%.1f / 5", avg));
+            refreshHeader();
         } else {
             firstNameField.setText("");
             lastNameField.setText("");

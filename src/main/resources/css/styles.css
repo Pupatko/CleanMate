@@ -1204,3 +1204,25 @@
     -fx-padding: 0 4 0 4;
 }
 .assign-panel-close:hover { -fx-text-fill: #475569; }
+
+/* ─── Checklist status banners ──────────────────────────── */
+.status-banner {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 12 18 12 18;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+
+.banner-done {
+    -fx-background-color: #D1FAE5;
+    -fx-border-color: #6EE7B7;
+    -fx-text-fill: #065F46;
+}
+
+.banner-lock {
+    -fx-background-color: #F1F5F9;
+    -fx-border-color: #CBD5E1;
+    -fx-text-fill: #475569;
+}
