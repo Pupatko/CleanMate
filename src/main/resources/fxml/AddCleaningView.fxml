@@ -75,10 +75,6 @@
                                   promptText="%add.cleaning.field.employee.prompt"/>
                     </VBox>
 
-                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                        <Label text="%add.cleaning.field.status" styleClass="field-label"/>
-                        <ComboBox fx:id="statusCombo" maxWidth="Infinity" styleClass="input"/>
-                    </VBox>
                 </GridPane>
 
                 <Label text="%add.cleaning.section.time" styleClass="section-title"/>

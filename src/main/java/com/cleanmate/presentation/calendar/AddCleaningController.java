@@ -18,9 +18,10 @@ public class AddCleaningController extends BaseNavController {
 
     private static final Logger LOG = Logger.getLogger(AddCleaningController.class.getName());
 
+    private static final String NO_EMPLOYEE = "— žiadny —";
+
     @FXML private ComboBox<String> propertyCombo;
     @FXML private ComboBox<String> employeeCombo;
-    @FXML private ComboBox<String> statusCombo;
     @FXML private DatePicker datePicker;
     @FXML private TextField checkOutTime;
     @FXML private TextField checkInTime;
@@ -31,11 +32,11 @@ public class AddCleaningController extends BaseNavController {
         propertyCombo.setItems(FXCollections.observableArrayList(
                 ServiceLocator.apartments().getAllAddresses()));
 
-        employeeCombo.setItems(FXCollections.observableArrayList(
-                ServiceLocator.employees().getAllNames()));
-
-        statusCombo.setItems(FXCollections.observableArrayList("NEW", "ASSIGNED"));
-        statusCombo.getSelectionModel().selectFirst();
+        java.util.List<String> empList = new java.util.ArrayList<>();
+        empList.add(NO_EMPLOYEE);
+        empList.addAll(ServiceLocator.employees().getAllNames());
+        employeeCombo.setItems(FXCollections.observableArrayList(empList));
+        employeeCombo.getSelectionModel().selectFirst();
 
         datePicker.setValue(LocalDate.now());
         checkOutTime.setText("09:00");
@@ -50,7 +51,6 @@ public class AddCleaningController extends BaseNavController {
 
         String property  = propertyCombo.getValue();
         String employee  = employeeCombo.getValue();
-        String status    = statusCombo.getValue();
         LocalDate date   = datePicker.getValue();
         String coTimeRaw = checkOutTime.getText() == null ? "" : checkOutTime.getText().trim();
         String ciTimeRaw = checkInTime.getText()  == null ? "" : checkInTime.getText().trim();
@@ -72,16 +72,22 @@ public class AddCleaningController extends BaseNavController {
             return;
         }
 
+        boolean hasEmployee = employee != null && !NO_EMPLOYEE.equals(employee);
+        String status    = hasEmployee ? "ASSIGNED" : "NEW";
+        String empSaved  = hasEmployee ? employee : "—";
+
+        String customer = ServiceLocator.apartments().getAll().stream()
+                .filter(a -> a.getAddress().equals(property))
+                .findFirst()
+                .map(a -> a.getCustomerName())
+                .orElse("—");
+
         CleaningCalendarController.addEvent(
                 com.cleanmate.model.Cleaning.of(
-                        date, coTime, ciTime,
-                        property,
-                        "—",
-                        employee == null ? "—" : employee,
-                        status == null ? "NEW" : status));
+                        date, coTime, ciTime, property, customer, empSaved, status));
 
         LOG.info(String.format("Saved new cleaning: %s | %s %s–%s | %s | %s",
-                property, date, coTime, ciTime, employee, status));
+                property, date, coTime, ciTime, empSaved, status));
 
         toast(com.cleanmate.presentation.nav.LanguageManager.getBundle().getString("toast.cleaning.saved"),
               com.cleanmate.presentation.util.ToastManager.Type.SUCCESS);

@@ -50,7 +50,11 @@
 
             <Label text="%schedule.tasks.title" styleClass="section-title"/>
 
-            <ListView fx:id="list" VBox.vgrow="ALWAYS" styleClass="task-list"/>
+            <ListView fx:id="list" prefHeight="260" styleClass="task-list"/>
+
+            <Label text="Budúce úlohy" styleClass="section-title"/>
+
+            <ListView fx:id="futureList" VBox.vgrow="ALWAYS" styleClass="task-list"/>
         </VBox>
     </center>
 </BorderPane>

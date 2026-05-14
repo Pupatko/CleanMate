@@ -2,6 +2,7 @@ package com.cleanmate.presentation.myschedule;
 
 import com.cleanmate.presentation.checklist.ChecklistController;
 import com.cleanmate.presentation.nav.LanguageManager;
+import com.cleanmate.presentation.util.ConfirmDialog;
 import com.cleanmate.presentation.util.EmptyState;
 import com.cleanmate.service.ServiceLocator;
 import com.cleanmate.service.Session;
@@ -31,6 +32,7 @@ public class MyScheduleController extends com.cleanmate.presentation.nav.BaseNav
     @FXML private Label dateLabel;
     @FXML private Label summaryLabel;
     @FXML private ListView<MyTaskItem> list;
+    @FXML private ListView<MyTaskItem> futureList;
 
     @FXML
     public void initialize() {
@@ -64,15 +66,41 @@ public class MyScheduleController extends com.cleanmate.presentation.nav.BaseNav
         list.setItems(items);
         list.setPlaceholder(EmptyState.build("📅", "empty.schedule"));
         list.setCellFactory(l -> new TaskCell());
-
         list.setOnMouseClicked(e -> {
             MyTaskItem sel = list.getSelectionModel().getSelectedItem();
             if (sel != null) {
-                LOG.info("Open checklist for: " + sel.property() + " @ " + sel.time());
                 ServiceLocator.cleanings().findById(sel.id()).ifPresent(c ->
                         ChecklistController.currentCleaning = c);
                 navChecklist();
             }
+        });
+
+        // ── Budúce úlohy ──────────────────────────────────────────────────────
+        ObservableList<MyTaskItem> futureItems = FXCollections.observableArrayList();
+        ServiceLocator.cleanings().getAll().stream()
+                .filter(c -> c.date().isAfter(LocalDate.now()))
+                .filter(c -> emp == null || emp.equals(c.employee()))
+                .sorted((a, b) -> a.date().equals(b.date())
+                        ? a.checkOut().compareTo(b.checkOut())
+                        : a.date().compareTo(b.date()))
+                .forEach(c -> {
+                    int total = ServiceLocator.apartments().getAll().stream()
+                            .filter(a -> a.getAddress().equals(c.property()))
+                            .mapToInt(a -> a.getTaskCount()).findFirst().orElse(0);
+                    futureItems.add(new MyTaskItem(c.id(), c.checkOut(), c.property(), c.customer(), c.status(), total, 0));
+                });
+
+        futureList.setItems(futureItems);
+        futureList.setPlaceholder(EmptyState.build("🗓️", "empty.schedule"));
+        futureList.setCellFactory(l -> new TaskCell());
+        futureList.setOnMouseClicked(e -> {
+            MyTaskItem sel = futureList.getSelectionModel().getSelectedItem();
+            if (sel == null) return;
+            if (!ConfirmDialog.show("confirm.future.task.header",
+                    "Upravujete budúcu úlohu. Ste si istý?")) return;
+            ServiceLocator.cleanings().findById(sel.id()).ifPresent(c ->
+                    ChecklistController.currentCleaning = c);
+            navChecklist();
         });
     }
 
