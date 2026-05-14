@@ -75,12 +75,20 @@
 
             <HBox spacing="12" styleClass="filter-bar" alignment="CENTER_LEFT">
                 <VBox spacing="4">
+                    <Label text="%calendar.filter.customer" styleClass="field-label"/>
+                    <ComboBox fx:id="customerCombo" prefWidth="180" styleClass="input"/>
+                </VBox>
+                <VBox spacing="4">
+                    <Label text="%calendar.filter.apartment" styleClass="field-label"/>
+                    <ComboBox fx:id="apartmentCombo" prefWidth="200" styleClass="input"/>
+                </VBox>
+                <VBox spacing="4">
                     <Label text="%calendar.filter.employee" styleClass="field-label"/>
-                    <ComboBox fx:id="employeeCombo" prefWidth="200" styleClass="input"/>
+                    <ComboBox fx:id="employeeCombo" prefWidth="180" styleClass="input"/>
                 </VBox>
                 <VBox spacing="4">
                     <Label text="%calendar.filter.status" styleClass="field-label"/>
-                    <ComboBox fx:id="statusCombo" prefWidth="160" styleClass="input"/>
+                    <ComboBox fx:id="statusCombo" prefWidth="150" styleClass="input"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
                 <VBox spacing="4" alignment="CENTER_RIGHT">
@@ -99,6 +107,7 @@
                     <ToggleButton fx:id="dayToggle" text="%calendar.view.day" styleClass="view-toggle-button"/>
                     <ToggleButton fx:id="weekToggle" text="%calendar.view.week" styleClass="view-toggle-button"/>
                     <ToggleButton fx:id="monthToggle" text="%calendar.view.month" styleClass="view-toggle-button"/>
+                    <ToggleButton fx:id="listToggle" text="%calendar.view.list" styleClass="view-toggle-button"/>
                 </HBox>
             </HBox>
 

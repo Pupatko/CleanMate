@@ -42,19 +42,24 @@ import java.util.logging.Logger;
 public class CleaningCalendarController extends BaseNavController {
 
     private static final Logger LOG = Logger.getLogger(CleaningCalendarController.class.getName());
-    private static final String ALL        = "— všetci —";
-    private static final String ALL_STATUS = "— všetky —";
-    private static final Locale SK         = Locale.of("sk");
+    private static final String ALL         = "— všetci —";
+    private static final String ALL_STATUS  = "— všetky —";
+    private static final String ALL_APT     = "— všetky —";
+    private static final String ALL_CUST    = "— všetci —";
+    private static final Locale SK          = Locale.of("sk");
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("d.M.yyyy");
 
     @FXML private ComboBox<String> employeeCombo;
     @FXML private ComboBox<String> statusCombo;
+    @FXML private ComboBox<String> customerCombo;
+    @FXML private ComboBox<String> apartmentCombo;
     @FXML private Label resultsCountLabel;
     @FXML private Label dateRangeLabel;
     @FXML private ToggleButton dayToggle;
     @FXML private ToggleButton weekToggle;
     @FXML private ToggleButton monthToggle;
+    @FXML private ToggleButton listToggle;
     @FXML private StackPane calendarHolder;
 
     // ── Assign panel ──────────────────────────────────────────────────────────
@@ -66,7 +71,7 @@ public class CleaningCalendarController extends BaseNavController {
 
     private Cleaning selectedEvent = null;
 
-    private enum ViewMode { DAY, WEEK, MONTH }
+    private enum ViewMode { DAY, WEEK, MONTH, LIST }
     private ViewMode viewMode = ViewMode.WEEK;
     private LocalDate anchorDate = LocalDate.now();
 
@@ -84,12 +89,27 @@ public class CleaningCalendarController extends BaseNavController {
                 ALL_STATUS, "NEW", "ASSIGNED", "IN_PROGRESS", "DONE", "CANCELLED"));
         statusCombo.getSelectionModel().selectFirst();
 
+        java.util.List<String> custNames = new java.util.ArrayList<>();
+        custNames.add(ALL_CUST);
+        ServiceLocator.customers().getAll().stream()
+                .map(c -> c.getName()).sorted().forEach(custNames::add);
+        customerCombo.setItems(FXCollections.observableArrayList(custNames));
+        customerCombo.getSelectionModel().selectFirst();
+
+        java.util.List<String> aptAddrs = new java.util.ArrayList<>();
+        aptAddrs.add(ALL_APT);
+        ServiceLocator.apartments().getAll().stream()
+                .map(a -> a.getAddress()).sorted().forEach(aptAddrs::add);
+        apartmentCombo.setItems(FXCollections.observableArrayList(aptAddrs));
+        apartmentCombo.getSelectionModel().selectFirst();
+
         ToggleGroup viewGroup = new ToggleGroup();
         dayToggle.setToggleGroup(viewGroup);
         weekToggle.setToggleGroup(viewGroup);
         monthToggle.setToggleGroup(viewGroup);
+        listToggle.setToggleGroup(viewGroup);
 
-        for (ToggleButton t : new ToggleButton[]{dayToggle, weekToggle, monthToggle}) {
+        for (ToggleButton t : new ToggleButton[]{dayToggle, weekToggle, monthToggle, listToggle}) {
             t.addEventFilter(MouseEvent.MOUSE_PRESSED, ev -> { if (t.isSelected()) ev.consume(); });
         }
 
@@ -97,11 +117,14 @@ public class CleaningCalendarController extends BaseNavController {
             if      (n == dayToggle)   viewMode = ViewMode.DAY;
             else if (n == weekToggle)  viewMode = ViewMode.WEEK;
             else if (n == monthToggle) viewMode = ViewMode.MONTH;
+            else if (n == listToggle)  viewMode = ViewMode.LIST;
             renderCalendar();
         });
 
         employeeCombo.valueProperty().addListener((obs, o, n) -> renderCalendar());
         statusCombo.valueProperty().addListener((obs, o, n) -> renderCalendar());
+        customerCombo.valueProperty().addListener((obs, o, n) -> renderCalendar());
+        apartmentCombo.valueProperty().addListener((obs, o, n) -> renderCalendar());
         ServiceLocator.cleanings().getAll()
                 .addListener((javafx.collections.ListChangeListener<Cleaning>) c -> renderCalendar());
 
@@ -118,6 +141,7 @@ public class CleaningCalendarController extends BaseNavController {
             case DAY   -> anchorDate.minusDays(1);
             case WEEK  -> anchorDate.minusWeeks(1);
             case MONTH -> anchorDate.minusMonths(1);
+            case LIST  -> anchorDate;
         };
         renderCalendar();
     }
@@ -128,6 +152,7 @@ public class CleaningCalendarController extends BaseNavController {
             case DAY   -> anchorDate.plusDays(1);
             case WEEK  -> anchorDate.plusWeeks(1);
             case MONTH -> anchorDate.plusMonths(1);
+            case LIST  -> anchorDate;
         };
         renderCalendar();
     }
@@ -136,6 +161,8 @@ public class CleaningCalendarController extends BaseNavController {
     private void onClearFilters() {
         employeeCombo.getSelectionModel().selectFirst();
         statusCombo.getSelectionModel().selectFirst();
+        customerCombo.getSelectionModel().selectFirst();
+        apartmentCombo.getSelectionModel().selectFirst();
     }
 
     // ── Assign panel handlers ─────────────────────────────────────────────────
@@ -189,12 +216,16 @@ public class CleaningCalendarController extends BaseNavController {
     // ── Filtering ─────────────────────────────────────────────────────────────
 
     private List<Cleaning> filteredEvents() {
-        String emp = employeeCombo.getValue();
-        String st  = statusCombo.getValue();
+        String emp  = employeeCombo.getValue();
+        String st   = statusCombo.getValue();
+        String cust = customerCombo.getValue();
+        String apt  = apartmentCombo.getValue();
         List<Cleaning> out = new ArrayList<>();
         for (Cleaning it : ServiceLocator.cleanings().getAll()) {
-            if (emp != null && !ALL.equals(emp) && !emp.equals(it.employee())) continue;
-            if (st  != null && !ALL_STATUS.equals(st) && !st.equals(it.status()))  continue;
+            if (emp  != null && !ALL.equals(emp)          && !emp.equals(it.employee()))  continue;
+            if (st   != null && !ALL_STATUS.equals(st)    && !st.equals(it.status()))     continue;
+            if (cust != null && !ALL_CUST.equals(cust)    && !cust.equals(it.customer())) continue;
+            if (apt  != null && !ALL_APT.equals(apt)      && !apt.equals(it.property()))  continue;
             out.add(it);
         }
         return out;
@@ -209,6 +240,7 @@ public class CleaningCalendarController extends BaseNavController {
             case DAY   -> buildDayView(anchorDate, events);
             case WEEK  -> buildWeekView(startOfWeek(anchorDate), events);
             case MONTH -> buildMonthView(YearMonth.from(anchorDate), events);
+            case LIST  -> buildListView(events);
         };
         if (view instanceof Region r) {
             r.setMaxWidth(Double.MAX_VALUE);
@@ -233,11 +265,56 @@ public class CleaningCalendarController extends BaseNavController {
                 dateRangeLabel.setText(s.format(weekFmt) + " – " + e.format(weekFmt) + " " + e.getYear());
             }
             case MONTH -> dateRangeLabel.setText(capitalize(anchorDate.format(monthFmt)));
+            case LIST  -> dateRangeLabel.setText("Všetky záznamy");
         }
     }
 
     private String capitalize(String s) {
         return s == null || s.isEmpty() ? s : Character.toUpperCase(s.charAt(0)) + s.substring(1);
+    }
+
+    /* ========================= LIST VIEW ========================= */
+    private Node buildListView(List<Cleaning> all) {
+        VBox root = new VBox(10);
+        root.getStyleClass().add("calendar-root");
+        root.setPadding(new Insets(18, 20, 18, 20));
+
+        List<Cleaning> sorted = all.stream()
+                .sorted(Comparator.comparing(Cleaning::date).thenComparing(Cleaning::checkOut))
+                .toList();
+
+        if (sorted.isEmpty()) {
+            Label empty = new Label("Žiadne upratovania nezodpovedajú filtru.");
+            empty.getStyleClass().add("empty-hint");
+            empty.setMaxWidth(Double.MAX_VALUE);
+            empty.setAlignment(Pos.CENTER);
+            VBox.setVgrow(empty, Priority.ALWAYS);
+            root.getChildren().add(empty);
+            return root;
+        }
+
+        ScrollPane scroll = new ScrollPane();
+        scroll.setFitToWidth(true);
+        scroll.getStyleClass().add("cal-scroll");
+        VBox list = new VBox(8);
+        list.setPadding(new Insets(2, 2, 2, 2));
+
+        LocalDate lastDate = null;
+        for (Cleaning e : sorted) {
+            if (!e.date().equals(lastDate)) {
+                lastDate = e.date();
+                Label dateLbl = new Label(capitalize(lastDate.format(
+                        DateTimeFormatter.ofPattern("EEEE, d. MMMM yyyy", SK))));
+                dateLbl.getStyleClass().add("cal-day-title");
+                if (lastDate.equals(LocalDate.now())) dateLbl.getStyleClass().add("cal-today-title");
+                list.getChildren().add(dateLbl);
+            }
+            list.getChildren().add(buildLargeEventCard(e));
+        }
+        scroll.setContent(list);
+        VBox.setVgrow(scroll, Priority.ALWAYS);
+        root.getChildren().add(scroll);
+        return root;
     }
 
     /* ========================= DAY VIEW ========================= */
