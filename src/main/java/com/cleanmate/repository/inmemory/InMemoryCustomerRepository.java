@@ -10,13 +10,7 @@ import java.util.Optional;
 
 public class InMemoryCustomerRepository implements CustomerRepository {
 
-    private final ObservableList<Customer> data = FXCollections.observableArrayList(
-            new Customer("c1", "Acme Rentals s.r.o.",   "acme@rentals.sk",   "+421 2 1234 5678", "Hlavný zákazník, dlhodobá zmluva"),
-            new Customer("c2", "BNB Slovakia s.r.o.",   "info@bnbsk.sk",     "+421 2 8765 4321", ""),
-            new Customer("c3", "City Stays Ltd.",        "stays@city.sk",     "+421 910 123 456", "Platba vopred"),
-            new Customer("c4", "Nomad Homes s.r.o.",     "nomad@homes.sk",    "+421 910 654 321", ""),
-            new Customer("c5", "Ivan Novák",             "ivan@novak.sk",     "+421 905 111 222", "Súkromný zákazník")
-    );
+    private final ObservableList<Customer> data = FXCollections.observableArrayList();
 
     @Override public ObservableList<Customer> findAll() { return data; }
 
@@ -30,6 +24,11 @@ public class InMemoryCustomerRepository implements CustomerRepository {
         data.removeIf(c -> c.getId().equals(customer.getId()));
         data.add(customer);
         return customer;
+    }
+
+    @Override
+    public Optional<Customer> findByEmail(String email) {
+        return data.stream().filter(c -> c.getEmail().equalsIgnoreCase(email)).findFirst();
     }
 
     @Override

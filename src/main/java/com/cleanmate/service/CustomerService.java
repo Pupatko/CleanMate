@@ -19,6 +19,8 @@ public class CustomerService {
 
     public Optional<Customer> findById(String id) { return repo.findById(id); }
 
+    public Optional<Customer> findByEmail(String email) { return repo.findByEmail(email); }
+
     public List<String> getAllNames() { return repo.findAllNames(); }
 
     public Customer save(Customer customer) { return repo.save(customer); }

@@ -89,11 +89,12 @@ public class LoginController {
     // ── ZAKAZNIK ──────────────────────────────────────────────────────────────
 
     private void loginCustomer(String username, String password) {
-        if (!username.equals("test3") || !password.equals("test3")) {
+        var customer = ServiceLocator.customers().findByEmail(username).orElse(null);
+        if (customer == null || !customer.getPassword().equals(password)) {
             showError(LanguageManager.getBundle().getString("login.error.credentials"));
             return;
         }
-        Session.login(Session.Role.ZAKAZNIK, "", "");
+        Session.login(Session.Role.ZAKAZNIK, customer.getName(), customer.getId());
         navigateTo(Route.PORTAL);
     }
 

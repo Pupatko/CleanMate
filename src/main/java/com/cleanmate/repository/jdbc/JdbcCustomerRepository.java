@@ -29,15 +29,21 @@ public class JdbcCustomerRepository implements CustomerRepository {
     }
 
     @Override
+    public Optional<Customer> findByEmail(String email) {
+        return cache.stream().filter(c -> c.getEmail().equalsIgnoreCase(email)).findFirst();
+    }
+
+    @Override
     public Customer save(Customer c) {
         String sql = """
-                INSERT INTO customers (id, name, email, phone, notes)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO customers (id, name, email, phone, notes, password)
+                VALUES (?, ?, ?, ?, ?, ?)
                 ON CONFLICT (id) DO UPDATE SET
-                    name  = EXCLUDED.name,
-                    email = EXCLUDED.email,
-                    phone = EXCLUDED.phone,
-                    notes = EXCLUDED.notes
+                    name     = EXCLUDED.name,
+                    email    = EXCLUDED.email,
+                    phone    = EXCLUDED.phone,
+                    notes    = EXCLUDED.notes,
+                    password = EXCLUDED.password
                 """;
         try (Connection con = DatabaseManager.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -46,6 +52,7 @@ public class JdbcCustomerRepository implements CustomerRepository {
             ps.setString(3, c.getEmail());
             ps.setString(4, c.getPhone());
             ps.setString(5, c.getNotes());
+            ps.setString(6, c.getPassword());
             ps.executeUpdate();
         } catch (SQLException e) {
             LOG.severe("save customer failed: " + e.getMessage());
@@ -90,7 +97,8 @@ public class JdbcCustomerRepository implements CustomerRepository {
                 rs.getString("name"),
                 rs.getString("email"),
                 rs.getString("phone"),
-                rs.getString("notes")
+                rs.getString("notes"),
+                rs.getString("password")
         );
     }
 }

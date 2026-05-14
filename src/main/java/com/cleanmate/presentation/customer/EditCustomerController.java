@@ -10,6 +10,7 @@ import com.cleanmate.service.ServiceLocator;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
@@ -26,10 +27,11 @@ public class EditCustomerController extends BaseNavController {
     @FXML private Label pageSubtitle;
     @FXML private Label errorLabel;
 
-    @FXML private TextField nameField;
-    @FXML private TextField emailField;
-    @FXML private TextField phoneField;
-    @FXML private TextArea  noteArea;
+    @FXML private TextField     nameField;
+    @FXML private TextField     emailField;
+    @FXML private TextField     phoneField;
+    @FXML private PasswordField passwordField;
+    @FXML private TextArea      noteArea;
 
     @FXML private Button editButton;
     @FXML private Button cancelEditButton;
@@ -40,7 +42,7 @@ public class EditCustomerController extends BaseNavController {
     private CustomerRow target;
     private boolean addMode;
 
-    private String origName, origEmail, origPhone, origNote;
+    private String origName, origEmail, origPhone, origNote, origPassword;
 
     @FXML
     public void initialize() {
@@ -78,16 +80,18 @@ public class EditCustomerController extends BaseNavController {
     }
 
     private void snapshotOriginal() {
-        origName  = nameField.getText();
-        origEmail = emailField.getText();
-        origPhone = phoneField.getText();
-        origNote  = noteArea.getText();
+        origName     = nameField.getText();
+        origEmail    = emailField.getText();
+        origPhone    = phoneField.getText();
+        origNote     = noteArea.getText();
+        origPassword = passwordField.getText();
     }
 
     private void setEditMode(boolean editing) {
         nameField.setEditable(editing);
         emailField.setEditable(editing);
         phoneField.setEditable(editing);
+        passwordField.setEditable(editing);
         noteArea.setEditable(editing);
 
         if (!addMode) {
@@ -101,7 +105,7 @@ public class EditCustomerController extends BaseNavController {
 
         String styleOn  = "input-edit";
         String styleOff = "input-readonly";
-        for (TextField f : new TextField[]{nameField, emailField, phoneField}) {
+        for (TextField f : new TextField[]{nameField, emailField, phoneField, passwordField}) {
             f.getStyleClass().removeAll(styleOn, styleOff);
             f.getStyleClass().add(editing ? styleOn : styleOff);
         }
@@ -122,23 +126,26 @@ public class EditCustomerController extends BaseNavController {
         emailField.setText(origEmail);
         phoneField.setText(origPhone);
         noteArea.setText(origNote);
+        passwordField.setText(origPassword);
         setEditMode(false);
     }
 
     @FXML
     private void onConfirm() {
         errorLabel.setText("");
-        String name  = nameField.getText() == null ? "" : nameField.getText().trim();
-        String email = emailField.getText() == null ? "" : emailField.getText().trim();
-        String phone = phoneField.getText() == null ? "" : phoneField.getText().trim();
-        String note  = noteArea.getText() == null ? "" : noteArea.getText().trim();
+        String name     = nameField.getText()     == null ? "" : nameField.getText().trim();
+        String email    = emailField.getText()    == null ? "" : emailField.getText().trim();
+        String phone    = phoneField.getText()    == null ? "" : phoneField.getText().trim();
+        String note     = noteArea.getText()      == null ? "" : noteArea.getText().trim();
+        String password = passwordField.getText() == null ? "" : passwordField.getText().trim();
 
-        if (name.isEmpty())  { errorLabel.setText(LanguageManager.getBundle().getString("error.customer.name")); return; }
-        if (email.isEmpty()) { errorLabel.setText(LanguageManager.getBundle().getString("error.customer.email")); return; }
-        if (phone.isEmpty()) { errorLabel.setText(LanguageManager.getBundle().getString("error.customer.phone")); return; }
+        if (name.isEmpty())     { errorLabel.setText(LanguageManager.getBundle().getString("error.customer.name")); return; }
+        if (email.isEmpty())    { errorLabel.setText(LanguageManager.getBundle().getString("error.customer.email")); return; }
+        if (phone.isEmpty())    { errorLabel.setText(LanguageManager.getBundle().getString("error.customer.phone")); return; }
+        if (addMode && password.isEmpty()) { errorLabel.setText("Heslo je povinné."); return; }
 
         if (addMode) {
-            Customer c = Customer.create(name, email, phone, note);
+            Customer c = Customer.create(name, email, phone, note, password);
             ServiceLocator.customers().save(c);
             LOG.info("Created customer: " + name);
             toast(LanguageManager.getBundle().getString("toast.customer.saved"), ToastManager.Type.SUCCESS);
@@ -157,6 +164,7 @@ public class EditCustomerController extends BaseNavController {
             c.setEmail(email);
             c.setPhone(phone);
             c.setNotes(note);
+            if (!password.isEmpty()) c.setPassword(password);
             ServiceLocator.customers().save(c);
         });
 
