@@ -113,7 +113,7 @@ public class ChecklistController extends com.cleanmate.presentation.nav.BaseNavC
         double ratio = total == 0 ? 0.0 : (double) done / total;
         progressBar.setProgress(ratio);
         progressLabel.setText(done + " / " + total + "  (" + (int)(ratio * 100) + " %)");
-        completeButton.setDisable(ratio < 1.0);
+        completeButton.setDisable(total > 0 && ratio < 1.0);
     }
 
     @FXML
