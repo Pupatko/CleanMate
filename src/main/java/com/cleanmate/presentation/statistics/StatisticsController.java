@@ -22,7 +22,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -105,35 +104,65 @@ public class StatisticsController extends BaseNavController {
     private void updateMonthlyChart(List<Cleaning> items, LocalDate cutoff) {
         monthlyChart.getData().clear();
 
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("LLL yy", LanguageManager.getLocale());
-
-        // Build ordered month map from cutoff to now
-        Map<YearMonth, Long> monthMap = new LinkedHashMap<>();
-        YearMonth start = YearMonth.from(cutoff);
-        YearMonth end   = YearMonth.now();
-        for (YearMonth ym = start; !ym.isAfter(end); ym = ym.plusMonths(1)) {
-            monthMap.put(ym, 0L);
-        }
-        items.stream()
-                .filter(e -> "DONE".equals(e.status()) || "CANCELLED".equals(e.status()))
-                .forEach(e -> monthMap.merge(YearMonth.from(e.date()), 1L, Long::sum));
+        var b = LanguageManager.getBundle();
+        String sel = periodCombo.getValue();
 
         XYChart.Series<String, Number> doneSeries = new XYChart.Series<>();
-        doneSeries.setName(LanguageManager.getBundle().getString("stats.legend.done"));
+        doneSeries.setName(b.getString("stats.legend.done"));
         XYChart.Series<String, Number> cancelSeries = new XYChart.Series<>();
-        cancelSeries.setName(LanguageManager.getBundle().getString("stats.legend.cancelled"));
+        cancelSeries.setName(b.getString("stats.legend.cancelled"));
 
-        Map<YearMonth, Long> doneByMonth = items.stream()
-                .filter(e -> "DONE".equals(e.status()))
-                .collect(Collectors.groupingBy(e -> YearMonth.from(e.date()), Collectors.counting()));
-        Map<YearMonth, Long> cancelByMonth = items.stream()
-                .filter(e -> "CANCELLED".equals(e.status()))
-                .collect(Collectors.groupingBy(e -> YearMonth.from(e.date()), Collectors.counting()));
+        if (sel != null && sel.equals(b.getString("stats.period.week"))) {
+            // Group by day (Mon–Sun of current week)
+            DateTimeFormatter dayFmt = DateTimeFormatter.ofPattern("EEE d.M.", LanguageManager.getLocale());
+            LocalDate monday = LocalDate.now().with(java.time.DayOfWeek.MONDAY);
+            for (int i = 0; i < 7; i++) {
+                LocalDate day = monday.plusDays(i);
+                String label = capitalize(day.format(dayFmt));
+                long done = items.stream()
+                        .filter(e -> e.date().equals(day) && "DONE".equals(e.status())).count();
+                long cancelled = items.stream()
+                        .filter(e -> e.date().equals(day) && "CANCELLED".equals(e.status())).count();
+                doneSeries.getData().add(new XYChart.Data<>(label, done));
+                cancelSeries.getData().add(new XYChart.Data<>(label, cancelled));
+            }
 
-        for (YearMonth ym : monthMap.keySet()) {
-            String label = capitalize(ym.format(fmt));
-            doneSeries.getData().add(new XYChart.Data<>(label, doneByMonth.getOrDefault(ym, 0L)));
-            cancelSeries.getData().add(new XYChart.Data<>(label, cancelByMonth.getOrDefault(ym, 0L)));
+        } else if (sel != null && sel.equals(b.getString("stats.period.month"))) {
+            // Group by week within the current month
+            LocalDate firstOfMonth = LocalDate.now().withDayOfMonth(1);
+            LocalDate lastOfMonth  = firstOfMonth.withDayOfMonth(firstOfMonth.lengthOfMonth());
+            LocalDate weekStart = firstOfMonth.with(java.time.DayOfWeek.MONDAY);
+            if (weekStart.isAfter(firstOfMonth)) weekStart = weekStart.minusWeeks(1);
+            DateTimeFormatter wFmt = DateTimeFormatter.ofPattern("d.M.");
+            while (!weekStart.isAfter(lastOfMonth)) {
+                LocalDate weekEnd = weekStart.plusDays(6);
+                final LocalDate ws = weekStart, we = weekEnd;
+                String label = ws.format(wFmt) + "–" + we.format(wFmt);
+                long done = items.stream()
+                        .filter(e -> !e.date().isBefore(ws) && !e.date().isAfter(we) && "DONE".equals(e.status())).count();
+                long cancelled = items.stream()
+                        .filter(e -> !e.date().isBefore(ws) && !e.date().isAfter(we) && "CANCELLED".equals(e.status())).count();
+                doneSeries.getData().add(new XYChart.Data<>(label, done));
+                cancelSeries.getData().add(new XYChart.Data<>(label, cancelled));
+                weekStart = weekStart.plusWeeks(1);
+            }
+
+        } else {
+            // Quarter / Half-year: group by month
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("LLL yy", LanguageManager.getLocale());
+            Map<YearMonth, Long> doneByMonth = items.stream()
+                    .filter(e -> "DONE".equals(e.status()))
+                    .collect(Collectors.groupingBy(e -> YearMonth.from(e.date()), Collectors.counting()));
+            Map<YearMonth, Long> cancelByMonth = items.stream()
+                    .filter(e -> "CANCELLED".equals(e.status()))
+                    .collect(Collectors.groupingBy(e -> YearMonth.from(e.date()), Collectors.counting()));
+            YearMonth start = YearMonth.from(cutoff);
+            YearMonth end   = YearMonth.now();
+            for (YearMonth ym = start; !ym.isAfter(end); ym = ym.plusMonths(1)) {
+                String label = capitalize(ym.format(fmt));
+                doneSeries.getData().add(new XYChart.Data<>(label, doneByMonth.getOrDefault(ym, 0L)));
+                cancelSeries.getData().add(new XYChart.Data<>(label, cancelByMonth.getOrDefault(ym, 0L)));
+            }
         }
 
         monthlyChart.getData().addAll(List.of(doneSeries, cancelSeries));
